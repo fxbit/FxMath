@@ -1,0 +1,559 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+using SlimDX;
+using SlimDX.Direct2D;
+using Factory = SlimDX.Direct2D.Factory;
+using Ellipse = SlimDX.Direct2D.Ellipse;
+
+namespace FxMaths.GUI
+{
+    public partial class Canvas : UserControl, IDisposable
+    {
+
+        // direct 2d specific code
+        internal CanvasRenderArguments RenderVariables;
+
+        // the brush for the origin sign
+        SolidColorBrush originBrush;
+
+        // variable that set the changed of control
+        Boolean isDirty;
+
+        // the selected figure for move
+        public CanvasElements SelectedElement = null;
+
+        // set that the selected element can be internal edit
+        private Boolean SelectedElementInEditMode = false;
+
+        // the moving figure for move
+        CanvasElements MovingElement = null;
+
+        // offset of the screen
+        PointF _ScreenOffset;
+        SizeF _Zoom;
+        Boolean MovingScreen;
+
+        public PointF ScreenOffset { get { return _ScreenOffset; } }
+        public SizeF Zoom { get { return _Zoom; } }
+
+        // list with all elements that the user have insert
+        List<CanvasElements> ElementsList;
+
+        #region Selected/Edit Border Brush/Color
+
+        SolidColorBrush BrushSelectedBorder;
+        SolidColorBrush BrushEditBorder;
+
+        private Color _SelectedBorderColor;
+        private Color _EditBorderColor;
+
+        /// <summary>
+        /// The Border color of the selected element
+        /// </summary>
+        public Color SelectedBorderColor
+        {
+            get { return _SelectedBorderColor; }
+            set
+            {
+                _SelectedBorderColor = value;
+
+                if (BrushSelectedBorder != null)
+                    BrushSelectedBorder.Dispose();
+                BrushSelectedBorder = new SolidColorBrush( RenderVariables.renderTarget, _SelectedBorderColor );
+            }
+        }
+
+        /// <summary>
+        /// The Border color of the editable element
+        /// </summary>
+        public Color EditBorderColor
+        {
+            get { return _EditBorderColor; }
+            set
+            {
+                _EditBorderColor = value;
+                if (BrushEditBorder != null)
+                    BrushEditBorder.Dispose();
+                BrushEditBorder = new SolidColorBrush( RenderVariables.renderTarget, _EditBorderColor );
+            }
+        }
+        #endregion
+
+        public Canvas()
+        {
+            InitializeComponent();
+
+            // start the factory
+            RenderVariables.factory = new Factory( FactoryType.Multithreaded );
+
+            // criate the properties of the controler
+            WindowRenderTargetProperties windowProperties = new WindowRenderTargetProperties();
+
+            // fill the properties of the controller
+            windowProperties.Handle = RenderArea.Handle;
+            windowProperties.PixelSize = RenderArea.Size;
+            windowProperties.PresentOptions = PresentOptions.None;
+
+            // create the render target 
+            RenderVariables.renderTarget = new WindowRenderTarget( RenderVariables.factory, windowProperties );
+
+            // create the write factory
+            RenderVariables.WriteFactory = new SlimDX.DirectWrite.Factory( SlimDX.DirectWrite.FactoryType.Shared );
+
+            // create write target
+            // set the antialias mode
+            RenderVariables.renderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
+
+            // set that the control must pe paint one time
+            isDirty = false;
+
+            // set the initial tradformation
+            RenderVariables.renderTarget.Transform = Matrix3x2.Identity;
+
+            // init the offset
+            _ScreenOffset = new Point(10,10);
+
+            // init zoom
+            _Zoom = new SizeF( 1, 1 );
+
+            // set the origineBrush
+            if (originBrush != null)
+                originBrush.Dispose();
+            originBrush = new SolidColorBrush( RenderVariables.renderTarget, new Color4( Color.Bisque ) );
+
+            // init elements list
+            ElementsList = new List<CanvasElements>();
+
+            // init the color for the borders
+            SelectedBorderColor = Color.Beige;
+            EditBorderColor = Color.Brown;
+            SelectedElementInEditMode = false;
+
+            // draw the canvas
+            ReDraw();
+
+            // get mouse events from RenderArea
+            RenderArea.MouseDown += new MouseEventHandler( RenderArea_MouseDown );
+            RenderArea.MouseMove += new MouseEventHandler( RenderArea_MouseMove );
+            RenderArea.MouseUp += new MouseEventHandler( RenderArea_MouseUp );
+            RenderArea.MouseClick += new MouseEventHandler( RenderArea_MouseClick );
+            RenderArea.MouseDoubleClick += new MouseEventHandler( RenderArea_MouseDoubleClick );
+
+        }
+
+        #region Draw stuff
+
+        public void ReDraw()
+        {
+                // set that the control must pe paint one time
+                isDirty = true;
+
+                // redraw
+                Render();
+        }
+
+
+        private void Render()
+        {
+            lock ( RenderVariables.renderTarget ) {
+                // check if we must render
+                if ( isDirty && RenderVariables.renderTarget != null && !RenderVariables.renderTarget.Disposed ) {
+                    isDirty = false;
+
+                    Matrix3x2 newMAtrix = Matrix3x2.Identity;
+                    newMAtrix.M11 = _Zoom.Width;
+                    newMAtrix.M22 = _Zoom.Height;
+                    newMAtrix.M31 = _ScreenOffset.X;
+                    newMAtrix.M32 = _ScreenOffset.Y;
+                    RenderVariables.renderTarget.Transform = newMAtrix;
+
+                    // start drawing
+                    RenderVariables.renderTarget.BeginDraw();
+
+                    // clean the screen
+                    RenderVariables.renderTarget.Clear( new Color4( 0.3f, 0.3f, 0.3f ) );
+
+                    // protect the element list
+                    lock (ElementsList)
+                    {
+                        // render all the elements
+                        foreach (CanvasElements element in ElementsList)
+                        {
+
+                            newMAtrix.M31 = _ScreenOffset.X + element.Position.x * _Zoom.Width;
+                            newMAtrix.M32 = _ScreenOffset.Y + element.Position.y * _Zoom.Height;
+                            RenderVariables.renderTarget.Transform = newMAtrix;
+
+                            element.Render(RenderVariables, _Zoom);
+
+                            newMAtrix.M31 = _ScreenOffset.X;
+                            newMAtrix.M32 = _ScreenOffset.Y;
+                            RenderVariables.renderTarget.Transform = newMAtrix;
+
+                            // draw selection rectacngle 
+                            if (element.isSelected)
+                            {
+                                if (SelectedElementInEditMode)
+                                {
+                                    RenderVariables.renderTarget.DrawRectangle(BrushEditBorder, new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y));
+                                }
+                                else
+                                {
+                                    RenderVariables.renderTarget.DrawRectangle(BrushSelectedBorder, new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y));
+                                }
+                            }
+                        }
+                    }
+
+                    // draw the origine
+                    RenderVariables.renderTarget.DrawLine( originBrush, new PointF( -10, 0 ), new PointF( 10, 0 ) );
+                    RenderVariables.renderTarget.DrawLine( originBrush, new PointF( 0, -10 ), new PointF( 0, 10 ) );
+
+                    // end drawing
+                    RenderVariables.renderTarget.EndDraw();
+                }
+          
+            }
+        }
+
+        #endregion
+
+
+        #region Form events
+
+        protected override void OnPaint( PaintEventArgs e )
+        {
+            Render();
+        }
+
+        protected override void OnResize( EventArgs e )
+        {
+            base.OnResize( e );
+
+            if ( RenderVariables.renderTarget != null ) {
+                // resize  the buffers
+                RenderVariables.renderTarget.Resize( RenderArea.Size );
+
+                // set that the control must pe paint one time
+                isDirty = true;
+
+                // redraw
+                Refresh();
+            }
+        }
+
+        #endregion
+
+
+        #region point tranlsation in space
+        private Vector.FxVector2f TranslatePoint( PointF point )
+        {
+            return new Vector.FxVector2f((point.X - _ScreenOffset.X) / _Zoom.Width, (point.Y - _ScreenOffset.Y) / _Zoom.Height);
+        }
+
+        private float TranslatePointX( float point )
+        {
+            return ( point - _ScreenOffset.X ) / _Zoom.Width;
+        }
+
+        private float TranslatePointY( float point )
+        {
+            return ( point - _ScreenOffset.Y ) / _Zoom.Height;
+        }
+        #endregion
+
+
+        #region Elements Handling
+
+        #region Add/Remove Elements
+        public void AddElements( CanvasElements element ,Boolean Redraw=true)
+        {
+            // set the parent of the new element
+            element.Parent = this;
+
+            // load the element before add
+            element.Load( RenderVariables );
+
+            // protect the element list
+            lock (ElementsList)
+            {
+                // add the element to the internal list
+                ElementsList.Add(element);
+            }
+
+            // refresh the image
+            if(Redraw)
+                ReDraw();
+        }
+
+        public void RemoveElements( CanvasElements element, Boolean Redraw = true )
+        {
+            // protect the element list
+            lock (ElementsList)
+            {
+                // remove the element from the internal list
+                ElementsList.Remove(element);
+            }
+
+            // refresh the image
+            if ( Redraw )
+                ReDraw();
+        }
+        #endregion
+
+        #region Internal Handling
+
+        private CanvasElements HitElement( Vector.FxVector2f point )
+        {
+            // protect the element list
+            lock (ElementsList)
+            {
+                // search all the elements
+                foreach (CanvasElements element in ElementsList)
+                {
+                    if (element.IsHit(point))
+                    {
+                        return element;
+                    }
+                }
+            }
+
+            // if we don't find it we return null
+            return null;
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region Mouse events
+
+        void RenderArea_MouseDoubleClick( object sender, MouseEventArgs e )
+        {
+            if ( e.Button == System.Windows.Forms.MouseButtons.Left ) {
+                this.Focus();
+                
+                // translate the location to the screen and then
+                // find if we have hit
+                SelectedElement = HitElement(TranslatePoint(e.Location));
+
+                if ( SelectedElement != null ) {
+
+                    // protect the element list
+                    lock (ElementsList)
+                    {
+                        // clean all the prev selection
+                        foreach (CanvasElements element in ElementsList)
+                            element.isSelected = false;
+                    }
+
+
+                    // set the flag of the seleceted element 
+                    SelectedElement.isSelected = true;
+
+                    // because is double click then go to edit state
+                    SelectedElementInEditMode = true;
+                } else {
+                    
+                    // protect the element list
+                    lock (ElementsList)
+                    {
+                        // clean all the prev selection
+                        foreach (CanvasElements element in ElementsList)
+                            element.isSelected = false;
+                    }
+
+                    // because is no hit then leave to edit state
+                    SelectedElementInEditMode = false;
+                }
+            }
+
+            ReDraw();
+
+            // get the translated points
+            Vector.FxVector2f newLocation = TranslatePoint(e.Location);
+
+            // send the event to the base
+            base.OnMouseDoubleClick(new MouseEventArgs(e.Button, e.Clicks, (int)newLocation.X, (int)newLocation.Y, e.Delta));
+
+        }
+
+        Point privMousePosition;
+        void RenderArea_MouseClick( object sender, MouseEventArgs e )
+        {
+            if ( e.Button == System.Windows.Forms.MouseButtons.Left ) {
+                this.Focus();
+
+                // translate the location to the screen and then
+                // find if we have hit
+                SelectedElement = HitElement( TranslatePoint( e.Location ) );
+
+                if ( SelectedElement != null ) {
+
+                    // protect the element list
+                    lock (ElementsList)
+                    {
+                        // clean all the prev selection
+                        foreach (CanvasElements element in ElementsList)
+                            element.isSelected = false;
+                    }
+
+                    // set the flag of the seleceted element 
+                    SelectedElement.isSelected = true;
+
+                    // because is one click then leave to edit state
+                    //SelectedElementInEditMode = false;
+                } else {
+                    // protect the element list
+                    lock (ElementsList)
+                    {
+                        // clean all the prev selection
+                        foreach (CanvasElements element in ElementsList)
+                            element.isSelected = false;
+                    }
+
+                    // because is no hit then leave to edit state
+                    SelectedElementInEditMode = false;
+                }
+            }
+
+            ReDraw();
+        }
+
+        void RenderArea_MouseUp( object sender, MouseEventArgs e )
+        {
+            base.OnMouseUp( e );
+
+            // unselect the figure
+            MovingElement = null;
+            MovingScreen = false;
+        }
+
+        void RenderArea_MouseMove( object sender, MouseEventArgs e )
+        {
+            if ( MovingElement != null ) {
+
+                // check if the element is in edit mode
+                if ( SelectedElementInEditMode ) {
+                    MovingElement.InternalMove( new FxMaths.Vector.FxVector2f( ( e.Location.X - privMousePosition.X ) / _Zoom.Width, ( e.Location.Y - privMousePosition.Y ) / _Zoom.Height ) );
+                } else {
+                    MovingElement.Move( new FxMaths.Vector.FxVector2f( ( e.Location.X - privMousePosition.X ) / _Zoom.Width, ( e.Location.Y - privMousePosition.Y ) / _Zoom.Height ) );
+                }
+
+                // set the priv position
+                privMousePosition = e.Location;
+
+                // redraw the points
+                ReDraw();
+
+            } else if ( MovingScreen ) {
+
+                // set the new offset of the screen
+                _ScreenOffset = new PointF( _ScreenOffset.X + e.Location.X - privMousePosition.X, _ScreenOffset.Y + e.Location.Y - privMousePosition.Y );
+
+                // set the priv position
+                privMousePosition = e.Location;
+
+                // redraw the points
+                ReDraw();
+
+            }
+        }
+
+        void RenderArea_MouseDown( object sender, MouseEventArgs e )
+        {
+            if ( e.Button == System.Windows.Forms.MouseButtons.Left ) {
+
+                // translate the location to the screen and the find the moving element
+                MovingElement = HitElement( TranslatePoint( e.Location ) );
+
+                // set the current position of the mouse to be able to find the delta
+                privMousePosition = e.Location;
+
+                if ( MovingElement == null ) {
+                    // set that we start mouving
+                    MovingScreen = true;
+                }
+
+            }
+        }
+
+        protected override void OnMouseWheel( MouseEventArgs e )
+        {
+            // increse the zoom
+            _Zoom.Height += e.Delta * 0.0005f;
+            _Zoom.Width += e.Delta * 0.0005f;
+
+            // be sure that we are not too far
+            if ( _Zoom.Height < 0.1 ) {
+                _Zoom.Height = 0.1f;
+                _Zoom.Width = 0.1f;
+            }
+
+            // fix the offset
+            _ScreenOffset.X -= e.Delta * 0.0005f * RenderArea.Width;
+            _ScreenOffset.Y -= e.Delta * 0.0005f * RenderArea.Height;
+
+            // redraw
+            ReDraw();
+        }
+
+        #endregion
+
+
+        #region Name to String
+
+        public override string ToString()
+        {
+            return "Test Canvas";
+        }
+
+        #endregion
+
+        #region Dispose
+
+        protected virtual void MyDispose( bool disposing )
+        {
+            if ( disposing ) {
+                // get rid of managed resources
+                originBrush.Dispose();
+                if (BrushSelectedBorder != null)
+                    BrushSelectedBorder.Dispose();
+                if (BrushEditBorder != null)
+                    BrushEditBorder.Dispose();
+                RenderVariables.factory.Dispose();
+                RenderVariables.renderTarget.Dispose();
+                RenderVariables.WriteFactory.Dispose();
+
+                // protect the element list
+                lock (ElementsList)
+                {
+                    // dispose all the elements
+                    foreach (CanvasElements elem in ElementsList)
+                    {
+                        elem.Dispose();
+                    }
+
+                    ElementsList.Clear();
+                }
+            }
+            // get rid of unmanaged resources
+        }
+
+        ~Canvas()
+        {
+            Dispose( false );
+        }
+
+    }
+
+        #endregion
+}
