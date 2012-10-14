@@ -120,7 +120,7 @@ namespace FxMaths.GMaps
         {
             throw new NotImplementedException();
         }
-        
+
         #endregion
 
 
@@ -202,15 +202,17 @@ namespace FxMaths.GMaps
             RegionsNum = (int)Math.Ceiling((float)VertexNum / (float)PointsPerRegion);
 
 
-            int HorizontalRegions = (int)Math.Ceiling(Math.Sqrt(RegionsNum));
-            int HorizontalRegionsOffset = (int)Math.Ceiling((float)VertexNum / (float)HorizontalRegions);
-            int VerticalRegions = (int)Math.Ceiling((float)RegionsNum / (float)HorizontalRegions);   
+            int HorizontalRegions = (int)Math.Floor(Math.Sqrt(RegionsNum));
+            int HorizontalRegionsOffset = (int)Math.Floor((float)VertexNum / (float)HorizontalRegions);
+            int VerticalRegions = (int)Math.Floor((float)RegionsNum / (float)HorizontalRegions);
 #else
-            int HorizontalRegions = (int)Math.Floor(Math.Sqrt(VertexNum / Math.Log(VertexNum, 2)));
-            int HorizontalRegionsOffset = (int)Math.Ceiling((float)VertexNum / (float)HorizontalRegions);
-            int VerticalRegions = HorizontalRegions;
-            
+
+            int k = (int)Math.Floor(Math.Log(Math.Sqrt((float)VertexNum / (float)PointsPerRegion), 2));
+            int HorizontalRegions = (int)Math.Ceiling(Math.Pow(2, k));
+            int HorizontalRegionsOffset = (int)Math.Floor((float)VertexNum / (float)HorizontalRegions);
+            int VerticalRegions = (int)Math.Ceiling(Math.Pow(2, k));
 #endif
+
 
             // recalc the region number
             RegionsNum = HorizontalRegions * VerticalRegions;
@@ -222,7 +224,7 @@ namespace FxMaths.GMaps
             T y_max = VertexArray[0].Y;
 
             // split the array horizontally
-            for (int i = 0; i < HorizontalRegions; i++)
+            for (int i = 0; i < HorizontalRegions - 1; i++)
             {
                 // create tmp Horizontal region
                 VertexLiteHVTree_Horizontal<T> tmpHorizontal = new VertexLiteHVTree_Horizontal<T>();
@@ -260,23 +262,46 @@ namespace FxMaths.GMaps
                 Root.Add(tmpHorizontal);
             }
 
+            // add and the last one 
+            {
+                // create tmp Horizontal region
+                VertexLiteHVTree_Horizontal<T> tmpHorizontal = new VertexLiteHVTree_Horizontal<T>();
+
+                // the end of the list
+                tmpHorizontal.EndID = VertexArray.Length - 1;
+
+
+                // set the startID
+                tmpHorizontal.StartID = startID;
+
+                // renew the startID for the next one
+                startID = tmpHorizontal.EndID + 1;
+
+                // calc the min/max
+                tmpHorizontal.MinY = VertexArray[tmpHorizontal.EndID].Y;
+                tmpHorizontal.MaxY = y_max;
+
+
+                // add to the list
+                Root.Add(tmpHorizontal);
+            }
 
             // split the array horizontally
             Parallel.For(0, HorizontalRegions, (g) =>
             {
-                
+
                 VertexLiteHVTree_Horizontal<T> HRegion = Root[g];
 
                 // sort the horizontal region base on x
                 Array.Sort(VertexArray, HRegion.StartID, HRegion.EndID - HRegion.StartID + 1, VertexXComparer<T>.vc);
 
 
-                int VerticalRegionsOffset = (int)Math.Ceiling((float)(HRegion.EndID - HRegion.StartID + 1) / (float)VerticalRegions);
+                int VerticalRegionsOffset = (int)Math.Floor((float)(HRegion.EndID - HRegion.StartID + 1) / (float)VerticalRegions);
 
                 int startId = HRegion.StartID;
                 T x_max = VertexArray[startId].X;
 
-                for (int i = 1; i <= VerticalRegions; i++)
+                for (int i = 1; i < VerticalRegions; i++)
                 {
 
                     // create tmp vertical region
@@ -319,7 +344,23 @@ namespace FxMaths.GMaps
                     HRegion.VerticalRegionList.Add(tmpVertical);
                 }
 
-                    
+                {
+                    // create tmp vertical region
+                    VertexLiteHVTree_Vertical<T> tmpVertical = new VertexLiteHVTree_Vertical<T>();
+
+                    tmpVertical.EndID = HRegion.EndID;
+
+                    // set the startID
+                    tmpVertical.StartID = startId;
+
+
+                    // set the max/min
+                    tmpVertical.MinX = VertexArray[tmpVertical.EndID].X;
+                    tmpVertical.MaxX = x_max;
+
+                    // add the vertical region to the horizontal
+                    HRegion.VerticalRegionList.Add(tmpVertical);
+                }
             });
 
 

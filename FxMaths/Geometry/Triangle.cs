@@ -22,7 +22,9 @@ namespace FxMaths.Geometry
         private SolidColorBrush fillColorBrush;
         private Boolean fillColorDirty;
         private PathGeometry TriangleGeometry;
- 
+
+        private float _LineWidth = 1f;
+
         #endregion
 
         #region Properties
@@ -91,6 +93,12 @@ namespace FxMaths.Geometry
         }
 
         #endregion
+
+        public float LineWidth
+        {
+            get { return _LineWidth; }
+            set { _LineWidth = value; }
+        }
 
         #endregion
 
@@ -166,7 +174,7 @@ namespace FxMaths.Geometry
             }
 
             // draw the wireframe of the triangle
-            renderTarget.DrawGeometry(TriangleGeometry, brush, 2);
+            renderTarget.DrawGeometry(TriangleGeometry, brush, _LineWidth);
 
             if (fillTheTriangle)
             {

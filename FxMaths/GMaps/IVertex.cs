@@ -107,6 +107,7 @@ namespace FxMaths.GMaps
 
         void Subtract(IVertex<T> vec);
 
+        float Distance(IVertex<T> vec);
 
         float Length();
 
@@ -114,5 +115,10 @@ namespace FxMaths.GMaps
 
         #endregion
 
+        #region String Uitls
+
+        string ToString(String Format);
+
+        #endregion
     }
 }

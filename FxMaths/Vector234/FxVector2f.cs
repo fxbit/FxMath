@@ -326,10 +326,10 @@ namespace FxMaths.Vector
         /// </summary>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public float Distance(FxVector2f end)
+        public float Distance(IVertex<float> end)
         {
-            float x = this.x - end.x;
-            float y = this.y - end.y;
+            float x = this.X - end.X;
+            float y = this.Y - end.Y;
 
             return (float)Math.Sqrt((x * x) + (y * y));
         }
@@ -587,7 +587,6 @@ namespace FxMaths.Vector
         public override int GetHashCode()
         {
             return x.GetHashCode() + y.GetHashCode();
-
         }
 
         /// <summary>
@@ -622,7 +621,8 @@ namespace FxMaths.Vector
         /// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals(IVertex<float> value)
         {
-            return (x == value.X && y == value.Y);
+            return (Math.Abs(value.X - x) < 0.1 && Math.Abs(y - value.Y) < 0.1);
+            //return (x == value.X && y == value.Y);
         }
 
         /// <summary>
@@ -634,7 +634,9 @@ namespace FxMaths.Vector
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
         public bool Equals(IVertex<float> value1, IVertex<float> value2)
         {
-            return (value1.X == value2.X && value1.Y == value2.Y);
+            //return (value1.X == value2.X && value1.Y == value2.Y);
+
+            return (Math.Abs(value1.X - value2.X) < 0.1 && Math.Abs(value1.Y - value2.Y) < 0.1);
         }
         #endregion
 
@@ -715,7 +717,13 @@ namespace FxMaths.Vector
 
         public override string ToString()
         {
-            return "(" + x.ToString().Replace(',', '.') + "," + y.ToString().Replace(',', '.') + ")";
+            return "(" + x.ToString("0.0000000000").Replace(',', '.') + "," + y.ToString("0.0000000000").Replace(',', '.') + ")";
+        }
+
+
+        public string ToString(String Format)
+        {
+            return "(" + x.ToString(Format).Replace(',', '.') + "," + y.ToString(Format).Replace(',', '.') + ")";
         }
 
         public static FxVector2f Parse(String str)

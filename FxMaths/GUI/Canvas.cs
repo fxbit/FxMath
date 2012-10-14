@@ -493,9 +493,9 @@ namespace FxMaths.GUI
             _Zoom.Width += e.Delta * 0.0005f;
 
             // be sure that we are not too far
-            if ( _Zoom.Height < 0.1 ) {
-                _Zoom.Height = 0.1f;
-                _Zoom.Width = 0.1f;
+            if ( _Zoom.Height < 0.05 ) {
+                _Zoom.Height = 0.05f;
+                _Zoom.Width = 0.05f;
             }
 
             // fix the offset
@@ -551,6 +551,83 @@ namespace FxMaths.GUI
         ~Canvas()
         {
             Dispose( false );
+        }
+
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern IntPtr GetOpenClipboardWindow();
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern int GetWindowText(int hwnd, StringBuilder text, int count);
+
+        private static string getOpenClipboardWindowText()
+        {
+            IntPtr hwnd = GetOpenClipboardWindow();
+            StringBuilder sb = new StringBuilder(501);
+            GetWindowText(hwnd.ToInt32(), sb, 500);
+            return sb.ToString();
+            // example:
+            // skype_plugin_core_proxy_window: 02490E80
+        }
+
+        private void ToolButton_GetPosition_Click(object sender, EventArgs e)
+        {
+            String pos = (new FxMaths.Vector.FxVector2f(_ScreenOffset.X, _ScreenOffset.Y)).ToString() + "|" +
+                (new FxMaths.Vector.FxVector2f(_Zoom.Width, _Zoom.Height)).ToString();
+            MessageBox.Show(pos, "Position/Zoom");
+
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(pos);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                msg += Environment.NewLine;
+                msg += Environment.NewLine;
+                msg += "The problem:";
+                msg += Environment.NewLine;
+                msg += getOpenClipboardWindowText();
+                MessageBox.Show(msg);
+            }
+            
+        }
+
+        private void ToolButtonSetPosition_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                String str = Clipboard.GetText();
+                char []sep = {'|'};
+
+                String[] pos_zoom = str.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pos_zoom.Length == 2)
+                {
+                    try
+                    {
+                        FxMaths.Vector.FxVector2f offset = FxMaths.Vector.FxVector2f.Parse(pos_zoom[0]);
+                        FxMaths.Vector.FxVector2f zoom = FxMaths.Vector.FxVector2f.Parse(pos_zoom[1]);
+
+                        _ScreenOffset.X = offset.X;
+                        _ScreenOffset.Y = offset.Y;
+
+                        _Zoom.Width = zoom.X;
+                        _Zoom.Height = zoom.Y;
+
+                        ReDraw();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Wrong Format");
+                }
+            }
         }
 
     }

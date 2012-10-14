@@ -325,10 +325,10 @@ namespace FxMaths.Vector
         /// </summary>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public float Distance( FxVector2i end )
+        public float Distance(IVertex<int> end)
         {
-            float x = this.x - end.x;
-            float y = this.y - end.y;
+            float x = this.X - end.X;
+            float y = this.Y - end.Y;
 
             return (float)Math.Sqrt( ( x * x ) + ( y * y ) );
         }
@@ -701,6 +701,22 @@ namespace FxMaths.Vector
         {
             return new FxVector2i( this.x, this.y );
         }
+
+        #endregion
+
+        #region String Utils
+
+        public override string ToString()
+        {
+            return "(" + x.ToString().Replace(',', '.') + "," + y.ToString().Replace(',', '.') + ")";
+        }
+
+
+        public string ToString(String Format)
+        {
+            return "(" + x.ToString(Format).Replace(',', '.') + "," + y.ToString(Format).Replace(',', '.') + ")";
+        }
+
 
         #endregion
 

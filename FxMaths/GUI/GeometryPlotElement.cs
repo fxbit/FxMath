@@ -51,7 +51,7 @@ namespace FxMaths.GUI
 
             // set the position and the size of the element
             this.Position = new Vector.FxVector2f( 0 );
-            this.Size = new Vector.FxVector2f( 500, 250 );
+            this.Size = new Vector.FxVector2f( 10, 10 );
 
             // set the origin position 
             OriginPosition = new Vector.FxVector2f( 0 );

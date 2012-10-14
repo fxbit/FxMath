@@ -665,5 +665,15 @@ namespace FxMaths.Vector
             return ( value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z );
         }
         #endregion
+
+        #region String Utils
+
+        public override string ToString()
+        {
+            return "(" + X.ToString().Replace(',', '.') + "," + Y.ToString().Replace(',', '.') + "," + Z.ToString().Replace(',', '.') + ")";
+        }
+
+
+        #endregion
     }
 }
