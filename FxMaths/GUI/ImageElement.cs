@@ -7,7 +7,7 @@ using System.Text;
 using SlimDX;
 using System.Drawing;
 using SlimDX.Direct2D;
-using FXImages;
+using FxMaths.Images;
 
 namespace FxMaths.GUI
 {
@@ -18,7 +18,7 @@ namespace FxMaths.GUI
         int Width,Height,Pitch;
         byte []internalImage;
 
-        public ImageElement(FXImages.FxImages image)
+        public ImageElement(FxImages image)
         {
 
             // set the position and the size of the element

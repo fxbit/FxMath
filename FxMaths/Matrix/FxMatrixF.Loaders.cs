@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using FXImages;
+
+using FxMaths.Images;
 
 namespace FxMaths.Matrix
 {

@@ -190,6 +190,7 @@ namespace FXMaths_Demo
 
         #endregion
 
+
         #region Audio
 
         private IWavePlayer waveOut;
@@ -833,10 +834,6 @@ namespace FXMaths_Demo
         }
 
         #endregion
-
-
-
-
 
     }
 

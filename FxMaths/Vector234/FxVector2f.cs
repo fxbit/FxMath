@@ -704,6 +704,15 @@ namespace FxMaths.Vector
         }
 
         /// <summary>
+        /// Read the vertex from the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public static IVertex<float> sReadFromDataStream(DataStream dataStream)
+        {
+            return new FxVector2f(dataStream.Read<float>(), dataStream.Read<float>());
+        }
+
+        /// <summary>
         /// Return a copy of the vertex.
         /// </summary>
         /// <returns></returns>
