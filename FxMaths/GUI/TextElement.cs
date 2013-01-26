@@ -6,8 +6,8 @@ using System.Drawing;
 
 using FxMaths;
 
-using SlimDX.Direct2D;
-using SlimDX;
+using SharpDX.Direct2D1;
+using SharpDX;
 
 
 namespace FxMaths.GUI
@@ -34,8 +34,8 @@ namespace FxMaths.GUI
         /// The string that we want to draw
         /// </summary>
         private String Internal_String;
-        private SlimDX.DirectWrite.TextFormat DW_textFormat;
-        private RectangleF textRectangle;
+        private SharpDX.DirectWrite.TextFormat DW_textFormat;
+        private SharpDX.RectangleF textRectangle;
 
         /// <summary>
         /// The drawing text
@@ -86,16 +86,16 @@ namespace FxMaths.GUI
             // init format 
             _TextFormat = new TextElementFormat();
             _TextFormat.familyName = "Calibri";
-            _TextFormat.weight = SlimDX.DirectWrite.FontWeight.Black;
-            _TextFormat.fontStyle = SlimDX.DirectWrite.FontStyle.Normal;
-            _TextFormat.fontStretch = SlimDX.DirectWrite.FontStretch.Normal;
+            _TextFormat.weight = SharpDX.DirectWrite.FontWeight.Black;
+            _TextFormat.fontStyle = SharpDX.DirectWrite.FontStyle.Normal;
+            _TextFormat.fontStretch = SharpDX.DirectWrite.FontStretch.Normal;
             _TextFormat.fontSize = 8.0f;
 
             // init text rectangle
-            textRectangle = new System.Drawing.RectangleF( 0, 0, Size.x, Size.y );
+            textRectangle = new SharpDX.RectangleF( 0, 0, Size.x, Size.y );
 
             // init the color of the fonts
-            _FontColor = new Color4( 1.0f, 1.0f, 1.0f );
+            _FontColor = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
 
@@ -114,19 +114,20 @@ namespace FxMaths.GUI
 
         public override void Load( CanvasRenderArguments args )
         {
-            if ( lineBrush != null && !lineBrush.Disposed )
+            if ( lineBrush != null && !lineBrush.IsDisposed )
                 lineBrush.Dispose();
 
-            if ( DW_textFormat != null && !DW_textFormat.Disposed )
+            if (DW_textFormat != null && !DW_textFormat.IsDisposed)
                 DW_textFormat.Dispose();
 
             // init the lines brushs
             lineBrush = new SolidColorBrush( args.renderTarget, _FontColor );
 
-
+            _TextFormat.fontCollection = args.WriteFactory.GetSystemFontCollection(false);
             // init the text format
-            DW_textFormat = new SlimDX.DirectWrite.TextFormat( args.WriteFactory,
+            DW_textFormat = new SharpDX.DirectWrite.TextFormat( args.WriteFactory,
                                                             _TextFormat.familyName,
+                                                            _TextFormat.fontCollection,
                                                             _TextFormat.weight,
                                                             _TextFormat.fontStyle,
                                                             _TextFormat.fontStretch,
@@ -134,13 +135,13 @@ namespace FxMaths.GUI
                                                             "en-us" );
 
             // get the size of the string
-            SlimDX.DirectWrite.TextLayout textL=  args.WriteFactory.CreateTextLayout( Internal_String, DW_textFormat, 1500, 1500 );
+            SharpDX.DirectWrite.TextLayout textL= new SharpDX.DirectWrite.TextLayout( args.WriteFactory, Internal_String, DW_textFormat, 1500, 1500 );
             Size.x = textL.GetFontSize( 0 ) * Internal_String.Length;
             Size.y = textL.GetFontSize( 0 );
             textL.Dispose();
 
             // init text rectangle
-            textRectangle = new System.Drawing.RectangleF( 0, 0, Size.x, Size.y );
+            textRectangle = new DrawingRectangleF( 0, 0, Size.x, Size.y );
 
         }
 
@@ -152,7 +153,7 @@ namespace FxMaths.GUI
 
         public override void Dispose()
         {
-            if (lineBrush != null && !lineBrush.Disposed)
+            if (lineBrush != null && !lineBrush.IsDisposed)
                 lineBrush.Dispose();
 
             if ( StringGeo != null )

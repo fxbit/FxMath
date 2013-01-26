@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 
 
-using SlimDX;
+using SharpDX;
 using System.Drawing;
-using SlimDX.Direct2D;
+using SharpDX.Direct2D1;
 using FxMaths.Images;
 
 namespace FxMaths.GUI
 {
     public class ImageElement : CanvasElements
     {
-        SlimDX.Direct2D.Bitmap mImageBitmap;
+        SharpDX.Direct2D1.Bitmap mImageBitmap;
 
         int Width,Height,Pitch;
-        byte []internalImage;
+        DataStream internalImage;
 
         public ImageElement(FxImages image)
         {
@@ -30,7 +30,8 @@ namespace FxMaths.GUI
             Height = image.Image.Height;
 
             // allocate the memory for the internal image
-            internalImage = new byte[Width * Height * 4];
+            internalImage = new DataStream( Width * Height * 4, true, true);
+            byte[] internalImage_local = new byte[Width * Height * 4];
 
             Pitch = Width * 4;
             int size = Width * Height;
@@ -42,13 +43,15 @@ namespace FxMaths.GUI
                 {
                     for (int g = 0; g < image.FXPixelFormat.Length; g++)
                     {
-                        internalImage[i * 4 + j * Pitch + g] = image[i,j,(RGB)g];
+                        internalImage_local[i * 4 + j * Pitch + g] = image[i, j, (RGB)g];
 
                     }
-                    internalImage[i * 4 + j * Pitch + 3] = 255;
+                    internalImage_local[i * 4 + j * Pitch + 3] = 255;
                 }
             }
             image.UnLockImage();
+
+            internalImage.WriteRange<byte>(internalImage_local);
         }
 
         public ImageElement( Matrix.FxMatrixF image )
@@ -63,18 +66,20 @@ namespace FxMaths.GUI
             Height = image.Height;
 
             // allocate the memory for the internal image
-            internalImage = new byte[Width * Height * 4];
+            internalImage = new DataStream(Width * Height * 4, true, true);
+            byte[] internalImage_local = new byte[Width * Height * 4];
 
             Pitch = Width * 4;
             int size= Width*Height;
             
             // load the data in image form
             for ( int i=0; i < size; i ++ ) {
-                internalImage[i * 4] = (byte)( 256 * image[i] );
-                internalImage[i * 4 + 1] = (byte)( 256 * image[i] );
-                internalImage[i * 4 + 2] = (byte)( 256 * image[i] );
-                internalImage[i * 4 + 3] = 255;
+                internalImage_local[i * 4] = (byte)(256 * image[i]);
+                internalImage_local[i * 4 + 1] = (byte)(256 * image[i]);
+                internalImage_local[i * 4 + 2] = (byte)(256 * image[i]);
+                internalImage_local[i * 4 + 3] = 255;
             }
+            internalImage.WriteRange<byte>(internalImage_local);
         }
 
         public override void Render( CanvasRenderArguments args, SizeF Zoom )
@@ -83,25 +88,26 @@ namespace FxMaths.GUI
             if ( mImageBitmap != null ) {
                 //RectangleF rect= new RectangleF( Position.X, Position.Y, Size.X, Size.Y );
                 // render the image
-                args.renderTarget.DrawBitmap( mImageBitmap );
+                args.renderTarget.DrawBitmap( mImageBitmap,1, BitmapInterpolationMode.Linear );
             }
         }
 
         public override void Load( CanvasRenderArguments args )
         {
-            // make the data stream of the matrix
-            DataStream dataStream = new DataStream( internalImage, true, false );
-
             // set the properties of the image
             BitmapProperties bitmapProps = new BitmapProperties();
-            bitmapProps.PixelFormat = new SlimDX.Direct2D.PixelFormat( SlimDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied );
+            bitmapProps.PixelFormat = new SharpDX.Direct2D1.PixelFormat( SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied );
 
             if ( mImageBitmap != null ) {
                 // write to the specific bitmap not create a new one
-                mImageBitmap.FromStream( dataStream, Width, Width*Height );
+                mImageBitmap.CopyFromStream(internalImage, Width, Width * Height);
             } else {
-                // make the bitmap for direct2d
-                mImageBitmap = new SlimDX.Direct2D.Bitmap( args.renderTarget, new Size( Width, Height ), dataStream, Pitch, bitmapProps );
+                // make the bitmap for Direct2D1
+                mImageBitmap = new SharpDX.Direct2D1.Bitmap(args.renderTarget,
+                    new DrawingSize(Width, Height), 
+                    new DataPointer(internalImage.DataPointer, (int)internalImage.Length), 
+                    Pitch, 
+                    bitmapProps);
             }
         }
 

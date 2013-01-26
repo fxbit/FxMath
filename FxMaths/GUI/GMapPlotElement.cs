@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FxMaths.GMaps;
-using SlimDX.Direct2D;
+using SharpDX.Direct2D1;
 using System.Drawing;
-using SlimDX;
+using SharpDX;
 
 namespace FxMaths.GUI
 {
@@ -110,7 +110,7 @@ namespace FxMaths.GUI
             lineBrush = new SolidColorBrush(args.renderTarget, LineColor);
 
             // init the lines brushs
-            lineBrush_Color = new SolidColorBrush(args.renderTarget, new Color4(0.98f, 0.99f, 0.09f));
+            lineBrush_Color = new SolidColorBrush(args.renderTarget, new Color4(0.98f, 0.99f, 0.09f, 1.0f));
 
 
             // init the geometryes
@@ -166,7 +166,7 @@ namespace FxMaths.GUI
 
         #region Drawing 
 
-        PointF point= new PointF();
+        DrawingPointF point = new DrawingPointF();
 
         private void DrawFace( Face fe )
         {

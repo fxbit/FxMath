@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Globalization;
 
-using SlimDX;
+using SharpDX;
 using FxMaths.GMaps;
 
 namespace FxMaths.Vector

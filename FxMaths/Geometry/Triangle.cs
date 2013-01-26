@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SlimDX.Direct2D;
+using SharpDX.Direct2D1;
+using SharpDX;
 
 namespace FxMaths.Geometry
 {
@@ -12,13 +13,13 @@ namespace FxMaths.Geometry
 
         private Vector.FxVector2f m_P1,m_P2,m_P3;
 
-        private System.Drawing.PointF mp_P1,mp_P2,mp_P3;
+        private DrawingPointF mp_P1, mp_P2, mp_P3;
         private Boolean isGeometryDirty;
 
 
         private Boolean fillTheTriangle=false;
 
-        private SlimDX.Color4 fillColor;
+        private SharpDX.Color4 fillColor;
         private SolidColorBrush fillColorBrush;
         private Boolean fillColorDirty;
         private PathGeometry TriangleGeometry;
@@ -40,7 +41,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P1 = value;
-                mp_P1 = new System.Drawing.PointF( value.x, value.y );
+                mp_P1 = new DrawingPointF(value.x, value.y);
             }
         }
 
@@ -53,7 +54,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P2 = value;
-                mp_P2 = new System.Drawing.PointF( value.x, value.y );
+                mp_P2 = new DrawingPointF(value.x, value.y);
             }
         }
 
@@ -66,7 +67,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P3 = value;
-                mp_P3 = new System.Drawing.PointF( value.x, value.y );
+                mp_P3 = new DrawingPointF(value.x, value.y);
             }
         }
 
@@ -86,7 +87,7 @@ namespace FxMaths.Geometry
         /// <summary>
         /// The color of the filling.
         /// </summary>
-        public SlimDX.Color4 FillColor
+        public SharpDX.Color4 FillColor
         {
             get { return fillColor; }
             set { fillColor = value; fillColorDirty = true; }
@@ -111,9 +112,9 @@ namespace FxMaths.Geometry
             m_P2 = p2;
             m_P3 = p3;
 
-            mp_P1 = new System.Drawing.PointF( m_P1.x, m_P1.y );
-            mp_P2 = new System.Drawing.PointF( m_P2.x, m_P2.y );
-            mp_P3 = new System.Drawing.PointF( m_P3.x, m_P3.y );
+            mp_P1 = new DrawingPointF(m_P1.x, m_P1.y);
+            mp_P2 = new DrawingPointF(m_P2.x, m_P2.y);
+            mp_P3 = new DrawingPointF(m_P3.x, m_P3.y);
 
             // set that the geometry is dirty
             isGeometryDirty = true;
@@ -126,9 +127,9 @@ namespace FxMaths.Geometry
             m_P2 = vec2 as Vector.FxVector2f? ?? new Vector.FxVector2f(vec2.X, vec2.Y);
             m_P3 = vec3 as Vector.FxVector2f? ?? new Vector.FxVector2f(vec3.X, vec3.Y);
 
-            mp_P1 = new System.Drawing.PointF(m_P1.x, m_P1.y);
-            mp_P2 = new System.Drawing.PointF(m_P2.x, m_P2.y);
-            mp_P3 = new System.Drawing.PointF(m_P3.x, m_P3.y);
+            mp_P1 = new DrawingPointF(m_P1.x, m_P1.y);
+            mp_P2 = new DrawingPointF(m_P2.x, m_P2.y);
+            mp_P3 = new DrawingPointF(m_P3.x, m_P3.y);
 
             // set that the geometry is dirty
             isGeometryDirty = true;
@@ -139,10 +140,10 @@ namespace FxMaths.Geometry
         #region Draw
 
         /// <summary>
-        /// render the circle to specific render target of direct2D
+        /// render the circle to specific render target of Direct2D1
         /// </summary>
         /// <param name="renderTarget"></param>
-        public void Render2D(RenderTarget renderTarget, SlimDX.Direct2D.Brush brush)
+        public void Render2D(RenderTarget renderTarget, SharpDX.Direct2D1.Brush brush)
         {
             // check if the geometry is dirty
             if (isGeometryDirty)

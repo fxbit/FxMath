@@ -94,8 +94,6 @@ namespace FxMaths.Images
                 hist[i] = new FxVectorF(256, 0);
             }
 
-            int pixelCount = 0;
-
             // get the size of the image
             int ImWidth = image.Image.Width;
             int ImHeight = image.Image.Height;

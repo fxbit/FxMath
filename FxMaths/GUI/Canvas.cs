@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SlimDX;
-using SlimDX.Direct2D;
-using Factory = SlimDX.Direct2D.Factory;
-using Ellipse = SlimDX.Direct2D.Ellipse;
+using SharpDX;
+using SharpDX.Direct2D1;
+using Factory = SharpDX.Direct2D1.Factory;
+using Ellipse = SharpDX.Direct2D1.Ellipse;
+using Color = SharpDX.Color;
 
 namespace FxMaths.GUI
 {
@@ -91,21 +92,23 @@ namespace FxMaths.GUI
             InitializeComponent();
 
             // start the factory
-            RenderVariables.factory = new Factory( FactoryType.Multithreaded );
+            RenderVariables.factory = new Factory( FactoryType.MultiThreaded );
 
             // criate the properties of the controler
-            WindowRenderTargetProperties windowProperties = new WindowRenderTargetProperties();
+            HwndRenderTargetProperties windowProperties = new HwndRenderTargetProperties();
 
             // fill the properties of the controller
-            windowProperties.Handle = RenderArea.Handle;
-            windowProperties.PixelSize = RenderArea.Size;
+            windowProperties.Hwnd = RenderArea.Handle;
+            windowProperties.PixelSize = new DrawingSize(RenderArea.Size.Width, RenderArea.Size.Height);
             windowProperties.PresentOptions = PresentOptions.None;
 
             // create the render target 
-            RenderVariables.renderTarget = new WindowRenderTarget( RenderVariables.factory, windowProperties );
+            RenderVariables.renderTarget = new WindowRenderTarget(RenderVariables.factory, 
+                new RenderTargetProperties(new PixelFormat( SharpDX.DXGI.Format.Unknown, AlphaMode.Premultiplied)),
+                windowProperties);
 
             // create the write factory
-            RenderVariables.WriteFactory = new SlimDX.DirectWrite.Factory( SlimDX.DirectWrite.FactoryType.Shared );
+            RenderVariables.WriteFactory = new SharpDX.DirectWrite.Factory( SharpDX.DirectWrite.FactoryType.Shared );
 
             // create write target
             // set the antialias mode
@@ -126,7 +129,7 @@ namespace FxMaths.GUI
             // set the origineBrush
             if (originBrush != null)
                 originBrush.Dispose();
-            originBrush = new SolidColorBrush( RenderVariables.renderTarget, new Color4( Color.Bisque ) );
+            originBrush = new SolidColorBrush( RenderVariables.renderTarget, new Color4( Color.Bisque.R, Color.Bisque.G, Color.Bisque.B , 1.0f) );
 
             // init elements list
             ElementsList = new List<CanvasElements>();
@@ -164,7 +167,7 @@ namespace FxMaths.GUI
         {
             lock ( RenderVariables.renderTarget ) {
                 // check if we must render
-                if ( isDirty && RenderVariables.renderTarget != null && !RenderVariables.renderTarget.Disposed ) {
+                if ( isDirty && RenderVariables.renderTarget != null && !RenderVariables.renderTarget.IsDisposed ) {
                     isDirty = false;
 
                     Matrix3x2 newMAtrix = Matrix3x2.Identity;
@@ -178,7 +181,7 @@ namespace FxMaths.GUI
                     RenderVariables.renderTarget.BeginDraw();
 
                     // clean the screen
-                    RenderVariables.renderTarget.Clear( new Color4( 0.3f, 0.3f, 0.3f ) );
+                    RenderVariables.renderTarget.Clear( new Color4( 0.3f, 0.3f, 0.3f , 1.0f) );
 
                     // protect the element list
                     lock (ElementsList)
@@ -202,19 +205,19 @@ namespace FxMaths.GUI
                             {
                                 if (SelectedElementInEditMode)
                                 {
-                                    RenderVariables.renderTarget.DrawRectangle(BrushEditBorder, new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y));
+                                    RenderVariables.renderTarget.DrawRectangle(new DrawingRectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
                                 }
                                 else
                                 {
-                                    RenderVariables.renderTarget.DrawRectangle(BrushSelectedBorder, new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y));
+                                    RenderVariables.renderTarget.DrawRectangle(new DrawingRectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
                                 }
                             }
                         }
                     }
 
                     // draw the origine
-                    RenderVariables.renderTarget.DrawLine( originBrush, new PointF( -10, 0 ), new PointF( 10, 0 ) );
-                    RenderVariables.renderTarget.DrawLine( originBrush, new PointF( 0, -10 ), new PointF( 0, 10 ) );
+                    RenderVariables.renderTarget.DrawLine(new DrawingPointF(-10, 0), new DrawingPointF(10, 0), originBrush);
+                    RenderVariables.renderTarget.DrawLine(new DrawingPointF(0, -10), new DrawingPointF(0, 10), originBrush);
 
                     // end drawing
                     RenderVariables.renderTarget.EndDraw();
@@ -239,7 +242,7 @@ namespace FxMaths.GUI
 
             if ( RenderVariables.renderTarget != null ) {
                 // resize  the buffers
-                RenderVariables.renderTarget.Resize( RenderArea.Size );
+                RenderVariables.renderTarget.Resize(new DrawingSize(RenderArea.Size.Width, RenderArea.Size.Height));
 
                 // set that the control must pe paint one time
                 isDirty = true;

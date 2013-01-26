@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 
 
-using SlimDX.Direct2D;
-using System.Drawing;
+using SharpDX.Direct2D1;
+using SharpDX;
 
 
 namespace FxMaths.Geometry
@@ -20,8 +20,8 @@ namespace FxMaths.Geometry
         GMaps.IVertex<float> m_Start;
         GMaps.IVertex<float> m_End;
 
-        private PointF m_pStart;
-        private PointF m_pEnd;
+        private DrawingPointF m_pStart;
+        private DrawingPointF m_pEnd;
         private float m_lineWidth = 2;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace FxMaths.Geometry
         /// The color of the line.
         /// To use that we must set false the "useDefaultColor"
         /// </summary>
-        private SlimDX.Color4 m_lineColor;
+        private SharpDX.Color4 m_lineColor;
 
         private SolidColorBrush m_lineColorBrush = null;
         private Boolean m_isLineColorBrushDirty = false;
@@ -51,7 +51,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_Start = value;
-                m_pStart = new PointF( value.X, value.Y );
+                m_pStart = new DrawingPointF(value.X, value.Y);
             }
         }
 
@@ -64,7 +64,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_End = value;
-                m_pEnd = new PointF( value.X, value.Y );
+                m_pEnd = new DrawingPointF(value.X, value.Y);
             }
         }
 
@@ -81,7 +81,7 @@ namespace FxMaths.Geometry
         /// The color of the line.
         /// To use that we must set false the "useDefaultColor"
         /// </summary>
-        public SlimDX.Color4 LineColor
+        public SharpDX.Color4 LineColor
         {
             get { return m_lineColor; }
             set { m_lineColor = value; m_isLineColorBrushDirty = true; }
@@ -105,8 +105,8 @@ namespace FxMaths.Geometry
             m_Start = Start;
             m_End = End;
 
-            m_pStart = new PointF(m_Start.X, m_Start.Y);
-            m_pEnd = new PointF(m_End.X, m_End.Y);
+            m_pStart = new DrawingPointF(m_Start.X, m_Start.Y);
+            m_pEnd = new DrawingPointF(m_End.X, m_End.Y);
         }
 
         public Line(GMaps.IVertex<float> Start, GMaps.IVertex<float> End)
@@ -115,8 +115,8 @@ namespace FxMaths.Geometry
             m_Start = Start;
             m_End = End;
 
-            m_pStart = new PointF(m_Start.X, m_Start.Y);
-            m_pEnd = new PointF(m_End.X, m_End.Y);
+            m_pStart = new DrawingPointF(m_Start.X, m_Start.Y);
+            m_pEnd = new DrawingPointF(m_End.X, m_End.Y);
         }
         
         #endregion
@@ -124,10 +124,10 @@ namespace FxMaths.Geometry
         #region Draw
 
         /// <summary>
-        /// render the circle to specific render target of direct2D
+        /// render the circle to specific render target of Direct2D1
         /// </summary>
         /// <param name="renderTarget"></param>
-        public void Render2D( RenderTarget renderTarget, SlimDX.Direct2D.Brush brush )
+        public void Render2D( RenderTarget renderTarget, SharpDX.Direct2D1.Brush brush )
         {
             // if the brush is dirty renew it
             if ( m_isLineColorBrushDirty ) {
@@ -144,12 +144,12 @@ namespace FxMaths.Geometry
 
             if (m_useDefaultColor || m_lineColorBrush == null)
             {
-                renderTarget.DrawLine(brush, m_pStart, m_pEnd, m_lineWidth);
+                renderTarget.DrawLine(m_pStart, m_pEnd, brush, m_lineWidth);
             }
             else
             {
                 // draw
-                renderTarget.DrawLine(m_lineColorBrush, m_pStart, m_pEnd, m_lineWidth);
+                renderTarget.DrawLine(m_pStart, m_pEnd, m_lineColorBrush, m_lineWidth);
             }
         }
 

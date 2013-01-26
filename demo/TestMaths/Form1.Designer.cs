@@ -45,10 +45,10 @@
             // 
             // canvas1
             // 
-            this.canvas1.EditBorderColor = System.Drawing.Color.Brown;
+            this.canvas1.EditBorderColor =  SharpDX.Color.Brown;
             this.canvas1.Location = new System.Drawing.Point(111, 12);
             this.canvas1.Name = "canvas1";
-            this.canvas1.SelectedBorderColor = System.Drawing.Color.Beige;
+            this.canvas1.SelectedBorderColor = SharpDX.Color.Beige;
             this.canvas1.Size = new System.Drawing.Size(808, 556);
             this.canvas1.TabIndex = 1;
             // 

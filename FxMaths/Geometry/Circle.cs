@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SlimDX.Direct2D;
+using SharpDX.Direct2D1;
 using FxMaths.GMaps;
 
 namespace FxMaths.Geometry
@@ -30,7 +30,7 @@ namespace FxMaths.Geometry
         /// The color of the line.
         /// To use that we must set false the "useDefaultColor"
         /// </summary>
-        private SlimDX.Color4 m_circleColor;
+        private SharpDX.Color4 m_circleColor;
 
         private float m_lineWidth = 3;
         private SolidColorBrush m_lineColorBrush = null;
@@ -48,7 +48,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_Center = value;
-                m_Ellipse.Center = new System.Drawing.PointF( m_Center.X, m_Center.Y );
+                m_Ellipse.Point = new SharpDX.DrawingPointF( m_Center.X, m_Center.Y );
             }
         }
 
@@ -79,7 +79,7 @@ namespace FxMaths.Geometry
         /// The color of the line.
         /// To use that we must set false the "useDefaultColor"
         /// </summary>
-        public SlimDX.Color4 LineColor
+        public SharpDX.Color4 LineColor
         {
             get { return m_circleColor; }
             set { m_circleColor = value; m_isLineColorBrushDirty = true; }
@@ -107,7 +107,7 @@ namespace FxMaths.Geometry
             m_Ellipse = new Ellipse();
 
             // init the ellipse
-            m_Ellipse.Center = new System.Drawing.PointF( m_Center.X, m_Center.Y );
+            m_Ellipse.Point = new SharpDX.DrawingPointF( m_Center.X, m_Center.Y );
             m_Ellipse.RadiusX = Radius;
             m_Ellipse.RadiusY = Radius;
         }
@@ -117,7 +117,7 @@ namespace FxMaths.Geometry
         #region Draw
 
         /// <summary>
-        /// render the circle to specific render target of direct2D
+        /// render the circle to specific render target of Direct2D1
         /// </summary>
         /// <param name="renderTarget"></param>
         public void Render2D( RenderTarget renderTarget , Brush brush)
@@ -137,10 +137,10 @@ namespace FxMaths.Geometry
 
             // check if we use other color
             if ( m_useDefaultColor || m_lineColorBrush == null) {
-                renderTarget.DrawEllipse( brush, m_Ellipse );
+                renderTarget.DrawEllipse(m_Ellipse, brush);
             } else {
                 // draw
-                renderTarget.DrawEllipse( m_lineColorBrush, m_Ellipse ,m_lineWidth);
+                renderTarget.DrawEllipse(m_Ellipse, m_lineColorBrush, m_lineWidth);
             }
             
         }

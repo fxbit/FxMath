@@ -606,8 +606,6 @@ namespace FxMaths.GMaps
             }
             else
             {
-                Face result;
-
                 // continue to the correct side
                 if (vertex.X == faceNode.X_mid)
                 {

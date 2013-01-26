@@ -6,8 +6,8 @@ using System.Text;
 using FxMaths;
 using FxMaths.Geometry;
 
-using SlimDX.Direct2D;
-using SlimDX;
+using SharpDX.Direct2D1;
+using SharpDX;
 
 namespace FxMaths.GUI
 {
@@ -137,7 +137,7 @@ namespace FxMaths.GUI
             // init the lines brushes
             if(lineBrush!=null)
                 lineBrush.Dispose();
-            lineBrush = new SolidColorBrush( args.renderTarget, new Color4( 0.08f, 0.40f, 0.93f ) );
+            lineBrush = new SolidColorBrush( args.renderTarget, new Color4( 0.08f, 0.40f, 0.93f, 1.0f) );
 
             // refresh the geometries 
             RefreshGeometry( args.renderTarget );
@@ -175,15 +175,15 @@ namespace FxMaths.GUI
 
                 if ( OriginPosition.y > 0 && OriginPosition.y < this.Size.y ) {
                     // add x axes
-                    Geo_Axes_Sink.BeginFigure( new System.Drawing.PointF( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
-                    Geo_Axes_Sink.AddLine( new System.Drawing.PointF( this.Size.x, this.Size.y - OriginPosition.y ) );
+                    Geo_Axes_Sink.BeginFigure( new DrawingPointF( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
+                    Geo_Axes_Sink.AddLine(new DrawingPointF(this.Size.x, this.Size.y - OriginPosition.y));
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 
                 if ( OriginPosition.x > 0 && OriginPosition.x < this.Size.x ) {
                     // add y axes
-                    Geo_Axes_Sink.BeginFigure( new System.Drawing.PointF( OriginPosition.x, 0 ), FigureBegin.Filled );
-                    Geo_Axes_Sink.AddLine( new System.Drawing.PointF( OriginPosition.x, this.Size.y ) );
+                    Geo_Axes_Sink.BeginFigure(new DrawingPointF(OriginPosition.x, 0), FigureBegin.Filled);
+                    Geo_Axes_Sink.AddLine(new DrawingPointF(OriginPosition.x, this.Size.y));
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 

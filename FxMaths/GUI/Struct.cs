@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SlimDX;
-using SlimDX.Direct2D;
-using Factory = SlimDX.Direct2D.Factory;
-using Ellipse = SlimDX.Direct2D.Ellipse;
+using SharpDX;
+using SharpDX.Direct2D1;
+using Factory = SharpDX.Direct2D1.Factory;
+using Ellipse = SharpDX.Direct2D1.Ellipse;
 
 namespace FxMaths.GUI
 {
@@ -16,7 +16,7 @@ namespace FxMaths.GUI
     public struct CanvasRenderArguments
     {
         public Factory factory;
-        public SlimDX.DirectWrite.Factory WriteFactory;
+        public SharpDX.DirectWrite.Factory WriteFactory;
         public WindowRenderTarget renderTarget;
     }
 
@@ -26,9 +26,10 @@ namespace FxMaths.GUI
     public struct TextElementFormat
     {
         public string familyName;
-        public SlimDX.DirectWrite.FontWeight weight;
-        public SlimDX.DirectWrite.FontStyle fontStyle;
-        public SlimDX.DirectWrite.FontStretch fontStretch;
+        public SharpDX.DirectWrite.FontCollection fontCollection;
+        public SharpDX.DirectWrite.FontWeight weight;
+        public SharpDX.DirectWrite.FontStyle fontStyle;
+        public SharpDX.DirectWrite.FontStretch fontStretch;
         public float fontSize;
     }
 }
