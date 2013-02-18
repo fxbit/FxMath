@@ -22,7 +22,7 @@ namespace FxMaths
         /// <summary>
         /// Stop The clock and print the time that have pass in the console.
         /// </summary>
-        public static float StopClock(float loops, Boolean useMessageBox = false)
+        public static float StopClock(float loops = 1, Boolean useMessageBox = false)
         {
             watch.Stop();
 
