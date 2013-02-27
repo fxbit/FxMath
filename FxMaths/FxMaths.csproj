@@ -112,6 +112,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedCuda">
+      <HintPath>..\..\ManagedCuda\Release\ManagedCuda.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\SharpDX\SharpDX.dll</HintPath>
     </Reference>
@@ -139,9 +142,6 @@
     <Reference Include="SharpDX.RawInput">
       <HintPath>..\..\SharpDX\SharpDX.RawInput.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XACT3">
-      <HintPath>..\..\SharpDX\SharpDX.XACT3.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.XInput">
       <HintPath>..\..\SharpDX\SharpDX.XInput.dll</HintPath>
     </Reference>
@@ -157,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Complex\ComplexTools.cs" />
+    <Compile Include="Cuda\CudaUtils.cs" />
+    <Compile Include="Cuda\FxCuda.cs" />
+    <Compile Include="Cuda\FxCudaPTX.cs" />
     <Compile Include="DSP\BiQuadFilter.cs" />
     <Compile Include="DSP\FIR_GenericFilter.cs" />
     <Compile Include="DSP\IFilter.cs" />
