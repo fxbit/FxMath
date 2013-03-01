@@ -160,6 +160,8 @@
     <Compile Include="Cuda\CudaUtils.cs" />
     <Compile Include="Cuda\FxCuda.cs" />
     <Compile Include="Cuda\FxCudaPTX.cs" />
+    <Compile Include="Cuda\Sort\BitonicSort.cs" />
+    <Compile Include="Cuda\Sort\MergeSort.cs" />
     <Compile Include="DSP\BiQuadFilter.cs" />
     <Compile Include="DSP\FIR_GenericFilter.cs" />
     <Compile Include="DSP\IFilter.cs" />
