@@ -166,7 +166,7 @@ namespace FxMaths.GUI
 
         #region Drawing 
 
-        DrawingPointF point = new DrawingPointF();
+        Vector2 point = new Vector2();
 
         private void DrawFace( Face fe )
         {

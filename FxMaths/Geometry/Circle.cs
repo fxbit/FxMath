@@ -48,7 +48,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_Center = value;
-                m_Ellipse.Point = new SharpDX.DrawingPointF( m_Center.X, m_Center.Y );
+                m_Ellipse.Point = new SharpDX.Vector2( m_Center.X, m_Center.Y );
             }
         }
 
@@ -107,7 +107,7 @@ namespace FxMaths.Geometry
             m_Ellipse = new Ellipse();
 
             // init the ellipse
-            m_Ellipse.Point = new SharpDX.DrawingPointF( m_Center.X, m_Center.Y );
+            m_Ellipse.Point = new SharpDX.Vector2( m_Center.X, m_Center.Y );
             m_Ellipse.RadiusX = Radius;
             m_Ellipse.RadiusY = Radius;
         }

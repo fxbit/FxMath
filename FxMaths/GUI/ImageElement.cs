@@ -104,7 +104,7 @@ namespace FxMaths.GUI
             } else {
                 // make the bitmap for Direct2D1
                 mImageBitmap = new SharpDX.Direct2D1.Bitmap(args.renderTarget,
-                    new DrawingSize(Width, Height), 
+                    new Size2(Width, Height), 
                     new DataPointer(internalImage.DataPointer, (int)internalImage.Length), 
                     Pitch, 
                     bitmapProps);

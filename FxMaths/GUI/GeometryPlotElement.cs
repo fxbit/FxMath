@@ -175,15 +175,15 @@ namespace FxMaths.GUI
 
                 if ( OriginPosition.y > 0 && OriginPosition.y < this.Size.y ) {
                     // add x axes
-                    Geo_Axes_Sink.BeginFigure( new DrawingPointF( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
-                    Geo_Axes_Sink.AddLine(new DrawingPointF(this.Size.x, this.Size.y - OriginPosition.y));
+                    Geo_Axes_Sink.BeginFigure( new Vector2( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
+                    Geo_Axes_Sink.AddLine(new Vector2(this.Size.x, this.Size.y - OriginPosition.y));
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 
                 if ( OriginPosition.x > 0 && OriginPosition.x < this.Size.x ) {
                     // add y axes
-                    Geo_Axes_Sink.BeginFigure(new DrawingPointF(OriginPosition.x, 0), FigureBegin.Filled);
-                    Geo_Axes_Sink.AddLine(new DrawingPointF(OriginPosition.x, this.Size.y));
+                    Geo_Axes_Sink.BeginFigure(new Vector2(OriginPosition.x, 0), FigureBegin.Filled);
+                    Geo_Axes_Sink.AddLine(new Vector2(OriginPosition.x, this.Size.y));
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 

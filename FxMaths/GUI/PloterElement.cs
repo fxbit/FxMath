@@ -382,15 +382,15 @@ namespace FxMaths.GUI
 
                 if ( OriginPosition.y > 0 && OriginPosition.y < this.Size.y ) {
                     // add x axes
-                    Geo_Axes_Sink.BeginFigure( new DrawingPointF( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
-                    Geo_Axes_Sink.AddLine( new DrawingPointF( this.Size.x, this.Size.y - OriginPosition.y ) );
+                    Geo_Axes_Sink.BeginFigure( new Vector2( 0, this.Size.y - OriginPosition.y ), FigureBegin.Filled );
+                    Geo_Axes_Sink.AddLine( new Vector2( this.Size.x, this.Size.y - OriginPosition.y ) );
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 
                 if ( OriginPosition.x > 0 && OriginPosition.x < this.Size.x ) {
                     // add y axes
-                    Geo_Axes_Sink.BeginFigure(new DrawingPointF(OriginPosition.x, 0), FigureBegin.Filled);
-                    Geo_Axes_Sink.AddLine(new DrawingPointF(OriginPosition.x, this.Size.y));
+                    Geo_Axes_Sink.BeginFigure(new Vector2(OriginPosition.x, 0), FigureBegin.Filled);
+                    Geo_Axes_Sink.AddLine(new Vector2(OriginPosition.x, this.Size.y));
                     Geo_Axes_Sink.EndFigure( FigureEnd.Open );
                 }
 
@@ -501,12 +501,12 @@ namespace FxMaths.GUI
                                         if ( IsFigureBegined ) {
 
                                             // add the i'st point of the plot
-                                            Geo_Sink.AddLine( new DrawingPointF( X_View_Point, Y_Point ) );
+                                            Geo_Sink.AddLine( new Vector2( X_View_Point, Y_Point ) );
 
                                         } else {
 
                                             // add the start of the plot
-                                            Geo_Sink.BeginFigure(new DrawingPointF(X_View_Point, Y_Point), FigureBegin.Filled);
+                                            Geo_Sink.BeginFigure(new Vector2(X_View_Point, Y_Point), FigureBegin.Filled);
 
                                             // set that  we have begin the figure
                                             IsFigureBegined = true;
@@ -578,10 +578,10 @@ namespace FxMaths.GUI
                                             Y_End = this.Size.y;
 
                                         // add the start of the line that start from x axes
-                                        Geo_Sink.BeginFigure(new DrawingPointF(X_point + OriginPosition.x, Y_Start), FigureBegin.Filled);
+                                        Geo_Sink.BeginFigure(new Vector2(X_point + OriginPosition.x, Y_Start), FigureBegin.Filled);
 
                                         // add the i'st point of the plot
-                                        Geo_Sink.AddLine(new DrawingPointF(X_point + OriginPosition.x, Y_End));
+                                        Geo_Sink.AddLine(new Vector2(X_point + OriginPosition.x, Y_End));
 
                                         // end the plot
                                         Geo_Sink.EndFigure( FigureEnd.Open );
@@ -615,12 +615,12 @@ namespace FxMaths.GUI
                                 if ( X_point + OriginPosition.x > 0 ) {
 
                                     // add the start of the line that start from x axes
-                                    Geo_Sink.BeginFigure(new DrawingPointF(X_point + OriginPosition.x, this.Size.y - OriginPosition.y), FigureBegin.Filled);
+                                    Geo_Sink.BeginFigure(new Vector2(X_point + OriginPosition.x, this.Size.y - OriginPosition.y), FigureBegin.Filled);
 
                                     // add the i'st point of the plot
-                                    Geo_Sink.AddLine(new DrawingPointF(X_point + X_Space + OriginPosition.x, this.Size.y - OriginPosition.y));
-                                    Geo_Sink.AddLine(new DrawingPointF(X_point + X_Space + OriginPosition.x, this.Size.y - OriginPosition.y - Geo.ScaledVectorY[i]));
-                                    Geo_Sink.AddLine(new DrawingPointF(X_point + OriginPosition.x, this.Size.y - OriginPosition.y - Geo.ScaledVectorY[i]));
+                                    Geo_Sink.AddLine(new Vector2(X_point + X_Space + OriginPosition.x, this.Size.y - OriginPosition.y));
+                                    Geo_Sink.AddLine(new Vector2(X_point + X_Space + OriginPosition.x, this.Size.y - OriginPosition.y - Geo.ScaledVectorY[i]));
+                                    Geo_Sink.AddLine(new Vector2(X_point + OriginPosition.x, this.Size.y - OriginPosition.y - Geo.ScaledVectorY[i]));
 
                                     // end the plot
                                     Geo_Sink.EndFigure( FigureEnd.Closed );

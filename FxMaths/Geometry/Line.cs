@@ -20,8 +20,8 @@ namespace FxMaths.Geometry
         GMaps.IVertex<float> m_Start;
         GMaps.IVertex<float> m_End;
 
-        private DrawingPointF m_pStart;
-        private DrawingPointF m_pEnd;
+        private Vector2 m_pStart;
+        private Vector2 m_pEnd;
         private float m_lineWidth = 2;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_Start = value;
-                m_pStart = new DrawingPointF(value.X, value.Y);
+                m_pStart = new Vector2(value.X, value.Y);
             }
         }
 
@@ -64,7 +64,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_End = value;
-                m_pEnd = new DrawingPointF(value.X, value.Y);
+                m_pEnd = new Vector2(value.X, value.Y);
             }
         }
 
@@ -105,8 +105,8 @@ namespace FxMaths.Geometry
             m_Start = Start;
             m_End = End;
 
-            m_pStart = new DrawingPointF(m_Start.X, m_Start.Y);
-            m_pEnd = new DrawingPointF(m_End.X, m_End.Y);
+            m_pStart = new Vector2(m_Start.X, m_Start.Y);
+            m_pEnd = new Vector2(m_End.X, m_End.Y);
         }
 
         public Line(GMaps.IVertex<float> Start, GMaps.IVertex<float> End)
@@ -115,8 +115,8 @@ namespace FxMaths.Geometry
             m_Start = Start;
             m_End = End;
 
-            m_pStart = new DrawingPointF(m_Start.X, m_Start.Y);
-            m_pEnd = new DrawingPointF(m_End.X, m_End.Y);
+            m_pStart = new Vector2(m_Start.X, m_Start.Y);
+            m_pEnd = new Vector2(m_End.X, m_End.Y);
         }
         
         #endregion

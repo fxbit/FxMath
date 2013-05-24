@@ -9,6 +9,7 @@ using FxMaths;
 using SharpDX.Direct2D1;
 using SharpDX;
 
+using RectangleF = SharpDX.RectangleF;
 
 namespace FxMaths.GUI
 {
@@ -35,7 +36,7 @@ namespace FxMaths.GUI
         /// </summary>
         private String Internal_String;
         private SharpDX.DirectWrite.TextFormat DW_textFormat;
-        private SharpDX.RectangleF textRectangle;
+        private RectangleF textRectangle;
 
         /// <summary>
         /// The drawing text
@@ -141,7 +142,7 @@ namespace FxMaths.GUI
             textL.Dispose();
 
             // init text rectangle
-            textRectangle = new DrawingRectangleF( 0, 0, Size.x, Size.y );
+            textRectangle = new RectangleF( 0, 0, Size.x, Size.y );
 
         }
 

@@ -12,6 +12,7 @@ using SharpDX.Direct2D1;
 using Factory = SharpDX.Direct2D1.Factory;
 using Ellipse = SharpDX.Direct2D1.Ellipse;
 using Color = SharpDX.Color;
+using RectangleF = SharpDX.RectangleF;
 
 namespace FxMaths.GUI
 {
@@ -37,11 +38,11 @@ namespace FxMaths.GUI
         CanvasElements MovingElement = null;
 
         // offset of the screen
-        PointF _ScreenOffset;
+        Vector2 _ScreenOffset;
         SizeF _Zoom;
         Boolean MovingScreen;
 
-        public PointF ScreenOffset { get { return _ScreenOffset; } }
+        public Vector2 ScreenOffset { get { return _ScreenOffset; } }
         public SizeF Zoom { get { return _Zoom; } }
 
         // list with all elements that the user have insert
@@ -99,7 +100,7 @@ namespace FxMaths.GUI
 
             // fill the properties of the controller
             windowProperties.Hwnd = RenderArea.Handle;
-            windowProperties.PixelSize = new DrawingSize(RenderArea.Size.Width, RenderArea.Size.Height);
+            windowProperties.PixelSize = new Size2(RenderArea.Size.Width, RenderArea.Size.Height);
             windowProperties.PresentOptions = PresentOptions.None;
 
             // create the render target 
@@ -121,7 +122,7 @@ namespace FxMaths.GUI
             RenderVariables.renderTarget.Transform = Matrix3x2.Identity;
 
             // init the offset
-            _ScreenOffset = new Point(10,10);
+            _ScreenOffset = new Vector2(10,10);
 
             // init zoom
             _Zoom = new SizeF( 1, 1 );
@@ -205,19 +206,19 @@ namespace FxMaths.GUI
                             {
                                 if (SelectedElementInEditMode)
                                 {
-                                    RenderVariables.renderTarget.DrawRectangle(new DrawingRectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
+                                    RenderVariables.renderTarget.DrawRectangle(new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
                                 }
                                 else
                                 {
-                                    RenderVariables.renderTarget.DrawRectangle(new DrawingRectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
+                                    RenderVariables.renderTarget.DrawRectangle(new RectangleF(element.Position.x, element.Position.y, element.Size.x, element.Size.y), BrushEditBorder);
                                 }
                             }
                         }
                     }
 
                     // draw the origine
-                    RenderVariables.renderTarget.DrawLine(new DrawingPointF(-10, 0), new DrawingPointF(10, 0), originBrush);
-                    RenderVariables.renderTarget.DrawLine(new DrawingPointF(0, -10), new DrawingPointF(0, 10), originBrush);
+                    RenderVariables.renderTarget.DrawLine(new Vector2(-10, 0), new Vector2(10, 0), originBrush);
+                    RenderVariables.renderTarget.DrawLine(new Vector2(0, -10), new Vector2(0, 10), originBrush);
 
                     // end drawing
                     RenderVariables.renderTarget.EndDraw();
@@ -242,7 +243,7 @@ namespace FxMaths.GUI
 
             if ( RenderVariables.renderTarget != null ) {
                 // resize  the buffers
-                RenderVariables.renderTarget.Resize(new DrawingSize(RenderArea.Size.Width, RenderArea.Size.Height));
+                RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
 
                 // set that the control must pe paint one time
                 isDirty = true;
@@ -389,7 +390,7 @@ namespace FxMaths.GUI
 
         }
 
-        Point privMousePosition;
+        Vector2 privMousePosition;
         void RenderArea_MouseClick( object sender, MouseEventArgs e )
         {
             if ( e.Button == System.Windows.Forms.MouseButtons.Left ) {
@@ -452,7 +453,7 @@ namespace FxMaths.GUI
                 }
 
                 // set the priv position
-                privMousePosition = e.Location;
+                privMousePosition = new Vector2(e.Location.X,e.Location.Y);
 
                 // redraw the points
                 ReDraw();
@@ -460,10 +461,10 @@ namespace FxMaths.GUI
             } else if ( MovingScreen ) {
 
                 // set the new offset of the screen
-                _ScreenOffset = new PointF( _ScreenOffset.X + e.Location.X - privMousePosition.X, _ScreenOffset.Y + e.Location.Y - privMousePosition.Y );
+                _ScreenOffset = new Vector2( _ScreenOffset.X + e.Location.X - privMousePosition.X, _ScreenOffset.Y + e.Location.Y - privMousePosition.Y );
 
                 // set the priv position
-                privMousePosition = e.Location;
+                privMousePosition = new Vector2(e.Location.X, e.Location.Y);
 
                 // redraw the points
                 ReDraw();
@@ -479,7 +480,7 @@ namespace FxMaths.GUI
                 MovingElement = HitElement( TranslatePoint( e.Location ) );
 
                 // set the current position of the mouse to be able to find the delta
-                privMousePosition = e.Location;
+                privMousePosition = new Vector2(e.Location.X, e.Location.Y);
 
                 if ( MovingElement == null ) {
                     // set that we start mouving

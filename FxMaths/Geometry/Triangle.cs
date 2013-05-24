@@ -13,7 +13,7 @@ namespace FxMaths.Geometry
 
         private Vector.FxVector2f m_P1,m_P2,m_P3;
 
-        private DrawingPointF mp_P1, mp_P2, mp_P3;
+        private Vector2 mp_P1, mp_P2, mp_P3;
         private Boolean isGeometryDirty;
 
 
@@ -41,7 +41,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P1 = value;
-                mp_P1 = new DrawingPointF(value.x, value.y);
+                mp_P1 = new Vector2(value.x, value.y);
             }
         }
 
@@ -54,7 +54,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P2 = value;
-                mp_P2 = new DrawingPointF(value.x, value.y);
+                mp_P2 = new Vector2(value.x, value.y);
             }
         }
 
@@ -67,7 +67,7 @@ namespace FxMaths.Geometry
             set
             {
                 m_P3 = value;
-                mp_P3 = new DrawingPointF(value.x, value.y);
+                mp_P3 = new Vector2(value.x, value.y);
             }
         }
 
@@ -112,9 +112,9 @@ namespace FxMaths.Geometry
             m_P2 = p2;
             m_P3 = p3;
 
-            mp_P1 = new DrawingPointF(m_P1.x, m_P1.y);
-            mp_P2 = new DrawingPointF(m_P2.x, m_P2.y);
-            mp_P3 = new DrawingPointF(m_P3.x, m_P3.y);
+            mp_P1 = new Vector2(m_P1.x, m_P1.y);
+            mp_P2 = new Vector2(m_P2.x, m_P2.y);
+            mp_P3 = new Vector2(m_P3.x, m_P3.y);
 
             // set that the geometry is dirty
             isGeometryDirty = true;
@@ -127,9 +127,9 @@ namespace FxMaths.Geometry
             m_P2 = vec2 as Vector.FxVector2f? ?? new Vector.FxVector2f(vec2.X, vec2.Y);
             m_P3 = vec3 as Vector.FxVector2f? ?? new Vector.FxVector2f(vec3.X, vec3.Y);
 
-            mp_P1 = new DrawingPointF(m_P1.x, m_P1.y);
-            mp_P2 = new DrawingPointF(m_P2.x, m_P2.y);
-            mp_P3 = new DrawingPointF(m_P3.x, m_P3.y);
+            mp_P1 = new Vector2(m_P1.x, m_P1.y);
+            mp_P2 = new Vector2(m_P2.x, m_P2.y);
+            mp_P3 = new Vector2(m_P3.x, m_P3.y);
 
             // set that the geometry is dirty
             isGeometryDirty = true;
