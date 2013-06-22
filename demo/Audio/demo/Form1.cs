@@ -53,8 +53,7 @@ namespace FXMaths_Demo
             PloterElement plot = new PloterElement( signal );
             plot.Position.X = 0;
             plot.Position.Y = 50;
-            plot.Origin.X = 10;
-            plot.Origin.Y = 100;
+            plot.Origin = new FxVector2f(10, 100);
             plot.FitPlots();
 
             // add the signal to canva
@@ -80,8 +79,7 @@ namespace FXMaths_Demo
             PloterElement plotDFT_Real = new PloterElement( dftReal );
             plotDFT_Real.Position.X = 0;
             plotDFT_Real.Position.Y = 450;
-            plotDFT_Real.Origin.X = 10;
-            plotDFT_Real.Origin.Y = 100;
+            plotDFT_Real.Origin = new FxVector2f(10, 100);
             plotDFT_Real.FitPlots();
 
             // add the signal to canva
@@ -101,8 +99,7 @@ namespace FXMaths_Demo
             PloterElement plotDFT_Imag = new PloterElement( dftImag );
             plotDFT_Imag.Position.X = 600;
             plotDFT_Imag.Position.Y = 450;
-            plotDFT_Imag.Origin.X = 10;
-            plotDFT_Imag.Origin.Y = 100;
+            plotDFT_Imag.Origin = new FxVector2f(10, 100);
             plotDFT_Imag.FitPlots();
 
             // add the signal to canva
@@ -127,8 +124,7 @@ namespace FXMaths_Demo
             PloterElement plot = new PloterElement( re_signal );
             plot.Position.X = 600;
             plot.Position.Y = 50;
-            plot.Origin.X = 10;
-            plot.Origin.Y = 100;
+            plot.Origin = new FxVector2f(10, 100);
             plot.FitPlots();
 
             // add the signal to canva
@@ -146,7 +142,6 @@ namespace FXMaths_Demo
         private void button6_Click( object sender, EventArgs e )
         {
             FxVectorF convResultFFT;
-            FxVectorF convResultDFT;
 
             // create a filter for testing
             FxVectorF filter = new FxVectorF( 1024 );
@@ -167,8 +162,7 @@ namespace FXMaths_Demo
             PloterElement plot = new PloterElement( signal );
             plot.Position.X = 600;
             plot.Position.Y = 50;
-            plot.Origin.X = 10;
-            plot.Origin.Y = 100;
+            plot.Origin = new FxVector2f(10, 100);
             plot.FitPlots();
 
             // add the signal to the same plot
@@ -231,7 +225,7 @@ namespace FXMaths_Demo
             power = new FxVectorF( 256 );
         }
 
-        void callback(ref byte[] data )
+        Boolean callback(byte[] data )
         {
             
             WaveBuffer wb = new WaveBuffer( data );
@@ -372,7 +366,7 @@ namespace FXMaths_Demo
             }
 
             TimeStatistics.StopClock( 1 );
-
+            return true;
         }
 
 
@@ -441,7 +435,7 @@ namespace FXMaths_Demo
             try {
 
                 // in the wave out ( give and the call back for the editing
-                waveOut.Init( new SampleToWaveProvider( sampleProvider ), new BufferCB( callback ) );
+                waveOut.Init( new SampleToWaveProvider( sampleProvider), callback);
 
             } catch ( Exception initException ) {
                 MessageBox.Show( String.Format( "{0}", initException.Message ), "Error Initializing Output" );
@@ -459,8 +453,7 @@ namespace FXMaths_Demo
                 filterPlot = new PloterElement(signal_spectrum);
                 filterPlot.Position.X = 0;
                 filterPlot.Position.Y = 410;
-                filterPlot.Origin.X = 10;
-                filterPlot.Origin.Y = 100;
+                filterPlot.Origin = new FxVector2f(10, 100);
                 filterPlot.FitPlots();
                 canvas_audio.AddElements(filterPlot);
 
@@ -468,8 +461,7 @@ namespace FXMaths_Demo
                 plot_signal_spectrum = new PloterElement( signal_spectrum );
                 plot_signal_spectrum.Position.X = 0;
                 plot_signal_spectrum.Position.Y = 10;
-                plot_signal_spectrum.Origin.X = 10;
-                plot_signal_spectrum.Origin.Y = 100;
+                plot_signal_spectrum.Origin = new FxVector2f(10, 100);
                 plot_signal_spectrum.FitPlots();
                 plot_signal_spectrum.AddPlot(signal_spectrum, PlotType.Lines, Color.Aqua);
 
@@ -480,8 +472,7 @@ namespace FXMaths_Demo
                 plot_signal_spectrum_original = new PloterElement(signal_spectrum);
                 plot_signal_spectrum_original.Position.X = 600;
                 plot_signal_spectrum_original.Position.Y = 10;
-                plot_signal_spectrum_original.Origin.X = 10;
-                plot_signal_spectrum_original.Origin.Y = 100;
+                plot_signal_spectrum_original.Origin = new FxVector2f(10, 100);
                 plot_signal_spectrum_original.FitPlots();
 
                 // add the signal to canva
@@ -492,8 +483,7 @@ namespace FXMaths_Demo
                 plot_filter_spectrum = new PloterElement(signal_spectrum);
                 plot_filter_spectrum.Position.X = 600;
                 plot_filter_spectrum.Position.Y = 410;
-                plot_filter_spectrum.Origin.X = 10;
-                plot_filter_spectrum.Origin.Y = 100;
+                plot_filter_spectrum.Origin = new FxVector2f(10, 100);
                 plot_filter_spectrum.FitPlots();
 
                 // add the signal to canva
@@ -651,8 +641,7 @@ namespace FXMaths_Demo
                     filterPlot = new PloterElement( signal_spectrum );
                     filterPlot.Position.X = 0;
                     filterPlot.Position.Y = 410;
-                    filterPlot.Origin.X = 10;
-                    filterPlot.Origin.Y = 100;
+                    filterPlot.Origin = new FxVector2f(10, 100);
                     filterPlot.FitPlots();
                     canvas_audio.AddElements( filterPlot );
 
@@ -660,8 +649,7 @@ namespace FXMaths_Demo
                     plot_signal_spectrum = new PloterElement( signal_spectrum );
                     plot_signal_spectrum.Position.X = 0;
                     plot_signal_spectrum.Position.Y = 10;
-                    plot_signal_spectrum.Origin.X = 10;
-                    plot_signal_spectrum.Origin.Y = 100;
+                    plot_signal_spectrum.Origin = new FxVector2f(10, 100);
                     plot_signal_spectrum.FitPlots();
                     plot_signal_spectrum.AddPlot( signal_spectrum, PlotType.Lines, Color.Aqua );
 
@@ -672,8 +660,7 @@ namespace FXMaths_Demo
                     plot_signal_spectrum_original = new PloterElement( signal_spectrum );
                     plot_signal_spectrum_original.Position.X = 600;
                     plot_signal_spectrum_original.Position.Y = 10;
-                    plot_signal_spectrum_original.Origin.X = 10;
-                    plot_signal_spectrum_original.Origin.Y = 100;
+                    plot_signal_spectrum_original.Origin = new FxVector2f(10, 100);
                     plot_signal_spectrum_original.FitPlots();
 
                     // add the signal to canva
@@ -684,8 +671,7 @@ namespace FXMaths_Demo
                     plot_filter_spectrum = new PloterElement( signal_spectrum );
                     plot_filter_spectrum.Position.X = 600;
                     plot_filter_spectrum.Position.Y = 410;
-                    plot_filter_spectrum.Origin.X = 10;
-                    plot_filter_spectrum.Origin.Y = 100;
+                    plot_filter_spectrum.Origin = new FxVector2f(10, 100);
                     plot_filter_spectrum.FitPlots();
 
                     // add the signal to canva

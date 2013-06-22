@@ -164,10 +164,10 @@
             this.Signal_Canva.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
                         | System.Windows.Forms.AnchorStyles.Left )
                         | System.Windows.Forms.AnchorStyles.Right ) ) );
-            this.Signal_Canva.EditBorderColor = System.Drawing.Color.Brown;
+            this.Signal_Canva.EditBorderColor = SharpDX.Color.Brown;
             this.Signal_Canva.Location = new System.Drawing.Point( 87, 6 );
             this.Signal_Canva.Name = "Signal_Canva";
-            this.Signal_Canva.SelectedBorderColor = System.Drawing.Color.Beige;
+            this.Signal_Canva.SelectedBorderColor = SharpDX.Color.Beige;
             this.Signal_Canva.Size = new System.Drawing.Size( 975, 632 );
             this.Signal_Canva.TabIndex = 2;
             // 
@@ -350,10 +350,10 @@
             this.canvas_audio.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
                         | System.Windows.Forms.AnchorStyles.Left )
                         | System.Windows.Forms.AnchorStyles.Right ) ) );
-            this.canvas_audio.EditBorderColor = System.Drawing.Color.Brown;
+            this.canvas_audio.EditBorderColor = SharpDX.Color.Brown;
             this.canvas_audio.Location = new System.Drawing.Point( 142, 6 );
             this.canvas_audio.Name = "canvas_audio";
-            this.canvas_audio.SelectedBorderColor = System.Drawing.Color.Beige;
+            this.canvas_audio.SelectedBorderColor = SharpDX.Color.Beige;
             this.canvas_audio.Size = new System.Drawing.Size( 920, 632 );
             this.canvas_audio.TabIndex = 0;
             // 

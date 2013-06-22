@@ -37,6 +37,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NAudio\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\..\SharpDX\SharpDX.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -92,7 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FxMaths\FxMaths.csproj">
+    <ProjectReference Include="..\..\..\FxMaths\FxMaths.csproj">
       <Project>{4191b0a0-0064-4673-9fee-a33b70e3d3f0}</Project>
       <Name>FxMaths</Name>
     </ProjectReference>
