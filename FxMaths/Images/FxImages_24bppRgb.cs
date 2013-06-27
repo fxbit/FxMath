@@ -89,7 +89,26 @@ namespace FxMaths.Images
             throw new NotImplementedException();
         }
 
-
+        public override void Copy_to_Array(ref byte[] dest)
+        {
+            byte* ptr = Scan0;
+            if (dest.Length == 3*Image.Width * Image.Height)
+            {
+                for (int n = 0; n < dest.Length; n++)
+                    dest[n] = *ptr++;
+            }
+            else if (dest.Length == 4 * Image.Width * Image.Height)
+            {
+                for (int n = 0; n < dest.Length; n+=4)
+                {
+                    dest[n+0] = *ptr++;
+                    dest[n+1] = *ptr++;
+                    dest[n+2] = *ptr++;
+                    dest[n+3] = 1;
+                }
+                    
+            }
+        }
 
         public override void Copy_to_Array(ref int[] dest)
         {

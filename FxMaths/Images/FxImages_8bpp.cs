@@ -92,6 +92,12 @@ namespace FxMaths.Images
 
 
 
+        public override void Copy_to_Array(ref byte[] dest)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public override void Copy_to_Array(ref int[] dest)
         {
             throw new NotImplementedException();

@@ -38,6 +38,7 @@ namespace FxMaths.Images
         public abstract Color GetPixel(int x, int y);
         public abstract int GetPixel_int(int x, int y);
         public abstract void Copy_to_Array(ref int[] dest);
+        public abstract void Copy_to_Array(ref byte[] dest);
 
         /// <summary>
         /// Set the color of the specific pixel

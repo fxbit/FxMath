@@ -34,21 +34,8 @@ namespace FxMaths.GUI
             byte[] internalImage_local = new byte[Width * Height * 4];
 
             Pitch = Width * 4;
-            int size = Width * Height;
             image.LockImage();
-
-            for (int i = 0; i < Width; i++)
-            {
-                for (int j = 0; j < Height; j++)
-                {
-                    for (int g = 0; g < image.FXPixelFormat.Length; g++)
-                    {
-                        internalImage_local[i * 4 + j * Pitch + g] = image[i, j, (RGB)g];
-
-                    }
-                    internalImage_local[i * 4 + j * Pitch + 3] = 255;
-                }
-            }
+            image.Copy_to_Array(ref internalImage_local);
             image.UnLockImage();
 
             internalImage.WriteRange<byte>(internalImage_local);
@@ -109,6 +96,20 @@ namespace FxMaths.GUI
                     Pitch, 
                     bitmapProps);
             }
+        }
+
+        public void UpdateIternalImage(FxImages image)
+        {
+            byte[] internalImage_local = new byte[Width * Height * 4];
+
+            Pitch = Width * 4;
+            int size = Width * Height;
+            image.LockImage();
+            image.Copy_to_Array(ref internalImage_local);
+            image.UnLockImage();
+
+            // write to the specific bitmap not create a new one
+            mImageBitmap.CopyFromMemory(internalImage_local, Pitch);
         }
 
         internal override void InternalMove( Vector.FxVector2f delta )

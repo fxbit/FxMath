@@ -98,6 +98,13 @@ namespace FxMaths.Images
 
 
 
+        public override void Copy_to_Array(ref byte[] dest)
+        {
+            byte* ptr = Scan0;
+            for (int n = 0; n < dest.Length; n++)
+                dest[n] = *ptr++;
+        }
+
         public override void Copy_to_Array(ref int[] dest)
         {
             byte* ptr = Scan0;
