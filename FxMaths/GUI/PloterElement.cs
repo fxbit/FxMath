@@ -99,7 +99,7 @@ namespace FxMaths.GUI
         public Vector.FxVector2f Origin
         {
             get { return OriginPosition; }
-            set { OriginPosition = value; FitPlots(); IsGeomrtryDirty = true; Parent.ReDraw(); }
+            set { OriginPosition = value; FitPlots(); IsGeomrtryDirty = true; if(Parent!=null) Parent.ReDraw(); }
         }
 
         /// <summary>
