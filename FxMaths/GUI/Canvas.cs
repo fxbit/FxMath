@@ -42,8 +42,16 @@ namespace FxMaths.GUI
         SizeF _Zoom;
         Boolean MovingScreen;
 
-        public Vector2 ScreenOffset { get { return _ScreenOffset; } }
-        public SizeF Zoom { get { return _Zoom; } }
+        public Vector2 ScreenOffset
+        {
+            get { return _ScreenOffset; }
+            set { _ScreenOffset = value; ReDraw(); }
+        }
+        public SizeF Zoom
+        {
+            get { return _Zoom; }
+            set { _Zoom = value; ReDraw(); }
+        }
 
         // list with all elements that the user have insert
         List<CanvasElements> ElementsList;

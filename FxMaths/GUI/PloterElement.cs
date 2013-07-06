@@ -91,6 +91,11 @@ namespace FxMaths.GUI
         SolidColorBrush lineBrush;
         PathGeometry Geo_Axes;
 
+        private SharpDX.DirectWrite.TextFormat DW_textFormat;
+        private TextElementFormat _TextFormat;
+        private RectangleF textRectangle;
+
+
         /// <summary>
         /// Set the position of the origine in the plot
         /// </summary>
@@ -143,16 +148,27 @@ namespace FxMaths.GUI
 
         public PloterElement(Vector.FxVector<float> vec)
         {
-            InitPlotter(vec as Vector.FxVectorF);
+            InitPlotter(vec as Vector.FxVectorF, PlotType.Bars, Color.OrangeRed);
         }
 
 
         public PloterElement( Vector.FxVectorF vec )
         {
-            InitPlotter(vec);
+            InitPlotter(vec, PlotType.Lines, Color.OrangeRed);
         }
 
-        private void InitPlotter(Vector.FxVectorF vec)
+
+        public PloterElement(Vector.FxVectorF vec, PlotType plotType)
+        {
+            InitPlotter(vec, plotType, Color.OrangeRed);
+        }
+
+        public PloterElement(Vector.FxVectorF vec, PlotType plotType, Color color)
+        {
+            InitPlotter(vec, plotType, color);
+        }
+
+        private void InitPlotter(Vector.FxVectorF vec, PlotType plotType, Color color)
         {
             // init the lists
             listPlotsGeometry = new List<PlotGeometry>();
@@ -164,8 +180,8 @@ namespace FxMaths.GUI
             // add the vector to the list 
             PlotGeometry plot = new PlotGeometry();
             plot.OrigVectorY = vec;
-            plot.Color = new Color4(Color.OrangeRed.R, Color.OrangeRed.G, Color.OrangeRed.B, 1.0f);
-            plot.Type = PlotType.Bars;
+            plot.Color = color.ToColor4();
+            plot.Type = plotType;
             plot.StepType = XStepType.ZeroToMax;
 
             // add the plot to the list
@@ -182,6 +198,16 @@ namespace FxMaths.GUI
 
             // set the x_step base on the size of vec and the width
             X_Space = this.Size.x / vec.Size;
+
+
+            // init format 
+            _TextFormat = new TextElementFormat();
+            _TextFormat.familyName = "Calibri";
+            _TextFormat.weight = SharpDX.DirectWrite.FontWeight.Black;
+            _TextFormat.fontStyle = SharpDX.DirectWrite.FontStyle.Normal;
+            _TextFormat.fontStretch = SharpDX.DirectWrite.FontStretch.Normal;
+            _TextFormat.fontSize = 8.0f;
+
         }
 
         public void FitPlots()
@@ -323,27 +349,75 @@ namespace FxMaths.GUI
 
         public override void Render( CanvasRenderArguments args, System.Drawing.SizeF Zoom )
         {
+            float maxValue = 0;
+            float maxOrigValue = 0;
+
             if ( IsGeomrtryDirty ) {
                 Load( args );
             }
 
             // plot the plots
-            foreach ( PlotGeometry geo in listPlotsGeometry ) {
-                args.renderTarget.DrawGeometry( geo.Geometry, geo.Brush, 1 );
+            foreach (PlotGeometry geo in listPlotsGeometry)
+            {
+                args.renderTarget.DrawGeometry(geo.Geometry, geo.Brush, 1);
+                float geoMaxValue = geo.ScaledVectorY.Max();
+                maxOrigValue = (geoMaxValue > maxValue) ? geo.OrigVectorY.Max() : maxOrigValue;
+                maxValue = (geoMaxValue > maxValue) ? geoMaxValue : maxValue;
             }
 
             // plot the axes
             args.renderTarget.DrawGeometry( Geo_Axes, lineBrush, 1 );
+
+            maxValue = (int)Math.Ceiling(maxValue);
+            if (maxValue == 0)
+                maxValue = 1;
+
+            // add the dimension in the Axes
+            int offset = (int)(maxValue / 10.0);
+            if (offset == 0)
+                offset = (int)maxValue;
+
+            for (int i = 0; i <= maxValue; i += offset)
+            {
+                textRectangle.X = OriginPosition.X;
+                textRectangle.Y = - i + Size.y - OriginPosition.Y - textRectangle.Height;
+                args.renderTarget.DrawText((maxOrigValue * (float)i/maxValue).ToString(), DW_textFormat, textRectangle, lineBrush);
+            }
+
         }
 
         public override void Load( CanvasRenderArguments args )
         {
             // dispose the old brush
-            if (lineBrush != null)
+            if (lineBrush != null && !lineBrush.IsDisposed)
                 lineBrush.Dispose();
+
+
+            if (DW_textFormat != null && !DW_textFormat.IsDisposed)
+                DW_textFormat.Dispose();
 
             // init the lines brushs
             lineBrush = new SolidColorBrush( args.renderTarget, new Color4( 0.08f, 0.40f, 0.93f , 1.0f) );
+
+
+            _TextFormat.fontCollection = args.WriteFactory.GetSystemFontCollection(false);
+
+            // init the text format
+            DW_textFormat = new SharpDX.DirectWrite.TextFormat(args.WriteFactory,
+                                                            _TextFormat.familyName,
+                                                            _TextFormat.fontCollection,
+                                                            _TextFormat.weight,
+                                                            _TextFormat.fontStyle,
+                                                            _TextFormat.fontStretch,
+                                                            _TextFormat.fontSize,
+                                                            "en-us");
+
+            // get the size of the string
+            SharpDX.DirectWrite.TextLayout textL = new SharpDX.DirectWrite.TextLayout(args.WriteFactory, "(0,0)", DW_textFormat, 1500, 1500);
+            
+            // init text rectangle
+            textRectangle = new RectangleF(0, 0, textL.GetFontSize(0) * 10, textL.GetFontSize(0));
+            textL.Dispose();
 
             // refresh the geometrys
             RefreshGeometry( args.renderTarget );
@@ -356,6 +430,9 @@ namespace FxMaths.GUI
                 lineBrush.Dispose();
             if (Geo_Axes!=null)
                 Geo_Axes.Dispose();
+
+            if (DW_textFormat != null && !DW_textFormat.IsDisposed)
+                DW_textFormat.Dispose();
 
             // clean all the plots
             foreach ( PlotGeometry p in listPlotsGeometry ) {
