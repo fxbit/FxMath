@@ -107,6 +107,13 @@ namespace FxMaths.GUI
             set { OriginPosition = value; FitPlots(); IsGeomrtryDirty = true; if(Parent!=null) Parent.ReDraw(); }
         }
 
+        private Color _AxesColor = Color.NavajoWhite;
+        public Color AxesColor
+        {
+            get { return _AxesColor; }
+            set { _AxesColor = value; IsGeomrtryDirty = true; if (Parent != null) Parent.ReDraw(); }
+        }
+
         /// <summary>
         /// The distance bitween the steps in the x axis.
         /// </summary>
@@ -220,13 +227,21 @@ namespace FxMaths.GUI
             foreach ( PlotGeometry p in listPlotsGeometry ) {
                 // check if the origine is insite of the window
                 if ( OriginPosition.y < Size.y && OriginPosition.y > 0 ) {
-                    // check if the origine is bigger in th possitive 
-                    if ( OriginPosition.y < Size.y / 2 ) {
-                        tmpScaleY = OriginPosition.y / p.OrigVectorY.Max();
-                    } else {
-                        tmpScaleY = ( Size.y - OriginPosition.y ) / p.OrigVectorY.Min();
-                        tmpScaleY = -tmpScaleY;
-                    }
+
+                    float min = p.OrigVectorY.Min();
+                    float max = p.OrigVectorY.Max();
+
+                    float upDist = Size.y - OriginPosition.y;
+                    float downDist = OriginPosition.y;
+
+                    float upScale = upDist / max;
+                    float downScale = downDist / min;
+
+                    if (Math.Abs(upScale) < Math.Abs(downScale))
+                        tmpScaleY = upScale;
+                    else
+                        tmpScaleY = downScale;
+
                 } else {
                     tmpScaleY = Size.y / p.OrigVectorY.Max();
                 }
@@ -384,6 +399,7 @@ namespace FxMaths.GUI
                 args.renderTarget.DrawText((maxOrigValue * (float)i/maxValue).ToString(), DW_textFormat, textRectangle, lineBrush);
             }
 
+            //this.FitPlots();
         }
 
         public override void Load( CanvasRenderArguments args )
@@ -397,7 +413,7 @@ namespace FxMaths.GUI
                 DW_textFormat.Dispose();
 
             // init the lines brushs
-            lineBrush = new SolidColorBrush( args.renderTarget, new Color4( 0.08f, 0.40f, 0.93f , 1.0f) );
+            lineBrush = new SolidColorBrush( args.renderTarget, _AxesColor.ToColor4() );
 
 
             _TextFormat.fontCollection = args.WriteFactory.GetSystemFontCollection(false);
