@@ -188,5 +188,13 @@ namespace FxMaths.Images
         /// The internal bitmap
         /// </summary>
         public override Bitmap Image { get { return localImage; } }
+
+
+
+
+        public override void Load(Matrix.FxMatrixF mat)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

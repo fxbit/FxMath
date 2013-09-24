@@ -202,5 +202,26 @@ namespace FxMaths.Images
         /// The internal bitmap
         /// </summary>
         public override Bitmap Image { get { return localImage; } }
-}
+
+        public override void Load(Matrix.FxMatrixF mat)
+        {
+            if (mat.Height != Image.Height || mat.Width != Image.Width)
+                return;
+
+            this.LockImage();
+
+            for (int x = 0; x < mat.Width; x++)
+                for (int y = 0; y < mat.Height; y++)
+                {
+                    byte* ptr = Scan0 + (y * Stride) + (x * 4);
+                    byte value = (byte)(mat[x,y]*256);
+                    *(ptr + 3) = value;
+                    *(ptr + 2) = value;
+                    *(ptr + 1) = value;
+                    *(ptr) = value;
+                }
+
+            this.UnLockImage();
+        }
+    }
 }

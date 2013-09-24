@@ -81,5 +81,16 @@ namespace FxMaths.Images
 
 
 
+
+        public void Dispose()
+        {
+            Image.Dispose();
+        }
+
+        /// <summary>
+        /// Load from external matrix to internal image.
+        /// </summary>
+        /// <param name="mat"></param>
+        public abstract void Load(Matrix.FxMatrixF mat);
     }
 }
