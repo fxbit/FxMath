@@ -98,7 +98,8 @@ namespace FxMaths.GUI
             }
         }
 
-        public void UpdateIternalImage(FxImages image)
+        #region Update Internal Image
+        public void UpdateInternalImage(FxImages image)
         {
             byte[] internalImage_local = new byte[Width * Height * 4];
 
@@ -111,6 +112,49 @@ namespace FxMaths.GUI
             // write to the specific bitmap not create a new one
             mImageBitmap.CopyFromMemory(internalImage_local, Pitch);
         }
+
+
+
+        public void UpdateInternalImage(byte[] image)
+        {
+            byte[] newIm = new byte[Width * Height * 4];
+
+            Pitch = Width * 4;
+            int size = Width * Height;
+
+            for (int i = 0; i < size; i++)
+            {
+                newIm[i * 4] = image[i * 3];
+                newIm[i * 4 + 1] = image[i * 3 + 1];
+                newIm[i * 4 + 2] = image[i * 3 + 2];
+                newIm[i * 4 + 3] = 255;
+            }
+
+            // write to the specific bitmap not create a new one
+            mImageBitmap.CopyFromMemory(newIm, Pitch);
+        }
+
+
+
+        public void UpdateInternalImage(Matrix.FxMatrixF mat)
+        {
+            byte[] newIm = new byte[Width * Height * 4];
+            int size = Width * Height;
+
+            for (int i = 0; i < size; i++)
+            {
+                newIm[i * 4] = (byte)(mat[i] * 256);
+                newIm[i * 4 + 1] = (byte)(mat[i] * 256);
+                newIm[i * 4 + 2] = (byte)(mat[i] * 256);
+                newIm[i * 4 + 3] = 255;
+            }
+
+            // write to the specific bitmap not create a new one
+            mImageBitmap.CopyFromMemory(newIm, Width * 4);
+
+        } 
+        #endregion
+
 
         internal override void InternalMove( Vector.FxVector2f delta )
         {
