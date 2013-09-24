@@ -96,6 +96,15 @@ namespace FxMaths.Matrix
         /// <returns></returns>
         protected abstract FxVector<T> AllocateVector( int Size );
 
+        /// <summary>
+        /// Make a copy of the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public FxMatrix<T> Copy()
+        {
+            return AllocateCopyMatrix();
+        }
+
         #endregion
 
 

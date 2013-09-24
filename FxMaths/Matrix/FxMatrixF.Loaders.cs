@@ -8,7 +8,7 @@ using FxMaths.Images;
 
 namespace FxMaths.Matrix
 {
-    public partial class FxMatrixF
+    public partial class FxMatrixF : FxMatrix<float>
     {
         /// <summary>
         /// Load the input image to the matrix
@@ -160,6 +160,40 @@ namespace FxMaths.Matrix
             return result;
         }
 
+        public void Load(byte[] im, ColorSpace space)
+        {
+            switch(space) {
+
+                // base on 
+                case ColorSpace.Grayscale: {
+                        int grayScale;
+                        int size = Height * Width;
+                        if(im.Length == size) {
+                            Array.Copy(im, Data, size);
+                            this.DoDivide(256);
+                        } else if(im.Length == 3 * size) {
+                            for(int i = 0; i < size; i++) {
+                                grayScale = (int)((im[i * 3] * 0.3) + (im[i * 3 + 1] * 0.59) + (im[i * 3 + 2] * 0.11));
+                                Data[i] = (grayScale / 256.0f);
+                            }
+                        } else if(im.Length == 4 * size) {
+                            for(int i = 0; i < size; i++) {
+                                grayScale = (int)((im[i * 4] * 0.3) + (im[i * 4 + 1] * 0.59) + (im[i * 4 + 2] * 0.11));
+                                Data[i] = (grayScale / 256.0f);
+                            }
+                        }
+                    }
+                    break;
+
+                case ColorSpace.RGB:
+                    throw new ArgumentNullException("Not supported Yet");
+                //break;
+
+                case ColorSpace.HSV:
+                    throw new ArgumentNullException("Not supported Yet");
+                //break;
+            }
+        }
 
         /// <summary>
         /// Load the input file to the matrix
