@@ -28,11 +28,18 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+
         #region Internal Variables
 
         public T []Data;
 
         #endregion
+
+
+
+
 
         #region Constraction
 
@@ -69,11 +76,19 @@ namespace FxMaths.Matrix
         /// <returns></returns>
         protected abstract FxMatrix<T> AllocateMatrix();
 
+                /// <summary>
+        /// Allocate the data array
+        /// </summary>
+        /// <returns></returns>
+        protected abstract FxMatrix<T> AllocateCopyMatrix();
+
+
         /// <summary>
         /// Allocate the data array
         /// </summary>
         /// <returns></returns>
         protected abstract FxMatrix<T> AllocateMatrix(int Width,int Height);
+        
 
         /// <summary>
         /// Allocate the data for Vector
@@ -82,6 +97,9 @@ namespace FxMaths.Matrix
         protected abstract FxVector<T> AllocateVector( int Size );
 
         #endregion
+
+
+
 
         #region Fill
 
@@ -105,6 +123,8 @@ namespace FxMaths.Matrix
         public abstract void FillIdentity();
 
         #endregion
+
+
 
         #region Get/Set values
 
@@ -172,6 +192,8 @@ namespace FxMaths.Matrix
 
         #endregion
       
+
+
         #region Get/Set Row/Columns
 
         #region Get
@@ -503,6 +525,8 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
         #region Math Functions
 
         #region Add
@@ -595,6 +619,9 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+
+
         #region Subtract
         /// <summary>
         /// Subtracts another matrix to this matrix.
@@ -683,7 +710,11 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+
+
         #region Multiply
+
 
         #region Multiply with Matrix
 
@@ -741,6 +772,9 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+
         #region Multiply with scalar
 
         protected abstract void DoMultiply( float value );
@@ -763,8 +797,10 @@ namespace FxMaths.Matrix
         {
             DoMultiply( value );
         }
-
         #endregion
+
+
+
 
         #region Multiply with vector
 
@@ -824,6 +860,9 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+
         #region Pointwise
 
         /// <summary>
@@ -872,7 +911,12 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
         #endregion
+
+
+
+
 
 
         #region Divide 
@@ -899,6 +943,14 @@ namespace FxMaths.Matrix
         public virtual void Divide(int value)
         {
             DoDivide(value);
+        }
+
+
+        public static FxMatrix<T> operator /(FxMatrix<T> mat, float value)
+        {
+            FxMatrix<T> newMat = mat.AllocateCopyMatrix();
+            newMat.Divide(value);
+            return newMat;
         }
 
         #endregion
@@ -954,10 +1006,14 @@ namespace FxMaths.Matrix
         protected abstract void DoDividePointwise(FxMatrix<T> other, FxMatrix<T> result);
         protected abstract void DoDividePointwise(FxMatrix<T> other);
 
+
         #endregion
 
 
         #endregion
+
+
+
 
 
         #region Negate
@@ -973,6 +1029,9 @@ namespace FxMaths.Matrix
         }
 
         #endregion
+
+
+
 
 
         #region Transpose
@@ -1001,7 +1060,11 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
         #endregion
+
+
 
         #region Statistics
 
@@ -1040,6 +1103,8 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
         #region Inverse/Determinal/LUFactor
 
 
@@ -1054,6 +1119,8 @@ namespace FxMaths.Matrix
 
 
         #endregion
+
+
 
 
         public override string ToString()

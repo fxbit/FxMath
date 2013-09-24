@@ -35,7 +35,7 @@ namespace FxMaths.GUI
 
             Pitch = Width * 4;
             image.LockImage();
-            image.Copy_to_Array(ref internalImage_local);
+            image.Copy_to_Array(ref internalImage_local, ColorChannels.RGBA);
             image.UnLockImage();
 
             internalImage.WriteRange<byte>(internalImage_local);
@@ -61,9 +61,10 @@ namespace FxMaths.GUI
             
             // load the data in image form
             for ( int i=0; i < size; i ++ ) {
-                internalImage_local[i * 4] = (byte)(256 * image[i]);
-                internalImage_local[i * 4 + 1] = (byte)(256 * image[i]);
-                internalImage_local[i * 4 + 2] = (byte)(256 * image[i]);
+                byte value = (byte)(256 * image[i]);
+                internalImage_local[i * 4] = value;
+                internalImage_local[i * 4 + 1] = value;
+                internalImage_local[i * 4 + 2] = value;
                 internalImage_local[i * 4 + 3] = 255;
             }
             internalImage.WriteRange<byte>(internalImage_local);
@@ -106,7 +107,7 @@ namespace FxMaths.GUI
             Pitch = Width * 4;
             int size = Width * Height;
             image.LockImage();
-            image.Copy_to_Array(ref internalImage_local);
+            image.Copy_to_Array(ref internalImage_local, ColorChannels.RGBA);
             image.UnLockImage();
 
             // write to the specific bitmap not create a new one
@@ -138,21 +139,30 @@ namespace FxMaths.GUI
 
         public void UpdateInternalImage(Matrix.FxMatrixF mat)
         {
-            byte[] newIm = new byte[Width * Height * 4];
-            int size = Width * Height;
+            unsafe {
+                try {
+                    byte[] newIm = new byte[Width * Height * 4];
+                    int size = Width * Height;
+                    fixed(byte*dst = newIm) {
+                        fixed(float *src = mat.Data) {
+                            byte *pDst = dst;
+                            float *pSrc = src;
+                            float *pSrcEnd = pSrc + mat.Size;
+                            for(; pSrc < pSrcEnd; pSrc++) {
+                                byte value = (byte)(*(pSrc) * 256);
+                                *(pDst++) = value;
+                                *(pDst++) = value;
+                                *(pDst++) = value;
+                                *(pDst++) = 255;
+                            }
+                        }
+                    }
 
-            for (int i = 0; i < size; i++)
-            {
-                newIm[i * 4] = (byte)(mat[i] * 256);
-                newIm[i * 4 + 1] = (byte)(mat[i] * 256);
-                newIm[i * 4 + 2] = (byte)(mat[i] * 256);
-                newIm[i * 4 + 3] = 255;
+                    // write to the specific bitmap not create a new one
+                    mImageBitmap.CopyFromMemory(newIm, Width * 4);
+                } catch(Exception ex) { Console.WriteLine(ex.Message); }
             }
-
-            // write to the specific bitmap not create a new one
-            mImageBitmap.CopyFromMemory(newIm, Width * 4);
-
-        } 
+        }
         #endregion
 
 

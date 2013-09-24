@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace FxMaths.Images
 {
@@ -89,28 +90,42 @@ namespace FxMaths.Images
             throw new NotImplementedException();
         }
 
-        public override void Copy_to_Array(ref byte[] dest)
+        public override void Copy_to_Array(ref byte[] dest, ColorChannels numChannels)
         {
+            int size = localImage.Height * localImage.Width;
             byte* ptr = Scan0;
-            if (dest.Length == 3*Image.Width * Image.Height)
-            {
-                for (int n = 0; n < dest.Length; n++)
-                    dest[n] = *ptr++;
-            }
-            else if (dest.Length == 4 * Image.Width * Image.Height)
-            {
-                for (int n = 0; n < dest.Length; n+=4)
-                {
-                    dest[n+0] = *ptr++;
-                    dest[n+1] = *ptr++;
-                    dest[n+2] = *ptr++;
-                    dest[n+3] = 1;
+            unsafe {
+                switch(numChannels) {
+                    case ColorChannels.Gray:
+                        fixed(byte *d = dest) {
+                            byte *pDest = d;
+                            byte *pDestEnd = d + dest.Length;
+                            for(; pDest < pDestEnd; pDest++) {
+                                *pDest = (byte)((*ptr++ * 0.3) + (*ptr++ * 0.59) + (*ptr++ * 0.11));
+                            }
+                        }
+                        break;
+                    case ColorChannels.RGB:
+                        Marshal.Copy(ImageData.Scan0, dest, 0, dest.Length);
+                        break;
+                    case ColorChannels.RGBA:
+                        fixed(byte *d = dest) {
+                            byte *pDest = d;
+                            for(int i=0; i < size; i++) {
+                                *(pDest++) = *ptr++;// B
+                                *(pDest++) = *ptr++;// G
+                                *(pDest++) = *ptr++;// R
+                                *(pDest++) = 1;// A
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                    
             }
         }
 
-        public override void Copy_to_Array(ref int[] dest)
+        public override void Copy_to_Array(ref int[] dest, ColorChannels numChannels)
         {
             throw new NotImplementedException();
         }

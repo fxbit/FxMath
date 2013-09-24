@@ -130,10 +130,19 @@ namespace FxMaths.Matrix
                     {
                         int grayScale;
                         int size = Height * Width;
-                        for (int i = 0; i < size; i++)
-                        {
-                            grayScale = (int)((image_in[i * 3] * 0.3) + (image_in[i * 3 + 1] * 0.59) + (image_in[i * 3 + 2] * 0.11));
-                            result[i] = (grayScale / 256.0f);
+                        if(image_in.Length == size) {
+                            Array.Copy(image_in, result.Data, size);
+                            result.Divide(256);
+                        } else if(image_in.Length == 3*size){
+                            for(int i = 0; i < size; i++) {
+                                grayScale = (int)((image_in[i * 3] * 0.3) + (image_in[i * 3 + 1] * 0.59) + (image_in[i * 3 + 2] * 0.11));
+                                result[i] = (grayScale / 256.0f);
+                            }
+                        } else if(image_in.Length == 4 * size) {
+                            for(int i = 0; i < size; i++) {
+                                grayScale = (int)((image_in[i * 4] * 0.3) + (image_in[i * 4 + 1] * 0.59) + (image_in[i * 4 + 2] * 0.11));
+                                result[i] = (grayScale / 256.0f);
+                            }
                         }
                     }
                     break;

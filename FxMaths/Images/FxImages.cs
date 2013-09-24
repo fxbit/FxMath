@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 namespace FxMaths.Images
 {
     public enum RGB { B = 0, G, R, A }
+    public enum ColorChannels { Gray=1, RGB=3, RGBA=4 }
 
     public abstract class FxImages
     {
@@ -37,8 +38,8 @@ namespace FxMaths.Images
         /// <returns></returns>
         public abstract Color GetPixel(int x, int y);
         public abstract int GetPixel_int(int x, int y);
-        public abstract void Copy_to_Array(ref int[] dest);
-        public abstract void Copy_to_Array(ref byte[] dest);
+        public abstract void Copy_to_Array(ref int[] dest, ColorChannels numChannels);
+        public abstract void Copy_to_Array(ref byte[] dest, ColorChannels numChannels);
 
         /// <summary>
         /// Set the color of the specific pixel

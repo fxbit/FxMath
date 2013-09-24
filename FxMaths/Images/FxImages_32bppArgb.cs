@@ -98,14 +98,37 @@ namespace FxMaths.Images
 
 
 
-        public override void Copy_to_Array(ref byte[] dest)
+        public override void Copy_to_Array(ref byte[] dest, ColorChannels numChannels)
         {
+            int size = localImage.Height * localImage.Width;
             byte* ptr = Scan0;
-            for (int n = 0; n < dest.Length; n++)
-                dest[n] = *ptr++;
+            unsafe {
+                switch(numChannels) {
+                    case ColorChannels.Gray:
+                        for(int n = 0; n < dest.Length; n++) {
+                            dest[n] = (byte)((*ptr++ * 0.3) + (*ptr++ * 0.59) + (*ptr++ * 0.11));
+                            ptr++;
+                        }
+                        break;
+                    case ColorChannels.RGB:
+                        for(int n = 0; n < dest.Length; n += 3) {
+                            dest[n + 0] = *ptr++;
+                            dest[n + 1] = *ptr++;
+                            dest[n + 2] = *ptr++;
+                            ptr++;
+                        }
+                        break;
+                    case ColorChannels.RGBA:
+                        for(int n = 0; n < dest.Length; n++)
+                            dest[n] = *ptr++;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
-        public override void Copy_to_Array(ref int[] dest)
+        public override void Copy_to_Array(ref int[] dest, ColorChannels numChannels)
         {
             byte* ptr = Scan0;
             int* dest_ptr = (int*)ptr;
