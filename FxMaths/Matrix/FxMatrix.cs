@@ -590,6 +590,8 @@ namespace FxMaths.Matrix
         {
             DoAddCol( vector, ColIndex );
         }
+
+
         #endregion
 
 

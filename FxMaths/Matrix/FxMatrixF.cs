@@ -53,6 +53,8 @@ namespace FxMaths.Matrix
 
         #region Math Functions
 
+
+
         #region Add
 
         protected override void DoAdd( FxMatrix<float> other, FxMatrix<float> result )
@@ -117,7 +119,77 @@ namespace FxMaths.Matrix
                 Data[i * Width + ColIndex] += Col[i];
             }
         }
+
+        public static FxMatrixF operator+(FxMatrixF mat1, FxMatrixF mat2)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] + mat2[x];
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator +(FxMatrixF mat1, float value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] + value;
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator +(FxMatrixF mat1, int value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] + value;
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator +(float value, FxMatrixF mat1)
+        {
+            return mat1 + value;
+        }
+
+        public static FxMatrixF operator +(int value, FxMatrixF mat1)
+        {
+            return mat1 + value;
+        }
+
         #endregion
+
+
 
 
         #region Subtract
@@ -184,12 +256,86 @@ namespace FxMaths.Matrix
                 Data[i * Width + ColIndex] -= Col[i];
             }
         }
+
+        public static FxMatrixF operator -(FxMatrixF mat1, FxMatrixF mat2)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] - mat2[x];
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator -(FxMatrixF mat1, float value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] - value;
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator -(FxMatrixF mat1, int value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] - value;
+                }
+            });
+
+            return result;
+        }
+
+
+        public static FxMatrixF operator -(float value, FxMatrixF mat1)
+        {
+            return mat1 - value;
+        }
+
+        public static FxMatrixF operator -(int value, FxMatrixF mat1)
+        {
+            return mat1 - value;
+        }
+
         #endregion
+
+
 
 
         #region Multiply
 
-        protected override void DoMultiply( FxMatrix<float> other, FxMatrix<float> result )
+
+        #region Matric Mult
+
+        protected override void DoMultiply(FxMatrix<float> other, FxMatrix<float> result)
         {
             #region test code
             /*
@@ -215,42 +361,49 @@ namespace FxMaths.Matrix
              */
             #endregion
 
-            unsafe {
+            unsafe
+            {
                 // store local the with of other
-                int OWidth=other.Width;
+                int OWidth = other.Width;
 
                 // pass all the data and Multiply the new data
-                Parallel.For( 0, OWidth, ( x ) => {
+                Parallel.For(0, OWidth, (x) =>
+                {
                     // get the selected collumn
-                    FxMaths.Vector.FxVector<float> vec = other.GetCol( x );
-                    float sum=0.0f;
-                    int Width2=Width - Width % 2;
+                    FxMaths.Vector.FxVector<float> vec = other.GetCol(x);
+                    float sum = 0.0f;
+                    int Width2 = Width - Width % 2;
 
                     // use pointer to access the data
-                    fixed ( float* DataX = Data ) {
-                        fixed ( float* ResultX = result.Data ) {
+                    fixed (float* DataX = Data)
+                    {
+                        fixed (float* ResultX = result.Data)
+                        {
 
                             // get the pointer of the result and the local data
-                            float *pData = DataX;
-                            float *pResult = ResultX + x;
+                            float* pData = DataX;
+                            float* pResult = ResultX + x;
 
                             // pass all the rows
-                            for ( int y=0; y < Height; y++ ) {
+                            for (int y = 0; y < Height; y++)
+                            {
 
                                 // init sum
                                 sum = 0.0f;
 
                                 // pass all the columns
-                                for ( int i=0; i < Width2; i += 2 ) {
-                                    sum += *( pData + i ) * vec[i] + *( pData + i + 1 ) * vec[i + 1];
+                                for (int i = 0; i < Width2; i += 2)
+                                {
+                                    sum += *(pData + i) * vec[i] + *(pData + i + 1) * vec[i + 1];
                                 }
 
-                                for ( int i = Width2; i < Width; i++ ) {
-                                    sum += *( pData + i ) * vec[i];
+                                for (int i = Width2; i < Width; i++)
+                                {
+                                    sum += *(pData + i) * vec[i];
                                 }
 
                                 // store the result
-                                *( pResult ) = sum;
+                                *(pResult) = sum;
 
                                 // move to the next data
                                 pResult += OWidth;
@@ -258,9 +411,13 @@ namespace FxMaths.Matrix
                             }
                         }
                     }
-                } );
+                });
             }
         }
+
+        
+        #endregion
+
 
 
         #region Multiply with scalar
@@ -287,7 +444,56 @@ namespace FxMaths.Matrix
             } );
         }
 
+        public static FxMatrixF operator *(FxMatrixF mat1, int value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] * value;
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator *(FxMatrixF mat1, float value)
+        {
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            FxMatrixF result = new FxMatrixF(Width, Height);
+
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result[x] = mat1[x] * value;
+                }
+            });
+
+            return result;
+        }
+
+        public static FxMatrixF operator *(float value, FxMatrixF mat1)
+        {
+            return mat1 * value ;
+        }
+
+        public static FxMatrixF operator *(int value, FxMatrixF mat1)
+        {
+            return mat1 * value;
+        }
         #endregion
+
+
 
 
         #region Multiply with vector
@@ -338,6 +544,8 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+
         #region Pointwise
         protected override void DoMultiplyPointwise( FxMatrix<float> other, FxMatrix<float> result )
         {
@@ -364,6 +572,8 @@ namespace FxMaths.Matrix
 
 
         #endregion
+
+
 
 
         #region Divide
@@ -425,6 +635,8 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+
         #region Negate
         protected override void DoNegate()
         {
@@ -437,6 +649,10 @@ namespace FxMaths.Matrix
 
 
         #endregion
+
+
+
+
 
         #region Statistics
 
@@ -692,6 +908,7 @@ namespace FxMaths.Matrix
 
 
         #endregion
+
 
     }
 }
