@@ -209,6 +209,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Matrix\FxMatrixF.Loaders.cs" />
     <Compile Include="Matrix\FxMatrixF.cs" />
+    <Compile Include="Matrix\FxMatrixMask.cs" />
     <Compile Include="Matrix\Struct.cs" />
     <Compile Include="MiscUtils.cs" />
     <Compile Include="Noise\INoise2D.cs" />
