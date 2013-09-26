@@ -919,71 +919,15 @@ namespace FxMaths.Matrix
 
         #region With float scalar
 
-        public static FxMatrixMask operator >(FxMatrixF mat1, float value)
-        {
-            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
-            int Height = mat1.Height;
-            int Width = mat1.Width;
-
-            Parallel.For(0, Height, (y) => {
-                int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
-                    result.Data[x] = mat1.Data[x] > value;
-                }
-            });
-            return result;
-        }
-
-        public static FxMatrixMask operator <(FxMatrixF mat1, float value)
-        {
-            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
-            int Height = mat1.Height;
-            int Width = mat1.Width;
-
-            Parallel.For(0, Height, (y) => {
-                int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
-                    result.Data[x] = mat1.Data[x] < value;
-                }
-            });
-            return result;
-        }
-
-        public static FxMatrixMask operator ==(FxMatrixF mat1, float value)
-        {
-            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
-            int Height = mat1.Height;
-            int Width = mat1.Width;
-
-            Parallel.For(0, Height, (y) => {
-                int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
-                    result.Data[x] = mat1.Data[x] == value;
-                }
-            });
-            return result;
-        }
-
-
-        public static FxMatrixMask operator !=(FxMatrixF mat1, float value)
-        {
-            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
-            int Height = mat1.Height;
-            int Width = mat1.Width;
-
-            Parallel.For(0, Height, (y) => {
-                int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
-                    result.Data[x] = mat1.Data[x] == value;
-                }
-            });
-            return result;
-        } 
+        public static FxMatrixMask operator >(FxMatrixF mat1, float value) { return FxMatrixMask.GreaderThan<float>(mat1, value); }
+        public static FxMatrixMask operator <(FxMatrixF mat1, float value) { return FxMatrixMask.LessThan<float>(mat1, value); }
+        public static FxMatrixMask operator ==(FxMatrixF mat1, float value) { return FxMatrixMask.Equal<float>(mat1, value); }
+        public static FxMatrixMask operator !=(FxMatrixF mat1, float value) { return FxMatrixMask.NotEqual<float>(mat1, value); }
 
         #endregion
 
 
-        #region With float scalar
+        #region With int scalar
 
         public static FxMatrixMask operator >(FxMatrixF mat1, int value) { return FxMatrixMask.GreaderThan<int>(mat1, value); }
         public static FxMatrixMask operator <(FxMatrixF mat1, int value) { return FxMatrixMask.LessThan<int>(mat1, value); }

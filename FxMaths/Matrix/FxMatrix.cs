@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FxMaths.Vector;
+using System.Threading.Tasks;
 
 namespace FxMaths.Matrix
 {
-    public abstract partial class FxMatrix<T> where T : struct, IEquatable<T>
+    public abstract partial class FxMatrix<T> where T : struct, IComparable, IComparable<T>, IEquatable<T>
     {
 
         #region Size Parameters
@@ -391,7 +392,8 @@ namespace FxMaths.Matrix
         public void GetSubMatrix( FxMatrix<T> sub, int startX, int startY, int endX, int endY )
         {
             #region Exceptions
-            if ( sub == null ) {
+            if (object.ReferenceEquals(null, sub))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -510,7 +512,8 @@ namespace FxMaths.Matrix
         public void SetSubMatrix( FxMatrix<T> sub, int startX, int startY, int endX, int endY )
         {
             #region Exceptions
-            if ( sub == null ) {
+            if (object.ReferenceEquals(null, sub))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -574,7 +577,7 @@ namespace FxMaths.Matrix
         public virtual void Add( FxMatrix<T> other )
         {
             #region Exceptions
-            if ( other == null ) {
+            if ( object.ReferenceEquals(null, other) ) {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -667,7 +670,8 @@ namespace FxMaths.Matrix
         public virtual void Subtract( FxMatrix<T> other )
         {
             #region Exceptions
-            if ( other == null ) {
+            if (object.ReferenceEquals(null, other))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -743,7 +747,8 @@ namespace FxMaths.Matrix
         public virtual FxMatrix<T> Multiply( FxMatrix<T> other )
         {
             #region Exceptions
-            if ( other == null ) {
+            if (object.ReferenceEquals(null, other))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -767,7 +772,8 @@ namespace FxMaths.Matrix
         public virtual void Multiply( FxMatrix<T> other , FxMatrix<T> result)
         {
             #region Exceptions
-            if ( other == null ) {
+            if (object.ReferenceEquals(null, other))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -883,7 +889,8 @@ namespace FxMaths.Matrix
         {
 
             #region Exceptions
-            if ( other == null ) {
+            if (object.ReferenceEquals(null, other))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -903,7 +910,8 @@ namespace FxMaths.Matrix
         {
 
             #region Exceptions
-            if ( other == null ) {
+            if (object.ReferenceEquals(null, other))
+            {
                 throw new ArgumentNullException( "other" );
             }
 
@@ -976,7 +984,7 @@ namespace FxMaths.Matrix
         {
 
             #region Exceptions
-            if (other == null)
+            if ( object.ReferenceEquals(null, other) )
             {
                 throw new ArgumentNullException("other");
             }
@@ -998,7 +1006,7 @@ namespace FxMaths.Matrix
         {
 
             #region Exceptions
-            if (other == null)
+            if ( object.ReferenceEquals(null, other) )
             {
                 throw new ArgumentNullException("other");
             }
@@ -1132,19 +1140,24 @@ namespace FxMaths.Matrix
 
 
 
+        #region Override 
         public override string ToString()
         {
             StringBuilder strB = new StringBuilder();
 
-            for ( int y=0; y < Height; y++ ) {
-                int end = (y+1)*Width;
-                for ( int i=y*Width; i < end; i++ )
-                    strB.Append( Data[i].ToString() + "\t" );
+            for (int y = 0; y < Height; y++)
+            {
+                int end = (y + 1) * Width;
+                for (int i = y * Width; i < end; i++)
+                    strB.Append(Data[i].ToString() + "\t");
 
-                strB.Append( "\r\n" );
+                strB.Append("\r\n");
             }
 
             return strB.ToString();
         }
+
+        #endregion
+
     }
 }
