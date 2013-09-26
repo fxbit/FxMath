@@ -96,6 +96,19 @@ namespace FxMaths.Matrix
             });
         }
 
+
+        public void Xor(FxMatrixMask mask)
+        {
+            if(this.Width == mask.Width && this.Height == mask.Height) {
+                Parallel.For(0, Height, (y) => {
+                    int offsetEnd = (y + 1) * Width;
+                    for(int x= y * Width; x < offsetEnd; x++) {
+                        Data[x] = mask.Data[x] ^ Data[x];
+                    }
+                });
+            }
+        }
+
         public static FxMatrixMask operator |(FxMatrixMask mask1, FxMatrixMask mask2)
         {
             FxMatrixMask result = mask1.Copy();
@@ -107,6 +120,13 @@ namespace FxMaths.Matrix
         {
             FxMatrixMask result = mask1.Copy();
             result.And(mask2);
+            return result;
+        }
+
+        public static FxMatrixMask operator ^(FxMatrixMask mask1, FxMatrixMask mask2)
+        {
+            FxMatrixMask result = mask1.Copy();
+            result.Xor(mask2);
             return result;
         }
 
@@ -190,5 +210,7 @@ namespace FxMaths.Matrix
 
 
         #endregion
+
+
     }
 }

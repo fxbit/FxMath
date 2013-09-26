@@ -927,6 +927,8 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+
         #region With int scalar
 
         public static FxMatrixMask operator >(FxMatrixF mat1, int value) { return FxMatrixMask.GreaderThan<int>(mat1, value); }
@@ -936,6 +938,11 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+
         #endregion
+
+
     }
 }
