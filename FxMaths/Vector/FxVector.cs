@@ -114,8 +114,7 @@ namespace FxMaths.Vector
         /// <param name="value"></param>
         public void SetValue( T value )
         {
-            for ( int i=0; i < Size; i++ )
-                this.Data[i] = value;
+            this.Data.Fill<T>(value);
         }
 
         /// <summary>
@@ -124,8 +123,8 @@ namespace FxMaths.Vector
         /// <param name="data"></param>
         public void SetValue( T[] data )
         {
-            for ( int i=0; i < Size; i++ )
-                this.Data[i] = data[i];
+            int copySize = (data.Length > Size) ? Size : data.Length;
+            Array.Copy(data, this.Data, copySize);
         }
 
 
@@ -135,8 +134,8 @@ namespace FxMaths.Vector
         /// <param name="data"></param>
         public void SetValue( FxVector<T> data )
         {
-            for ( int i=0; i < Size; i++ )
-                this.Data[i] = data[i];
+            int copySize = (data.Size > Size) ? Size : data.Size;
+            Array.Copy(data.Data, this.Data, copySize);
         }
 
         /// <summary>
@@ -145,8 +144,8 @@ namespace FxMaths.Vector
         /// <param name="data"></param>
         public void GetValue( ref T[] data )
         {
-            for ( int i=0; i < Size; i++ )
-                data[i] = this.Data[i];
+            int copySize = (data.Length > Size) ? Size : data.Length;
+            Array.Copy(this.Data, data, copySize);
         }
 
         /// <summary>
@@ -166,6 +165,13 @@ namespace FxMaths.Vector
             {
                 this.Data[index] = value;
             }
+        }
+
+
+        public void SetValue(FxVector<T> data, int startIndex)
+        {
+            int copySize = (data.Size > Size - startIndex) ? Size - startIndex : data.Size;
+            Array.Copy(data.Data, 0, this.Data, startIndex, copySize);
         }
 
         #endregion
