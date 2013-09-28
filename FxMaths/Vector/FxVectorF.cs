@@ -441,5 +441,71 @@ namespace FxMaths.Vector
 
         #endregion
 
+        #region Linear space creations
+
+        /// <summary>
+        /// Create a vector that start and end in linear space between two regions.
+        /// </summary>
+        /// <param name="x0">Starting x</param>
+        /// <param name="x1">Ending X</param>
+        /// <param name="n">Steps</param>
+        /// <returns></returns>
+        public static FxVectorF LinSpace(float x0, float x1, int n)
+        {
+            FxVectorF vec = new FxVectorF(n);
+            float step = (x1 - x0) / (n - 1.0f);
+            for(int i=0; i < n; i++) {
+                vec[i] = x0 + i * step;
+            }
+            return vec;
+        }
+
+        /// <summary>
+        /// Create a linear space with uniform keypoints.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static FxVectorF LinSpace(FxVectorF x, int n)
+        {
+            return LinSpace(x.Data,n);
+        }
+
+        /// <summary>
+        /// Create a linear space with uniform keypoints.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static FxVectorF LinSpace(float[] x, int n)
+        {
+            FxVectorF vec = new FxVectorF(n);
+            int num_regions = x.Length - 1;
+            int region_len = (int)Math.Ceiling((float)n / num_regions);
+            for(int i=0; i < num_regions - 1; i++) {
+                vec.SetValue(LinSpace(x[i], x[i + 1], region_len), i * region_len);
+            }
+            int remain_len = n - (num_regions - 1) * region_len;
+            vec.SetValue(LinSpace(x[num_regions - 1], x[num_regions], remain_len), (num_regions - 1) * region_len);
+            return vec;
+        }
+
+        /// <summary>
+        /// Create a linear space with non-uniform keypoints.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static FxVectorF LinSpace(FxVectorF x, FxVectorF var, int n)
+        {
+            FxVectorF vec = new FxVectorF(n);
+
+
+            return vec;
+        }
+
+
+        #endregion
+
     }
 }
