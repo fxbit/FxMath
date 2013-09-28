@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FxMaths
@@ -98,18 +99,60 @@ namespace FxMaths
         #endregion
     }
 
-    public static class floatExtender
+    public static class ArrayExtender
     {
+
+        #region Fill Extender
 
         public static unsafe void Fill(this float[] Data, float value)
         {
-            fixed (float* ptr = &Data[0])
-            {
+            fixed(float* ptr = &Data[0]) {
                 float* dest = ptr;
                 float* destEnd = ptr + Data.Length;
-                for (; dest < destEnd; dest++)
+                for(; dest < destEnd; dest++)
                     *dest = value;
             }
         }
+
+        public static unsafe void Fill(this int[] Data, int value)
+        {
+            fixed(int* ptr = &Data[0]) {
+                int* dest = ptr;
+                int* destEnd = ptr + Data.Length;
+                for(; dest < destEnd; dest++)
+                    *dest = value;
+            }
+        }
+
+        public static unsafe void Fill(this byte[] Data, byte value)
+        {
+            fixed(byte* ptr = &Data[0]) {
+                byte* dest = ptr;
+                byte* destEnd = ptr + Data.Length;
+                for(; dest < destEnd; dest++)
+                    *dest = value;
+            }
+        }
+
+        public static unsafe void Fill(this bool[] Data, bool value)
+        {
+            fixed(bool* ptr = &Data[0]) {
+                bool* dest = ptr;
+                bool* destEnd = ptr + Data.Length;
+                for(; dest < destEnd; dest++)
+                    *dest = value;
+            }
+        }
+
+        public static unsafe void Fill<T>(this T[] Data, T value) where T : struct
+        {
+            int size = Data.Length;
+            for(int i=0; i < size; i++) {
+                Data[i] = value;
+            }
+        } 
+        #endregion
+
+
     }
 }
