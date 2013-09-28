@@ -200,6 +200,7 @@
     <Compile Include="GMaps\FaceSimpleTree.cs" />
     <Compile Include="GMaps\Half_Edge.cs" />
     <Compile Include="GMaps\IVertex.cs" />
+    <Compile Include="Images\ColorMap.cs" />
     <Compile Include="Images\FxImages.cs" />
     <Compile Include="Images\FxImages_24bppRgb.cs" />
     <Compile Include="Images\FxImages_32bppArgb.cs" />

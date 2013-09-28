@@ -163,6 +163,39 @@ namespace FxMaths.GUI
                 } catch(Exception ex) { Console.WriteLine(ex.Message); }
             }
         }
+
+        public void UpdateInternalImage(Matrix.FxMatrixF mat, ColorMap map)
+        {
+            unsafe
+            {
+                try
+                {
+                    byte[] newIm = new byte[Width * Height * 4];
+                    int size = Width * Height;
+                    fixed (byte* dst = newIm)
+                    {
+                        fixed (float* src = mat.Data)
+                        {
+                            byte* pDst = dst;
+                            float* pSrc = src;
+                            float* pSrcEnd = pSrc + mat.Size;
+                            for (; pSrc < pSrcEnd; pSrc++)
+                            {
+                                byte id = (byte)(*(pSrc)*255);
+                                *(pDst++) = map[id, 2];
+                                *(pDst++) = map[id, 1];
+                                *(pDst++) = map[id, 0];
+                                *(pDst++) = 255;
+                            }
+                        }
+                    }
+
+                    // write to the specific bitmap not create a new one
+                    mImageBitmap.CopyFromMemory(newIm, Width * 4);
+                }
+                catch (Exception ex) { Console.WriteLine(ex.Message); }
+            }
+        }
         #endregion
 
 

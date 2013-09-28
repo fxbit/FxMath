@@ -97,4 +97,19 @@ namespace FxMaths
 
         #endregion
     }
+
+    public static class floatExtender
+    {
+
+        public static unsafe void Fill(this float[] Data, float value)
+        {
+            fixed (float* ptr = &Data[0])
+            {
+                float* dest = ptr;
+                float* destEnd = ptr + Data.Length;
+                for (; dest < destEnd; dest++)
+                    *dest = value;
+            }
+        }
+    }
 }

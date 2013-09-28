@@ -18,9 +18,7 @@ namespace FxMaths.Matrix
             this.Data = new float[Size];
 
             // init the datas
-            for ( int i=0; i < Size; i++ ) {
-                this.Data[i] = 0;
-            }
+            this.Data.Fill(0);
         }
 
         public FxMatrixF( int width, int height, float value )
@@ -30,9 +28,7 @@ namespace FxMaths.Matrix
             this.Data = new float[Size];
 
             // init the datas
-            for ( int i=0; i < Size; i++ ) {
-                this.Data[i] = value;
-            }
+            this.Data.Fill(value);
         }
 
         protected override FxMatrix<float> AllocateMatrix()
@@ -58,6 +54,57 @@ namespace FxMaths.Matrix
         {
             return new Vector.FxVectorF( Size );
         }
+
+        /// <summary>
+        /// Make a copy of the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public FxMatrixF Copy()
+        {
+            return AllocateCopyMatrix() as FxMatrixF;
+        }
+        #endregion
+
+
+
+
+        #region Get/Set
+
+        public FxMatrixF this[FxMatrixMask mask]
+        {
+            get
+            {
+                FxMatrixF newMat = new FxMatrixF(Width, Height);
+                // pass all the data and add the new data
+                Parallel.For(0, Height, (y) =>
+                {
+                    int offsetEnd = (y + 1) * Width;
+                    for (int x = y * Width; x < offsetEnd; x++)
+                    {
+                        if (mask[x])
+                            newMat.Data[x] = this.Data[x];
+                    }
+                });
+
+                return newMat;
+            }
+
+            set
+            {
+                // pass all the data and add the new data
+                Parallel.For(0, Height, (y) =>
+                {
+                    int offsetEnd = (y + 1) * Width;
+                    for (int x = y * Width; x < offsetEnd; x++)
+                    {
+                        if (mask[x])
+                            this.Data[x] = value[x];
+                    }
+                });
+            }
+
+        } 
+
         #endregion
 
 
@@ -111,6 +158,45 @@ namespace FxMaths.Matrix
                     Data[x] += value;
                 }
             } );
+        }
+
+        protected void Add(FxMatrix<float> other, FxMatrixMask mask)
+        {
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    Data[x] += mask[x] ? other[x] : 0;
+                }
+            });
+        }
+
+        protected void DoAdd(float value, FxMatrixMask mask)
+        {
+            // pass all the data and add the value
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    Data[x] += mask[x] ? value : 0;
+                }
+            });
+        }
+
+        protected void DoAdd(int value, FxMatrixMask mask)
+        {
+            // pass all the data and add the value
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    Data[x] += mask[x] ? value : 0;
+                }
+            });
         }
 
         protected override void DoAddRow( FxMaths.Vector.FxVector<float> Row, int RowIndex )
@@ -488,6 +574,13 @@ namespace FxMaths.Matrix
                 }
             } );
         }
+
+        public static FxMatrixF operator *(FxMatrixF mat1, FxMatrixF mat2)
+        {
+            var newMat = mat1.AllocateCopyMatrix() as FxMatrixF;
+            newMat.DoMultiplyPointwise(mat2);
+            return newMat;
+        }
         #endregion
 
 
@@ -715,9 +808,13 @@ namespace FxMaths.Matrix
             return value;
         }
 
+
+        public void Normalize()
+        {
+            this.Divide(Norm(NormMatrixType.Frobenius));
+        }
+
         #endregion
-
-
 
 
 
@@ -938,8 +1035,30 @@ namespace FxMaths.Matrix
 
         #endregion
 
+        #endregion
 
 
+        #region Equal test
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is FxMatrixF)
+            {
+                FxMatrixF mat = obj as FxMatrixF;
+                Boolean equal = true;
+                for (int i = 0; i < Size; i++)
+                    if (Data[i] != mat.Data[i])
+                    {
+                        equal = false;
+                        break;
+                    }
+                return equal;
+
+            }
+            return false;
+        } 
 
         #endregion
 

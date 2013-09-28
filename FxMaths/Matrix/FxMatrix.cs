@@ -1118,6 +1118,9 @@ namespace FxMaths.Matrix
         /// <returns></returns>
         public abstract T Norm( NormMatrixType type );
 
+
+        public T Max() { return Data.Max<T>(); }
+        public T Min() { return Data.Min<T>(); }
         #endregion
 
 

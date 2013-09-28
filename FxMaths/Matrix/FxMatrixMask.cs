@@ -58,6 +58,73 @@ namespace FxMaths.Matrix
         #endregion
 
 
+        #region Get/Set values
+
+        /// <summary>
+        /// Get The Value in specific position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool GetValue(int x, int y)
+        {
+            return this.Data[y * Width + x];
+        }
+
+        /// <summary>
+        /// Set The Value in specific position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="Value"></param>
+        public void SetValue(int x, int y, bool Value)
+        {
+            this.Data[y * Width + x] = Value;
+        }
+
+
+        /// <summary>
+        /// Set/Get internal values.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool this[int x, int y]
+        {
+            get
+            {
+                return this.Data[y * Width + x];
+            }
+
+            set
+            {
+                this.Data[y * Width + x] = value;
+            }
+        }
+
+        /// <summary>
+        /// Set/Get internal values.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool this[int index]
+        {
+            get
+            {
+                return this.Data[index];
+            }
+
+            set
+            {
+                this.Data[index] = value;
+            }
+        }
+
+
+        #endregion
+      
+
 
         #region Bitwise calculations
 
@@ -208,6 +275,19 @@ namespace FxMaths.Matrix
             return result;
         }
 
+        public static FxMatrixF operator *(FxMatrixMask mask, float f)
+        {
+            FxMatrixF mat = new FxMatrixF(mask.Width, mask.Height);
+            Parallel.For(0, mask.Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * mask.Width;
+                for (int x = y * mask.Width; x < offsetEnd; x++)
+                {
+                    mat.Data[x] = mask[x] ? f : 0;
+                }
+            });
+            return mat;
+        }
 
         #endregion
 
