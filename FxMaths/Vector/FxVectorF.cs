@@ -349,6 +349,7 @@ namespace FxMaths.Vector
         #endregion
 
 
+
         #region Norms
 
         /// <summary>
@@ -426,6 +427,7 @@ namespace FxMaths.Vector
         #endregion
 
 
+
         #region Lenght/Distance
 
         public override double Distance( FxVector<float> Other )
@@ -440,6 +442,9 @@ namespace FxMaths.Vector
         }
 
         #endregion
+
+
+
 
         #region Linear space creations
 
@@ -496,12 +501,27 @@ namespace FxMaths.Vector
         /// <param name="x"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(FxVectorF x, FxVectorF var, int n)
+        public static FxVectorF LinSpace(float[] x, float[] range, int n)
         {
             FxVectorF vec = new FxVectorF(n);
-
-
+            int reg_len, offset=0;
+            for(int i=0; i < x.Length - 1; i++) {
+                reg_len = (int)Math.Ceiling((range[i + 1] - range[i]) * n);
+                vec.SetValue(LinSpace(x[i], x[i + 1], reg_len), offset);
+                offset += reg_len;
+            }
             return vec;
+        }
+
+        /// <summary>
+        /// Create a linear space with non-uniform keypoints.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static FxVectorF LinSpace(FxVectorF x, FxVectorF range, int n)
+        {
+            return LinSpace(x.Data, range.Data, n);
         }
 
 
