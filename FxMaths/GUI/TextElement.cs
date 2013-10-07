@@ -29,7 +29,6 @@ namespace FxMaths.GUI
         /// set the brush style of lines
         /// </summary>
         SolidColorBrush lineBrush;
-        PathGeometry StringGeo;
 
         /// <summary>
         /// The string that we want to draw
@@ -100,6 +99,8 @@ namespace FxMaths.GUI
         }
 
 
+
+
         #region Canvas Specific Functions
 
         public override void Render( CanvasRenderArguments args, System.Drawing.SizeF Zoom )
@@ -157,9 +158,6 @@ namespace FxMaths.GUI
             if (lineBrush != null && !lineBrush.IsDisposed)
                 lineBrush.Dispose();
 
-            if ( StringGeo != null )
-                StringGeo.Dispose();
-
             DW_textFormat.Dispose();
         }
 
@@ -167,5 +165,16 @@ namespace FxMaths.GUI
         #endregion
 
 
+
+
+
+        #region Mouse Events
+
+        internal override void MouseClick(Vector.FxVector2f location)
+        {
+            // void
+        } 
+
+        #endregion
     }
 }

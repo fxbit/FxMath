@@ -226,23 +226,25 @@ namespace FxMaths.Images
         /// </summary>
         public override Bitmap Image { get { return localImage; } }
 
-        public override void Load(Matrix.FxMatrixF mat)
+        public override void Load(Matrix.FxMatrixF mat, ColorMap map)
         {
             if (mat.Height != Image.Height || mat.Width != Image.Width)
                 return;
 
             this.LockImage();
 
-            for (int x = 0; x < mat.Width; x++)
-                for (int y = 0; y < mat.Height; y++)
-                {
-                    byte* ptr = Scan0 + (y * Stride) + (x * 4);
-                    byte value = (byte)(mat[x,y]*256);
-                    *(ptr + 3) = value;
-                    *(ptr + 2) = value;
-                    *(ptr + 1) = value;
-                    *(ptr) = value;
+            byte* pDst = Scan0;
+            fixed(float* src = mat.Data) {
+                float* pSrc = src;
+                float* pSrcEnd = pSrc + mat.Size;
+                for(; pSrc < pSrcEnd; pSrc++) {
+                    byte id = (byte)(*(pSrc) * 255);
+                    *(pDst++) = map[id, 2];
+                    *(pDst++) = map[id, 1];
+                    *(pDst++) = map[id, 0];
+                    *(pDst++) = 255;
                 }
+            }
 
             this.UnLockImage();
         }

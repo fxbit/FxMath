@@ -14,9 +14,11 @@ namespace FxMaths.GUI
     public class ImageElement : CanvasElements
     {
         SharpDX.Direct2D1.Bitmap mImageBitmap;
-
         int Width,Height,Pitch;
-        DataStream internalImage;
+        byte[] internalImage;
+
+
+        #region Constructor
 
         public ImageElement(FxImages image)
         {
@@ -30,15 +32,12 @@ namespace FxMaths.GUI
             Height = image.Image.Height;
 
             // allocate the memory for the internal image
-            internalImage = new DataStream(Width * Height * 4, true, true);
-            byte[] internalImage_local = new byte[Width * Height * 4];
+            internalImage = new byte[Width * Height * 4];
 
             Pitch = Width * 4;
             image.LockImage();
-            image.Copy_to_Array(ref internalImage_local, ColorChannels.RGBA);
+            image.Copy_to_Array(ref internalImage, ColorChannels.RGBA);
             image.UnLockImage();
-
-            internalImage.WriteRange<byte>(internalImage_local);
         }
 
         public ImageElement(Matrix.FxMatrixF image)
@@ -53,8 +52,7 @@ namespace FxMaths.GUI
             Height = image.Height;
 
             // allocate the memory for the internal image
-            internalImage = new DataStream(Width * Height * 4, true, true);
-            byte[] internalImage_local = new byte[Width * Height * 4];
+            internalImage = new byte[Width * Height * 4];
 
             Pitch = Width * 4;
             int size= Width * Height;
@@ -62,13 +60,20 @@ namespace FxMaths.GUI
             // load the data in image form
             for(int i=0; i < size; i++) {
                 byte value = (byte)(256 * image[i]);
-                internalImage_local[i * 4] = value;
-                internalImage_local[i * 4 + 1] = value;
-                internalImage_local[i * 4 + 2] = value;
-                internalImage_local[i * 4 + 3] = 255;
+                internalImage[i * 4] = value;
+                internalImage[i * 4 + 1] = value;
+                internalImage[i * 4 + 2] = value;
+                internalImage[i * 4 + 3] = 255;
             }
-            internalImage.WriteRange<byte>(internalImage_local);
         }
+        
+        #endregion
+
+
+
+
+        #region Rendering
+
 
         public override void Render(CanvasRenderArguments args, SizeF Zoom)
         {
@@ -79,6 +84,13 @@ namespace FxMaths.GUI
                 args.renderTarget.DrawBitmap(mImageBitmap, 1, BitmapInterpolationMode.Linear);
             }
         }
+        
+        #endregion
+
+
+
+
+        #region Load functions
 
         public override void Load(CanvasRenderArguments args)
         {
@@ -86,52 +98,52 @@ namespace FxMaths.GUI
             BitmapProperties bitmapProps = new BitmapProperties();
             bitmapProps.PixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied);
 
-            if(mImageBitmap != null) {
-                // write to the specific bitmap not create a new one
-                mImageBitmap.CopyFromStream(internalImage, Width, Width * Height);
-            } else {
+            if(mImageBitmap == null) {
                 // make the bitmap for Direct2D1
                 mImageBitmap = new SharpDX.Direct2D1.Bitmap(args.renderTarget,
                     new Size2(Width, Height),
-                    new DataPointer(internalImage.DataPointer, (int)internalImage.Length),
-                    Pitch,
                     bitmapProps);
             }
+
+            // write to the specific bitmap not create a new one
+            mImageBitmap.CopyFromMemory(internalImage, Pitch);
         }
+
+        
+        #endregion
+
+
+
 
         #region Update Internal Image
         public void UpdateInternalImage(FxImages image)
         {
-            byte[] internalImage_local = new byte[Width * Height * 4];
-
             Pitch = Width * 4;
             int size = Width * Height;
             image.LockImage();
-            image.Copy_to_Array(ref internalImage_local, ColorChannels.RGBA);
+            image.Copy_to_Array(ref internalImage, ColorChannels.RGBA);
             image.UnLockImage();
 
             // write to the specific bitmap not create a new one
-            mImageBitmap.CopyFromMemory(internalImage_local, Pitch);
+            mImageBitmap.CopyFromMemory(internalImage, Pitch);
         }
 
 
 
         public void UpdateInternalImage(byte[] image)
         {
-            byte[] newIm = new byte[Width * Height * 4];
-
             Pitch = Width * 4;
             int size = Width * Height;
 
             for(int i = 0; i < size; i++) {
-                newIm[i * 4] = image[i * 3];
-                newIm[i * 4 + 1] = image[i * 3 + 1];
-                newIm[i * 4 + 2] = image[i * 3 + 2];
-                newIm[i * 4 + 3] = 255;
+                internalImage[i * 4] = image[i * 3];
+                internalImage[i * 4 + 1] = image[i * 3 + 1];
+                internalImage[i * 4 + 2] = image[i * 3 + 2];
+                internalImage[i * 4 + 3] = 255;
             }
 
             // write to the specific bitmap not create a new one
-            mImageBitmap.CopyFromMemory(newIm, Pitch);
+            mImageBitmap.CopyFromMemory(internalImage, Pitch);
         }
 
 
@@ -140,9 +152,8 @@ namespace FxMaths.GUI
         {
             unsafe {
                 try {
-                    byte[] newIm = new byte[Width * Height * 4];
                     int size = Width * Height;
-                    fixed(byte*dst = newIm) {
+                    fixed(byte*dst = internalImage) {
                         fixed(float *src = mat.Data) {
                             byte *pDst = dst;
                             float *pSrc = src;
@@ -158,38 +169,60 @@ namespace FxMaths.GUI
                     }
 
                     // write to the specific bitmap not create a new one
-                    mImageBitmap.CopyFromMemory(newIm, Width * 4);
+                    mImageBitmap.CopyFromMemory(internalImage, Width * 4);
                 } catch(Exception ex) { Console.WriteLine(ex.Message); }
             }
         }
 
-        public void UpdateInternalImage(Matrix.FxMatrixF mat, ColorMap map)
+        public void UpdateInternalImage(Matrix.FxMatrixF mat, ColorMap map, bool useInvMap = false)
         {
             unsafe {
                 try {
-                    byte[] newIm = new byte[Width * Height * 4];
                     int size = Width * Height;
-                    fixed(byte* dst = newIm) {
+                    fixed(byte* dst = internalImage) {
                         fixed(float* src = mat.Data) {
                             byte* pDst = dst;
                             float* pSrc = src;
                             float* pSrcEnd = pSrc + mat.Size;
-                            for(; pSrc < pSrcEnd; pSrc++) {
-                                byte id = (byte)(*(pSrc) * 255);
-                                *(pDst++) = map[id, 2];
-                                *(pDst++) = map[id, 1];
-                                *(pDst++) = map[id, 0];
-                                *(pDst++) = 255;
+                            if(useInvMap) {
+                                for(; pSrc < pSrcEnd; pSrc++) {
+                                    byte id = (byte)(255 - *(pSrc) * 255);
+                                    *(pDst++) = map[id, 2];
+                                    *(pDst++) = map[id, 1];
+                                    *(pDst++) = map[id, 0];
+                                    *(pDst++) = 255;
+                                }
+                            } else {
+                                for(; pSrc < pSrcEnd; pSrc++) {
+                                    byte id = (byte)(*(pSrc) * 255);
+                                    *(pDst++) = map[id, 2];
+                                    *(pDst++) = map[id, 1];
+                                    *(pDst++) = map[id, 0];
+                                    *(pDst++) = 255;
+                                }
+
                             }
                         }
                     }
 
                     // write to the specific bitmap not create a new one
-                    mImageBitmap.CopyFromMemory(newIm, Width * 4);
+                    mImageBitmap.CopyFromMemory(internalImage, Width * 4);
                 } catch(Exception ex) { Console.WriteLine(ex.Message); }
             }
         }
         #endregion
+
+        
+
+        public override void Dispose()
+        {
+            // clean the memmory
+            mImageBitmap.Dispose();
+        }
+
+
+
+        #region Mouse Events
 
 
         internal override void InternalMove(Vector.FxVector2f delta)
@@ -197,10 +230,19 @@ namespace FxMaths.GUI
             // do nothing
         }
 
-        public override void Dispose()
+
+        internal override void MouseClick(Vector.FxVector2f location)
         {
-            // clean the memmory
-            mImageBitmap.Dispose();
+            int x = (int)Math.Ceiling(location.x);
+            int y = (int)Math.Ceiling(location.y);
+            Console.WriteLine(location.ToString());
+            if(x >= 0 && x < Width && y >= 0 && y < Height) {
+                Console.WriteLine(internalImage[x+y*Pitch]);
+                OnMouseClickEvent(this, location);
+            }
+            
         }
+
+        #endregion
     }
 }

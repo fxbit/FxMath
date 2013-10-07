@@ -373,6 +373,7 @@ namespace FxMaths.GUI
 
                     // because is double click then go to edit state
                     SelectedElementInEditMode = true;
+
                 } else {
                     
                     // protect the element list
@@ -399,11 +400,13 @@ namespace FxMaths.GUI
         }
 
         Vector2 privMousePosition;
-        void RenderArea_MouseClick( object sender, MouseEventArgs e )
+        void RenderArea_MouseClick(object sender, MouseEventArgs e)
         {
-            if ( e.Button == System.Windows.Forms.MouseButtons.Left ) {
+            if(e.Button == System.Windows.Forms.MouseButtons.Left) {
                 this.Focus();
 
+
+#if false
                 // translate the location to the screen and then
                 // find if we have hit
                 SelectedElement = HitElement( TranslatePoint( e.Location ) );
@@ -434,6 +437,20 @@ namespace FxMaths.GUI
 
                     // because is no hit then leave to edit state
                     SelectedElementInEditMode = false;
+                }
+#endif
+
+                // get the translated points
+                Vector.FxVector2f pos = TranslatePoint(e.Location);
+
+                // check that we have selected element and check that we are click inside it
+                if(SelectedElement != null && SelectedElement.IsHit(pos)) {
+
+                    // remove the position of the selected element
+                    pos.Subtract(SelectedElement.Position);
+
+                    // send the event to selected element
+                    SelectedElement.MouseClick(pos);
                 }
             }
 

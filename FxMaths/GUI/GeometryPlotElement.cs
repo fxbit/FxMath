@@ -199,7 +199,10 @@ namespace FxMaths.GUI
 
 
 
-        internal override void InternalMove( Vector.FxVector2f delta )
+
+        #region Mouse Events
+
+        internal override void InternalMove(Vector.FxVector2f delta)
         {
             // change the position of the origin
             OriginPosition.x += delta.x;
@@ -211,5 +214,13 @@ namespace FxMaths.GUI
             // force the element to redraw
             //Parent.ReDraw();
         }
+
+
+        internal override void MouseClick(Vector.FxVector2f location)
+        {
+            // void
+        }
+
+        #endregion
     }
 }

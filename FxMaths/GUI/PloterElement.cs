@@ -260,6 +260,9 @@ namespace FxMaths.GUI
             IsGeomrtryDirty = true;
         }
 
+
+
+
         #region Add/Remove Plots
 
         public void AddPlot( Vector.FxVectorF vecX, Vector.FxVectorF vecY, PlotType type, System.Drawing.Color plotColor )
@@ -360,6 +363,9 @@ namespace FxMaths.GUI
 
         #endregion
 
+
+
+
         #region Canvas Specific Functions
 
         public override void Render( CanvasRenderArguments args, System.Drawing.SizeF Zoom )
@@ -458,6 +464,9 @@ namespace FxMaths.GUI
         }
 
         #endregion
+
+
+
 
         #region Geometrys
 
@@ -752,7 +761,11 @@ namespace FxMaths.GUI
 
         #endregion
 
-        internal override void InternalMove( Vector.FxVector2f delta )
+
+
+        #region Mouse Events
+
+        internal override void InternalMove(Vector.FxVector2f delta)
         {
             // change the position of the origine
             OriginPosition.x += delta.x;
@@ -764,5 +777,16 @@ namespace FxMaths.GUI
             // force the element to redraw
             //Parent.ReDraw();
         }
+
+
+        internal override void MouseClick(Vector.FxVector2f location)
+        {
+            // void
+        }
+
+        #endregion
+
+
+
     }
 }

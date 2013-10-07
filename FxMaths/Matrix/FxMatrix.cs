@@ -180,6 +180,7 @@ namespace FxMaths.Matrix
             }
         }
 
+
         /// <summary>
         /// Set/Get internal values.
         /// </summary>
@@ -199,6 +200,20 @@ namespace FxMaths.Matrix
             }
         }
 
+
+        /// <summary>
+        /// Set/Get internal values.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public T this[float x, float y]
+        {
+            get
+            {
+                return this.Sample(x, y);
+            }
+        }
 
         #endregion
       
@@ -1140,6 +1155,19 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+        #region Sample Functions
+
+        /// <summary>
+        /// Return interpolated value.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public abstract T Sample(float x, float y);
+
+        #endregion
 
 
 

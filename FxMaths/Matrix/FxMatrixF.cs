@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FxMaths.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,7 +60,7 @@ namespace FxMaths.Matrix
         /// Make a copy of the matrix.
         /// </summary>
         /// <returns></returns>
-        public FxMatrixF Copy()
+        public new FxMatrixF Copy()
         {
             return AllocateCopyMatrix() as FxMatrixF;
         }
@@ -616,6 +617,23 @@ namespace FxMaths.Matrix
             } );
         }
 
+
+
+
+        public static FxMatrixF operator /(FxMatrixF mat, float value)
+        {
+            var newMat = mat.AllocateCopyMatrix() as FxMatrixF;
+            newMat.DoDivide(value);
+            return newMat;
+        }
+
+        public static FxMatrixF operator /(FxMatrixF mat, int value)
+        {
+            var newMat = mat.AllocateCopyMatrix() as FxMatrixF;
+            newMat.DoDivide(value);
+            return newMat;
+        }
+
         #endregion
 
 
@@ -814,6 +832,11 @@ namespace FxMaths.Matrix
             this.Divide(Norm(NormMatrixType.Frobenius));
         }
 
+        public void Normalize(NormMatrixType type)
+        {
+            this.Divide(Norm(NormMatrixType.Frobenius));
+        }
+
         #endregion
 
 
@@ -941,6 +964,33 @@ namespace FxMaths.Matrix
 
 
 
+        #region Sample Functions
+
+        /// <summary>
+        /// Return interpolated value.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override float Sample(float x, float y)
+        {
+            // for now we are support only Bilinear sampling
+            int lowX = (int)Math.Floor(x);
+            int lowY = (int)Math.Floor(y);
+            float lowlow = this[lowX, lowY];
+            float lowhi = this[lowX, lowY+1];
+            float hilow = this[lowX+1, lowY];
+            float hihi = this[lowX+1, lowY+1];
+            x=x-lowX;
+            y=y-lowY;
+            //return lowlow + (hilow - lowlow) * x + (lowhi - lowlow) * y + (lowlow - hilow - lowhi + hihi) * x * y;
+            return lowlow * (1 - x) * (1 - y) + hilow * x * (1 - y) + lowhi * (1 - x) * y + hihi * x * y;
+        }
+
+        #endregion
+
+
+
         #region From mask calculation from FxMatrix
 
 
@@ -1038,6 +1088,7 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
         #region Equal test
 
         public override bool Equals(object obj)
@@ -1063,5 +1114,29 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+        public void SaveImage(string fileName, FxMaths.Images.ColorMap map)
+        {
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(Width,Height);
+            FxMaths.Images.FxImages im =  FxMaths.Images.FxTools.FxImages_safe_constructors(bitmap);
+            im.Load(this, map);
+            im.Image.Save(fileName);
+            im.Dispose();
+            bitmap.Dispose();
+        }
+
+        public void SaveCsv(string fileName)
+        {
+            CsvRow row = new CsvRow();
+            using(CsvFileWriter writer = new CsvFileWriter(fileName)) {
+                for(int j=0; j < Height; j++) {
+                    row.Clear();
+                    for(int i=0; i < Width; i++) {
+                        row.Add(this[i, j].ToString());
+                    }
+                    writer.WriteRow(row);
+                }
+            }
+        }
     }
 }

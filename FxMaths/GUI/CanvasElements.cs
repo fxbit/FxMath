@@ -10,6 +10,7 @@ namespace FxMaths.GUI
 {
     public abstract class CanvasElements
     {
+
         /// <summary>
         /// The upper position of the element
         /// </summary>
@@ -80,5 +81,28 @@ namespace FxMaths.GUI
         /// Clean the memory
         /// </summary>
         public abstract void Dispose();
+
+
+        /// <summary>
+        /// Mouse click event.
+        /// </summary>
+        /// <param name="newLocation"></param>
+        internal abstract void MouseClick(Vector.FxVector2f location);
+
+
+        public event MouseClickEventHandler MouseClickEvent;
+        public delegate void MouseClickEventHandler(CanvasElements m, Vector.FxVector2f location);
+
+        //The event-invoking method that derived classes can override. 
+        protected void OnMouseClickEvent(CanvasElements m, Vector.FxVector2f location)
+        {
+            // Make a temporary copy of the event to avoid possibility of 
+            // a race condition if the last subscriber unsubscribes 
+            // immediately after the null check and before the event is raised.
+            MouseClickEventHandler handler = MouseClickEvent;
+            if(handler != null) {
+                handler(m, location);
+            }
+        }
     }
 }

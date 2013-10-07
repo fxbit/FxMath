@@ -92,6 +92,6 @@ namespace FxMaths.Images
         /// Load from external matrix to internal image.
         /// </summary>
         /// <param name="mat"></param>
-        public abstract void Load(Matrix.FxMatrixF mat);
+        public abstract void Load(Matrix.FxMatrixF mat, ColorMap map);
     }
 }

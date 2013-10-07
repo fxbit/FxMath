@@ -232,7 +232,7 @@ namespace FxMaths.Images
 
 
 
-		public override void Load(Matrix.FxMatrixF mat)
+		public override void Load(Matrix.FxMatrixF mat, ColorMap map)
 		{
 			throw new NotImplementedException();
 		}

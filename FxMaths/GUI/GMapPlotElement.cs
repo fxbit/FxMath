@@ -64,6 +64,9 @@ namespace FxMaths.GUI
 
         #endregion
 
+
+
+
         #region construct
 
         public GMapPlotElement( DataStructHE data, Color4 LineColor, float StrokeWidth = 1, Boolean ShowVertex = false )
@@ -78,6 +81,9 @@ namespace FxMaths.GUI
         }
 
         #endregion
+
+
+
 
         #region Canvas Specific Functions
 
@@ -164,6 +170,9 @@ namespace FxMaths.GUI
 
         #endregion
 
+
+
+
         #region Drawing 
 
         Vector2 point = new Vector2();
@@ -249,6 +258,8 @@ namespace FxMaths.GUI
 
         #endregion
 
+
+
         #region Update/Refresh
 
         /// <summary>
@@ -260,6 +271,17 @@ namespace FxMaths.GUI
 
             if (ReDraw)
                 Parent.ReDraw();
+        }
+
+        #endregion
+
+
+
+        #region Mouse Events
+
+        internal override void MouseClick(Vector.FxVector2f location)
+        {
+            // void
         }
 
         #endregion
