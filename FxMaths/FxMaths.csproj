@@ -216,6 +216,7 @@
     <Compile Include="Noise\INoise2D.cs" />
     <Compile Include="Noise\PerlinNoise.cs" />
     <Compile Include="TimeStatistics.cs" />
+    <Compile Include="Utils\CsvFileWriter.cs" />
     <Compile Include="Vector\FxVectorI.cs" />
     <Compile Include="Vector\FxVector.cs" />
     <Compile Include="Vector234\FxVector2i.cs" />
