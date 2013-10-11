@@ -1132,7 +1132,7 @@ namespace FxMaths.Matrix
                 for(int j=0; j < Height; j++) {
                     row.Clear();
                     for(int i=0; i < Width; i++) {
-                        row.Add(this[i, j].ToString());
+                        row.Add(this[i, j].ToString().Replace(',','.'));
                     }
                     writer.WriteRow(row);
                 }
