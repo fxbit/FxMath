@@ -834,10 +834,11 @@ namespace FxMaths.Matrix
 
         public void Normalize(NormMatrixType type)
         {
-            this.Divide(Norm(NormMatrixType.Frobenius));
+            this.Divide(Norm(type));
         }
 
         #endregion
+
 
 
 
@@ -964,6 +965,7 @@ namespace FxMaths.Matrix
 
 
 
+
         #region Sample Functions
 
         /// <summary>
@@ -988,6 +990,7 @@ namespace FxMaths.Matrix
         }
 
         #endregion
+
 
 
 
@@ -1089,6 +1092,7 @@ namespace FxMaths.Matrix
 
 
 
+
         #region Equal test
 
         public override bool Equals(object obj)
@@ -1115,9 +1119,12 @@ namespace FxMaths.Matrix
 
 
 
+
+        #region Save Matrix in Files
+
         public void SaveImage(string fileName, FxMaths.Images.ColorMap map)
         {
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(Width,Height);
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(Width, Height);
             FxMaths.Images.FxImages im =  FxMaths.Images.FxTools.FxImages_safe_constructors(bitmap);
             im.Load(this, map);
             im.Image.Save(fileName);
@@ -1132,11 +1139,128 @@ namespace FxMaths.Matrix
                 for(int j=0; j < Height; j++) {
                     row.Clear();
                     for(int i=0; i < Width; i++) {
-                        row.Add(this[i, j].ToString().Replace(',','.'));
+                        row.Add(this[i, j].ToString().Replace(',', '.'));
                     }
                     writer.WriteRow(row);
                 }
             }
         }
+
+        #endregion
+
+
+
+
+        #region Calculate Gradient
+
+        public enum GradientMethod
+        {
+            Sobel,
+            Prewitt,
+            Roberts,
+            Scharr,
+            CentralDifference
+        }
+
+        /// <summary>
+        /// Calculate the gradient of the matrix.
+        /// Use Sobel method.
+        /// </summary>
+        /// <returns></returns>
+        public FxMatrixF Gradient()
+        {
+            return Gradient(GradientMethod.Sobel);
+        }
+
+        /// <summary>
+        /// Calculate the gradient of the matrix.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public FxMatrixF Gradient(GradientMethod method)
+        {
+            var result = new FxMatrixF(Width, Height);
+
+            switch(method) {
+                case GradientMethod.Prewitt:
+                    Parallel.For(1, Height - 1, (y) => {
+                        for(int x= 1; x < Width - 1; x++) {
+                            var dx  = this[x - 1, y - 1] - this[x + 1, y - 1];
+                            dx += this[x - 1, y] - this[x + 1, y];
+                            dx += this[x - 1, y + 1] - this[x + 1, y + 1];
+
+                            var dy  = this[x - 1, y - 1] - this[x - 1, y + 1];
+                            dy += this[x, y - 1] - this[x, y + 1];
+                            dy += this[x + 1, y - 1] - this[x + 1, y + 1];
+
+                            result[x, y] = (float)Math.Sqrt(dx * dx + dy * dy);
+                        }
+                    });
+                    break;
+
+
+                case GradientMethod.Sobel:
+                    Parallel.For(1, Height - 1, (y) => {
+                        for(int x= 1; x < Width - 1; x++) {
+                            var dx  = this[x - 1, y - 1] - this[x + 1, y - 1];
+                            dx += 2 * this[x - 1, y] - 2 * this[x + 1, y];
+                            dx += this[x - 1, y + 1] - this[x + 1, y + 1];
+
+                            var dy  = this[x - 1, y - 1] - this[x - 1, y + 1];
+                            dy += 2 * this[x, y - 1] - 2 * this[x, y + 1];
+                            dy += this[x + 1, y - 1] - this[x + 1, y + 1];
+
+                            result[x, y] = (float)Math.Sqrt(dx * dx + dy * dy);
+                        }
+                    });
+                    break;
+
+
+                case GradientMethod.Roberts:
+                    Parallel.For(0, Height - 1, (y) => {
+                        for(int x= 0; x < Width - 1; x++) {
+                            var dx  = this[x, y] - this[x + 1, y + 1];
+                            var dy  = this[x + 1, y] - this[x, y + 1];
+
+                            result[x, y] = (float)Math.Sqrt(dx * dx + dy * dy);
+                        }
+                    });
+                    break;
+
+                case GradientMethod.Scharr:
+                    Parallel.For(1, Height - 1, (y) => {
+                        for(int x= 1; x < Width - 1; x++) {
+                            var dx  = 3 * this[x - 1, y - 1] - 3 * this[x + 1, y - 1];
+                            dx += 10 * this[x - 1, y] - 10 * this[x + 1, y];
+                            dx += 3 * this[x - 1, y + 1] - 3 * this[x + 1, y + 1];
+
+                            var dy  = 3 * this[x - 1, y - 1] - 3 * this[x - 1, y + 1];
+                            dy += 10 * this[x, y - 1] - 10 * this[x, y + 1];
+                            dy += 3 * this[x + 1, y - 1] - 3 * this[x + 1, y + 1];
+
+                            result[x, y] = (float)Math.Sqrt(dx * dx + dy * dy);
+                        }
+                    });
+                    break;
+
+
+
+                case GradientMethod.CentralDifference:
+                    Parallel.For(1, Height - 1, (y) => {
+                        for(int x= 1; x < Width - 1; x++) {
+                            var dx  = (this[x - 1, y] - this[x + 1, y]) * 0.5f;
+                            var dy  = (this[x, y - 1] - this[x, y + 1]) * 0.5f;
+                            result[x, y] = (float)Math.Sqrt(dx * dx + dy * dy);
+                        }
+                    });
+                    break;
+            }
+
+            return result;
+        } 
+
+        #endregion
+
+
     }
 }
