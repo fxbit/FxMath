@@ -292,5 +292,22 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+        #region Covert to FxMatrixF
+
+        public FxMatrixF ToFxMatrixF()
+        {
+            FxMatrixF newMat = new FxMatrixF(Width, Height);
+            // pass all the data and add the new data
+            for(int y=0; y < Height; y++) {
+                int offsetEnd = (y + 1) * Width;
+                for(int x= y * Width; x < offsetEnd; x++) {
+                    newMat[x] = (this.Data[x]) ? 1f : 0;
+                }
+            }
+            return newMat;
+        } 
+
+        #endregion
     }
 }
