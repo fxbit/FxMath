@@ -14,10 +14,12 @@ namespace FxMaths.GUI
     public class ImageElement : CanvasElements
     {
         SharpDX.Direct2D1.Bitmap mImageBitmap;
-        int Width,Height,Pitch;
-        byte[] internalImage;
-
-
+        
+        private byte[] internalImage;
+        private int Width;
+        private int Height;
+		private int Pitch;
+		
         #region Constructor
 
         public ImageElement(FxImages image)
@@ -27,7 +29,7 @@ namespace FxMaths.GUI
             Position = new Vector.FxVector2f(0);
             Size = new Vector.FxVector2f(image.Image.Width, image.Image.Height);
 
-            // get the size of the image
+            // set the size of the image
             Width = image.Image.Width;
             Height = image.Image.Height;
 
@@ -40,33 +42,42 @@ namespace FxMaths.GUI
             image.UnLockImage();
         }
 
-        public ImageElement(Matrix.FxMatrixF image)
+        public ImageElement(Matrix.FxMatrixF mat)
         {
 
             // set the position and the size of the element
             Position = new Vector.FxVector2f(0);
-            Size = new Vector.FxVector2f(image.Width, image.Height);
-
-            // get the size of the image
-            Width = image.Width;
-            Height = image.Height;
+            Size = new Vector.FxVector2f(mat.Width, mat.Height);
+            
+            // set the size of the image
+            Width = mat.Width;
+            Height = mat.Height;
 
             // allocate the memory for the internal image
-            internalImage = new byte[Width * Height * 4];
+            internalImage = new byte[mat.Width * mat.Height * 4];
+            Pitch = mat.Width * 4;
 
-            Pitch = Width * 4;
-            int size= Width * Height;
-
-            // load the data in image form
-            for(int i=0; i < size; i++) {
-                byte value = (byte)(256 * image[i]);
-                internalImage[i * 4] = value;
-                internalImage[i * 4 + 1] = value;
-                internalImage[i * 4 + 2] = value;
-                internalImage[i * 4 + 3] = 255;
-            }
+            UpdateInternalImage(mat);
         }
-        
+
+        public ImageElement(Matrix.FxMatrixF mat, ColorMap map)
+        {
+
+            // set the position and the size of the element
+            Position = new Vector.FxVector2f(0);
+            Size = new Vector.FxVector2f(mat.Width, mat.Height);
+
+            // set the size of the image
+            Width = mat.Width;
+            Height = mat.Height;
+
+            // allocate the memory for the internal image
+            internalImage = new byte[mat.Width * mat.Height * 4];
+            Pitch = mat.Width * 4;
+
+            UpdateInternalImage(mat, map);
+        }
+
         #endregion
 
 
@@ -118,7 +129,6 @@ namespace FxMaths.GUI
         #region Update Internal Image
         public void UpdateInternalImage(FxImages image)
         {
-            Pitch = Width * 4;
             int size = Width * Height;
             image.LockImage();
             image.Copy_to_Array(ref internalImage, ColorChannels.RGBA);
@@ -132,7 +142,6 @@ namespace FxMaths.GUI
 
         public void UpdateInternalImage(byte[] image)
         {
-            Pitch = Width * 4;
             int size = Width * Height;
 
             for(int i = 0; i < size; i++) {
@@ -159,7 +168,7 @@ namespace FxMaths.GUI
                             float *pSrc = src;
                             float *pSrcEnd = pSrc + mat.Size;
                             for(; pSrc < pSrcEnd; pSrc++) {
-                                byte value = (byte)(*(pSrc) * 256);
+                                byte value = (byte)(*(pSrc) * 255);
                                 *(pDst++) = value;
                                 *(pDst++) = value;
                                 *(pDst++) = value;
