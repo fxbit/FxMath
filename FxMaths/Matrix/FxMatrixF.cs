@@ -71,6 +71,18 @@ namespace FxMaths.Matrix
 
         #region Get/Set
 
+        public void SetValue(int value)
+        {
+            // init the datas
+            this.Data.Fill(value);
+        }
+
+        public void SetValue(float value)
+        {
+            // init the datas
+            this.Data.Fill(value);
+        }
+
         public FxMatrixF this[FxMatrixMask mask]
         {
             get
@@ -221,6 +233,25 @@ namespace FxMaths.Matrix
 
 
 
+        public void Add(int sx, int sy, FxMatrixF mat)
+        {
+            if(sx > this.Width || sy > this.Height)
+                return;
+
+            int startX = (sx < 0) ? 0 : sx;
+            int startY = (sy < 0) ? 0 : sy;
+            int endX = (sx + mat.Width > this.Width) ? this.Width : sx + mat.Width;
+            int endY = (sy + mat.Height > this.Height) ? this.Height : sy + mat.Height;
+            int offsetMatX = (sx > 0) ? 0 : sx;
+            int offsetMatY = (sy > 0) ? 0 : sy;
+            // pass all the data and add the value
+            Parallel.For(startY, endY, (y) => {
+                var deltaY =  y * Width;
+                for(int x = startX; x < endX; x++) {
+                    Data[x + deltaY] += mat[x - startX - offsetMatX, y - startY - offsetMatY];
+                }
+            });
+        }
 
 
 
@@ -1262,5 +1293,51 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
+        #region Misc Utils
+
+
+        #region Clamp
+        /// <summary>
+        /// Clamped the value of the matrix to 
+        /// the zero or max based on min max.
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public void Clamp(float min, float max, float minReplace = 0)
+        {
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) => {
+                int offsetEnd = (y + 1) * Width;
+                for(int x= y * Width; x < offsetEnd; x++) {
+                    Data[x] = (Data[x] < min) ? minReplace : (Data[x] > max) ? max : Data[x];
+                }
+            });
+        } 
+        #endregion
+
+
+        
+        #endregion
+
+
+
+
+        public FxMatrixF Resize(int width, int height)
+        {
+            var newMat = new FxMatrixF(width, height);
+            float lx = Width / (float)width;
+            float ly = Height / (float)height;
+
+            Parallel.For(0, height, (y) => {
+                int offsetEnd = (y + 1) * width;
+                int offsetX = y * width;
+                for(int x= offsetX; x < offsetEnd; x++) {
+                    newMat.Data[x] = this.Sample((x - offsetX) * lx, y * ly);
+                }
+            });
+
+            return newMat;
+        }
     }
 }
