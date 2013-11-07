@@ -88,11 +88,16 @@ namespace FxMaths.GUI
 
         public override void Render(CanvasRenderArguments args, SizeF Zoom)
         {
-            // check if we have set the image
-            if(mImageBitmap != null) {
-                //RectangleF rect= new RectangleF( Position.X, Position.Y, Size.X, Size.Y );
-                // render the image
-                args.renderTarget.DrawBitmap(mImageBitmap, 1, BitmapInterpolationMode.Linear);
+            lock (this)
+            {
+                // check if we have set the image
+                if (mImageBitmap != null)
+                {
+
+                    var rect = new SharpDX.RectangleF(0, 0, Size.X, Size.Y);
+                    // render the image
+                    args.renderTarget.DrawBitmap(mImageBitmap,rect, 1, BitmapInterpolationMode.Linear);
+                }
             }
         }
         
@@ -159,6 +164,31 @@ namespace FxMaths.GUI
 
         public void UpdateInternalImage(Matrix.FxMatrixF mat)
         {
+            // check if we need to create a new internal buffer 
+            if (mat.Width != Width || mat.Height != Height)
+            {
+                lock (this)
+                {
+                    // set the properties of the image
+                    BitmapProperties bitmapProps = new BitmapProperties();
+                    bitmapProps.PixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied);
+
+                    // set the size of the image
+                    Width = mat.Width;
+                    Height = mat.Height;
+
+                    if (mImageBitmap == null)
+                    {
+                        mImageBitmap.Dispose();
+                    }
+
+                    // make the bitmap for Direct2D1
+                    mImageBitmap = new SharpDX.Direct2D1.Bitmap(this.Parent.RenderVariables.renderTarget,
+                                                                new Size2(Width, Height),
+                                                                bitmapProps);
+                }
+            }
+
             unsafe {
                 try {
                     int size = Width * Height;
@@ -185,6 +215,31 @@ namespace FxMaths.GUI
 
         public void UpdateInternalImage(Matrix.FxMatrixF mat, ColorMap map, bool useInvMap = false)
         {
+            // check if we need to create a new internal buffer 
+            if (mat.Width != Width || mat.Height != Height)
+            {
+                lock (this)
+                {
+                    // set the properties of the image
+                    BitmapProperties bitmapProps = new BitmapProperties();
+                    bitmapProps.PixelFormat = new SharpDX.Direct2D1.PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied);
+
+                    // set the size of the image
+                    Width = mat.Width;
+                    Height = mat.Height;
+
+                    if (mImageBitmap == null)
+                    {
+                        mImageBitmap.Dispose();
+                    }
+
+                    // make the bitmap for Direct2D1
+                    mImageBitmap = new SharpDX.Direct2D1.Bitmap(this.Parent.RenderVariables.renderTarget,
+                                                                new Size2(Width, Height),
+                                                                bitmapProps);
+                }
+            }
+
             unsafe {
                 try {
                     int size = Width * Height;
