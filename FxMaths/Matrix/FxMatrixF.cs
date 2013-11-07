@@ -83,6 +83,35 @@ namespace FxMaths.Matrix
             this.Data.Fill(value);
         }
 
+        public void SetValue(FxMatrixMask mask, float value)
+        {
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    if (mask[x])
+                        this.Data[x] = value;
+                }
+            });
+        }
+
+        public void SetValue(FxMatrixMask mask, int value)
+        {
+            // pass all the data and add the new data
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    if (mask[x])
+                        this.Data[x] = value;
+                }
+            });
+        }
+
+
         public FxMatrixF this[FxMatrixMask mask]
         {
             get
