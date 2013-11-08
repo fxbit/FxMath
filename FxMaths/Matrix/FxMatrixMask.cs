@@ -121,6 +121,18 @@ namespace FxMaths.Matrix
             }
         }
 
+        /// <summary>
+        /// Set each internal data based on external function.
+        /// </summary>
+        /// <param name="func"></param>
+        public void SetValueFunc(Func<int, int, bool> func)
+        {
+            Parallel.For(0, Height, (y) => {
+                for(int x= 0; x < Width; x++) {
+                    this[x,y] = func(x, y);
+                }
+            });
+        }
 
         #endregion
       
