@@ -381,20 +381,6 @@ namespace FxMaths.Matrix
 
         #region Labeling algorithm
 
-        private bool Labeling_mark(int x, int y, FxMatrixMask mask, FxMatrixF result, int count)
-        {
-            if (x < 0 || x >= Width || y < 0 || y >= Height)
-                return false;
-
-            if (mask[x, y])
-            {
-                result[x, y] = count;
-                mask[x, y] = false;
-                return true;
-            }
-            return false;
-        }
-
         private void Labeling_addStack(Stack<Tuple<int, int>> stack, int x, int y)
         {
             stack.Push(Tuple.Create(x, y - 1));
@@ -432,18 +418,22 @@ namespace FxMaths.Matrix
                     while (stack.Count > 0)
                     {
                         var dxy = stack.Pop();
+                        x = dxy.Item1;
+                        y = dxy.Item2;
 
-                        if (Labeling_mark(dxy.Item1, dxy.Item2, remainMask, labelMap, labelCount))
+                        if (x < 0 || x >= Width || y < 0 || y >= Height)
+                            continue;
+
+                        if (remainMask[x, y])
                         {
-                            Labeling_addStack(stack, dxy.Item1, dxy.Item2);
+                            labelMap[x, y] = labelCount;
+                            remainMask[x, y] = false;
+                            Labeling_addStack(stack, x, y);
                         }
                     }
                     labelCount++;
                 }
             }
-
-            Console.WriteLine("LabelCount:" + labelCount.ToString());
-
             return labelMap;
         }
         #endregion
