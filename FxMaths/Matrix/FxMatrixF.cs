@@ -1352,6 +1352,8 @@ namespace FxMaths.Matrix
 
 
 
+        #region Resize
+
         public FxMatrixF Resize(int width, int height)
         {
             var newMat = new FxMatrixF(width, height);
@@ -1367,6 +1369,45 @@ namespace FxMaths.Matrix
             });
 
             return newMat;
+        } 
+
+        #endregion
+
+
+
+        #region Median Filter 
+
+        public FxMatrixF MedianFilt(int sx = 3, int sy = 3)
+        {
+            FxMatrixF result = new FxMatrixF(Width, Height);
+            int sx2 = (int)Math.Floor(sx / 2.0);
+            int sy2 = (int)Math.Floor(sy / 2.0);
+            int midPoint = (int)Math.Floor(sx * sy / 2.0);
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int iy_start = (y > sy2) ? y - sy2 : 0;
+                int iy_end = (y + sy2 + 1 < Height) ? y + sy2 + 1 : Height;
+                FxMaths.Vector.FxVectorF vec = new Vector.FxVectorF(sx * sy);
+                for (int x = 0; x < Width; x++)
+                {
+                    int ix_start = (x > sx2) ? x - sx2 : 0;
+                    int ix_end = (x + sx2 + 1 < Width) ? x + sx2 + 1 : Width;
+                    int i = 0;
+                    for (int iy = iy_start; iy < iy_end; iy++)
+                        for (int ix = ix_start; ix < ix_end; ix++)
+                        {
+                            vec[i] = this[ix, iy];
+                            i++;
+                        }
+                    vec.Sort();
+                    result[x, y] = vec[midPoint];
+                }
+            });
+
+            return result;
         }
+
+        #endregion
     }
 }

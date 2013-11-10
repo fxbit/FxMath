@@ -527,5 +527,19 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
+        #region Sort
+        /// <summary>
+        /// Sort the internal list.
+        /// </summary>
+        public void Sort(bool Descending = false)
+        {
+            Array.Sort(this.Data);
+            if(Descending) {
+                Array.Reverse(this.Data);
+            }
+        } 
+        #endregion
     }
 }

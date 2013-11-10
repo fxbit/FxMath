@@ -8,7 +8,7 @@ namespace FxMaths.Matrix
 {
     public class FxMatrixMask
     {
-        public bool []Data;
+        public bool[] Data;
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -44,7 +44,7 @@ namespace FxMaths.Matrix
             this.Width = Width;
             this.Height = Height;
 
-            for(int i=0; i < Width * Height; i++)
+            for (int i = 0; i < Width * Height; i++)
                 this.Data[i] = value;
         }
 
@@ -127,25 +127,30 @@ namespace FxMaths.Matrix
         /// <param name="func"></param>
         public void SetValueFunc(Func<int, int, bool> func)
         {
-            Parallel.For(0, Height, (y) => {
-                for(int x= 0; x < Width; x++) {
-                    this[x,y] = func(x, y);
+            Parallel.For(0, Height, (y) =>
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    this[x, y] = func(x, y);
                 }
             });
         }
 
         #endregion
-      
+
 
 
         #region Bitwise calculations
 
         public void Or(FxMatrixMask mask)
         {
-            if(this.Width == mask.Width && this.Height == mask.Height) {
-                Parallel.For(0, Height, (y) => {
+            if (this.Width == mask.Width && this.Height == mask.Height)
+            {
+                Parallel.For(0, Height, (y) =>
+                {
                     int offsetEnd = (y + 1) * Width;
-                    for(int x= y * Width; x < offsetEnd; x++) {
+                    for (int x = y * Width; x < offsetEnd; x++)
+                    {
                         Data[x] = mask.Data[x] | Data[x];
                     }
                 });
@@ -154,10 +159,13 @@ namespace FxMaths.Matrix
 
         public void And(FxMatrixMask mask)
         {
-            if(this.Width == mask.Width && this.Height == mask.Height) {
-                Parallel.For(0, Height, (y) => {
+            if (this.Width == mask.Width && this.Height == mask.Height)
+            {
+                Parallel.For(0, Height, (y) =>
+                {
                     int offsetEnd = (y + 1) * Width;
-                    for(int x= y * Width; x < offsetEnd; x++) {
+                    for (int x = y * Width; x < offsetEnd; x++)
+                    {
                         Data[x] = mask.Data[x] & Data[x];
                     }
                 });
@@ -167,9 +175,11 @@ namespace FxMaths.Matrix
 
         public void Not()
         {
-            Parallel.For(0, Height, (y) => {
+            Parallel.For(0, Height, (y) =>
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     Data[x] = !Data[x];
                 }
             });
@@ -178,10 +188,13 @@ namespace FxMaths.Matrix
 
         public void Xor(FxMatrixMask mask)
         {
-            if(this.Width == mask.Width && this.Height == mask.Height) {
-                Parallel.For(0, Height, (y) => {
+            if (this.Width == mask.Width && this.Height == mask.Height)
+            {
+                Parallel.For(0, Height, (y) =>
+                {
                     int offsetEnd = (y + 1) * Width;
-                    for(int x= y * Width; x < offsetEnd; x++) {
+                    for (int x = y * Width; x < offsetEnd; x++)
+                    {
                         Data[x] = mask.Data[x] ^ Data[x];
                     }
                 });
@@ -229,9 +242,11 @@ namespace FxMaths.Matrix
             int Width = mat1.Width;
             float fValue = (dynamic)value;
 
-            Parallel.For(0, Height, (y) => {
+            Parallel.For(0, Height, (y) =>
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     result.Data[x] = mat1.Data[x] > fValue;
                 }
             });
@@ -245,9 +260,11 @@ namespace FxMaths.Matrix
             int Width = mat1.Width;
             float fValue = (dynamic)value;
 
-            Parallel.For(0, Height, (y) => {
+            Parallel.For(0, Height, (y) =>
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     result.Data[x] = mat1.Data[x] < fValue;
                 }
             });
@@ -262,9 +279,11 @@ namespace FxMaths.Matrix
             int Width = mat1.Width;
             float fValue = (dynamic)value;
 
-            Parallel.For(0, Height, (y) => {
+            Parallel.For(0, Height, (y) =>
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     result.Data[x] = mat1.Data[x] == fValue;
                 }
             });
@@ -278,9 +297,11 @@ namespace FxMaths.Matrix
             int Width = mat1.Width;
             float fValue = (dynamic)value;
 
-            Parallel.For(0, Height, (y) => {
+            Parallel.For(0, Height, (y) =>
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     result.Data[x] = mat1.Data[x] != fValue;
                 }
             });
@@ -305,21 +326,127 @@ namespace FxMaths.Matrix
 
 
 
-        #region Covert to FxMatrixF
+        #region Convert to FxMatrixF
 
         public FxMatrixF ToFxMatrixF()
         {
             FxMatrixF newMat = new FxMatrixF(Width, Height);
             // pass all the data and add the new data
-            for(int y=0; y < Height; y++) {
+            for (int y = 0; y < Height; y++)
+            {
                 int offsetEnd = (y + 1) * Width;
-                for(int x= y * Width; x < offsetEnd; x++) {
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
                     newMat[x] = (this.Data[x]) ? 1f : 0;
                 }
             }
             return newMat;
-        } 
+        }
 
         #endregion
+
+
+
+        #region Median Filtering
+        public FxMatrixMask MedianFilt(int sx = 3, int sy = 3)
+        {
+            FxMatrixMask result = new FxMatrixMask(Width, Height);
+            int sx2 = (int)Math.Floor(sx / 2.0);
+            int sy2 = (int)Math.Floor(sy / 2.0);
+            int midPoint = (int)Math.Floor(sx * sy / 2.0);
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int iy_start = (y > sy2) ? y - sy2 : 0;
+                int iy_end = (y + sy2 + 1 < Height) ? y + sy2 + 1 : Height;
+                for (int x = 0; x < Width; x++)
+                {
+                    int ix_start = (x > sx2) ? x - sx2 : 0;
+                    int ix_end = (x + sx2 + 1 < Width) ? x + sx2 + 1 : Width;
+                    int sum = 0;
+                    for (int iy = iy_start; iy < iy_end; iy++)
+                        for (int ix = ix_start; ix < ix_end; ix++)
+                        {
+                            if (this[ix, iy])
+                                sum++;
+                        }
+                    result[x, y] = sum >= midPoint;
+                }
+            });
+
+            return result;
+        }
+        #endregion
+
+
+        #region Labeling algorithm
+
+        private bool Labeling_mark(int x, int y, FxMatrixMask mask, FxMatrixF result, int count)
+        {
+            if (x < 0 || x >= Width || y < 0 || y >= Height)
+                return false;
+
+            if (mask[x, y])
+            {
+                result[x, y] = count;
+                mask[x, y] = false;
+                return true;
+            }
+            return false;
+        }
+
+        private void Labeling_addStack(Stack<Tuple<int, int>> stack, int x, int y)
+        {
+            stack.Push(Tuple.Create(x, y - 1));
+            stack.Push(Tuple.Create(x, y + 1));
+
+            stack.Push(Tuple.Create(x + 1, y - 1));
+            stack.Push(Tuple.Create(x + 1, y));
+            stack.Push(Tuple.Create(x + 1, y + 1));
+
+            stack.Push(Tuple.Create(x - 1, y - 1));
+            stack.Push(Tuple.Create(x - 1, y));
+            stack.Push(Tuple.Create(x - 1, y + 1));
+        }
+
+        public FxMatrixF Labeling(out int labelCount)
+        {
+            int maskSize = Width * Height;
+            var remainMask = this.Copy();
+            var labelMap = new FxMatrixF(Width, Height);
+            var stack = new Stack<Tuple<int, int>>(1000);
+
+            labelCount = 1;
+            for (int i = 0; i < maskSize; i++)
+            {
+                /* find the next start point */
+                if (remainMask[i])
+                {
+                    int x;
+                    int y = Math.DivRem(i, Width, out x);
+                    remainMask[i] = false;
+                    labelMap[x, y] = labelCount;
+
+                    /* propacate the search in sub pixels */
+                    Labeling_addStack(stack, x, y);
+                    while (stack.Count > 0)
+                    {
+                        var dxy = stack.Pop();
+
+                        if (Labeling_mark(dxy.Item1, dxy.Item2, remainMask, labelMap, labelCount))
+                        {
+                            Labeling_addStack(stack, dxy.Item1, dxy.Item2);
+                        }
+                    }
+                    labelCount++;
+                }
+            }
+
+            Console.WriteLine("LabelCount:" + labelCount.ToString());
+
+            return labelMap;
+        }
+        #endregion
+
     }
 }
