@@ -234,7 +234,23 @@ namespace FxMaths.Images
 
 		public override void Load(Matrix.FxMatrixF mat, ColorMap map)
 		{
-			throw new NotImplementedException();
+            if (mat.Height != Image.Height || mat.Width != Image.Width)
+                return;
+
+            this.LockImage();
+
+            byte* pDst = Scan0;
+            fixed (float* src = mat.Data)
+            {
+                float* pSrc = src;
+                float* pSrcEnd = pSrc + mat.Size;
+                for (; pSrc < pSrcEnd; pSrc++)
+                {
+                    *(pDst++) = (byte)(*(pSrc) * 255);
+                }
+            }
+
+            this.UnLockImage();
 		}
 	}
 }
