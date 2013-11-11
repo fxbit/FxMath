@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -438,5 +439,16 @@ namespace FxMaths.Matrix
         }
         #endregion
 
+
+
+        public Bitmap ToBitmap()
+        {
+            Bitmap bitmap = new Bitmap(Width, Height);
+
+            FxMaths.Images.FxImages fi = FxMaths.Images.FxTools.FxImages_safe_constructors(bitmap);
+            fi.Load(this.ToFxMatrixF().Gradient(), new Images.ColorMap(Images.ColorMapDefaults.Gray));
+
+            return bitmap;
+        }
     }
 }
