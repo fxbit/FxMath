@@ -208,6 +208,7 @@
     <Compile Include="Images\FxImageTools.cs" />
     <Compile Include="Images\FxTools.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Matrix\FxBlobTracker.cs" />
     <Compile Include="Matrix\FxMatrixF.Loaders.cs" />
     <Compile Include="Matrix\FxMatrixF.cs" />
     <Compile Include="Matrix\FxMatrixMask.cs" />
