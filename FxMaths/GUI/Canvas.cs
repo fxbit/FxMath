@@ -13,6 +13,7 @@ using Factory = SharpDX.Direct2D1.Factory;
 using Ellipse = SharpDX.Direct2D1.Ellipse;
 using Color = SharpDX.Color;
 using RectangleF = SharpDX.RectangleF;
+using FxMaths.Vector;
 
 namespace FxMaths.GUI
 {
@@ -96,6 +97,7 @@ namespace FxMaths.GUI
         }
         #endregion
 
+
         public Canvas()
         {
             InitializeComponent();
@@ -159,6 +161,8 @@ namespace FxMaths.GUI
             RenderArea.MouseDoubleClick += new MouseEventHandler( RenderArea_MouseDoubleClick );
 
         }
+
+
 
         #region Draw stuff
 
@@ -238,6 +242,7 @@ namespace FxMaths.GUI
         #endregion
 
 
+
         #region Form events
 
         protected override void OnPaint( PaintEventArgs e )
@@ -245,23 +250,28 @@ namespace FxMaths.GUI
             Render();
         }
 
-        protected override void OnResize( EventArgs e )
+        protected override void OnResize(EventArgs e)
         {
-            base.OnResize( e );
+            base.OnResize(e);
 
-            if ( RenderVariables.renderTarget != null ) {
-                // resize  the buffers
-                RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
+            if (RenderVariables.renderTarget != null)
+            {
+                lock (RenderVariables.renderTarget)
+                {
+                    // resize  the buffers
+                    RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
 
-                // set that the control must pe paint one time
-                isDirty = true;
+                    // set that the control must pe paint one time
+                    isDirty = true;
 
-                // redraw
-                Refresh();
+                    // redraw
+                    Refresh();
+                }
             }
         }
 
         #endregion
+
 
 
         #region point tranlsation in space
@@ -282,7 +292,10 @@ namespace FxMaths.GUI
         #endregion
 
 
+
+
         #region Elements Handling
+
 
         #region Add/Remove Elements
         public void AddElements( CanvasElements element ,Boolean Redraw=true)
@@ -320,6 +333,8 @@ namespace FxMaths.GUI
         }
         #endregion
 
+
+
         #region Internal Handling
 
         private CanvasElements HitElement( Vector.FxVector2f point )
@@ -343,7 +358,10 @@ namespace FxMaths.GUI
 
         #endregion
 
+
         #endregion
+
+
 
 
         #region Mouse events
@@ -538,6 +556,7 @@ namespace FxMaths.GUI
         #endregion
 
 
+
         #region Name to String
 
         public override string ToString()
@@ -546,6 +565,8 @@ namespace FxMaths.GUI
         }
 
         #endregion
+
+
 
         #region Dispose
 
@@ -659,7 +680,41 @@ namespace FxMaths.GUI
             }
         }
 
-    }
+
 
         #endregion
+
+
+
+        /// <summary>
+        /// Zoom out.
+        /// </summary>
+        public void FitView()
+        {
+            // find boundary of the internal elements.
+            FxVector2f min = new FxVector2f(float.MaxValue);
+            FxVector2f max = new FxVector2f(float.MinValue);
+            foreach(CanvasElements c in ElementsList)
+            {
+                if (c.Position.x < min.x)
+                    min.x = c.Position.x;
+                if (c.Position.y < min.y)
+                    min.y = c.Position.y;
+                var m = c.Position.x + c.Size.x;
+                if (m > max.x)
+                    max.x = m;
+                m = c.Position.y + c.Size.y;
+                if (m > max.y)
+                    max.y = m;
+            }
+
+            // find the correct zoom factor
+            var delta = max - min;
+            var z = this.Width / delta.x;
+            z = (z < this.Height / delta.y) ? this.Height / delta.y : z;
+            this._Zoom.Width = z;
+            this._Zoom.Height = z;
+        }
+    }
+
 }
