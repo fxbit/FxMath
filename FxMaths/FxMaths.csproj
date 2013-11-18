@@ -156,6 +156,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Complex\FxComplex.cs" />
     <Compile Include="Complex\ComplexTools.cs" />
     <Compile Include="Cuda\CudaUtils.cs" />
     <Compile Include="Cuda\FxCuda.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Images\FxTools.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Matrix\FxBlobTracker.cs" />
+    <Compile Include="Matrix\FxContour.cs" />
     <Compile Include="Matrix\FxMatrixF.Loaders.cs" />
     <Compile Include="Matrix\FxMatrixF.cs" />
     <Compile Include="Matrix\FxMatrixMask.cs" />
