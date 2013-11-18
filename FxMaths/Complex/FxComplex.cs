@@ -111,18 +111,18 @@ namespace FxMaths.Complex
 
 
 
-        #region Math abstract functions
-        public static abstract FxComplex<T> Add(FxComplex<T> x1, FxComplex<T> x2);
-        public static abstract FxComplex<T> Subtract(FxComplex<T> x1, FxComplex<T> x2);
-        public static abstract FxComplex<T> Multiply(FxComplex<T> x1, FxComplex<T> x2);
-        public static abstract FxComplex<T> Multiply(FxComplex<T> x1, float k);
-        public static abstract FxComplex<T> Multiply(FxComplex<T> x1, double k);
-        public static abstract FxComplex<T> Multiply(FxComplex<T> x1, int k); 
+        #region Math functions
+        public static FxComplex<T> Add(FxComplex<T> x1, FxComplex<T> x2) { throw new NotImplementedException(); }
+        public static FxComplex<T> Subtract(FxComplex<T> x1, FxComplex<T> x2) { throw new NotImplementedException(); }
+        public static FxComplex<T> Multiply(FxComplex<T> x1, FxComplex<T> x2) { throw new NotImplementedException(); }
+        public static FxComplex<T> Multiply(FxComplex<T> x1, float k) { throw new NotImplementedException(); }
+        public static FxComplex<T> Multiply(FxComplex<T> x1, double k) { throw new NotImplementedException(); }
+        public static FxComplex<T> Multiply(FxComplex<T> x1, int k) { throw new NotImplementedException(); } 
         #endregion
 
     }
 
-    public class FxComplexF:FxComplex<float>
+    public class FxComplexF : FxComplex<float>
     {
 
 
