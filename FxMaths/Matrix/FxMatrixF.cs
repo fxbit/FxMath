@@ -5,8 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace FxMaths.Matrix
 {
+
+    [Serializable]
     public partial class FxMatrixF : FxMatrix<float>
     {
 

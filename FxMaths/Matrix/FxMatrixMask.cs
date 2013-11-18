@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FxMaths.Matrix
 {
+    [Serializable]
     public class FxMatrixMask
     {
         public bool[] Data;

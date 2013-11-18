@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FxMaths.Matrix
 {
+    [Serializable]
     public abstract partial class FxMatrix<T> where T : struct, IComparable, IComparable<T>, IEquatable<T>
     {
 
@@ -1174,6 +1175,9 @@ namespace FxMaths.Matrix
         #region Override 
         public override string ToString()
         {
+            return string.Format("Width: {0}, Height: {1}",
+                                     Width, Height);
+            /*
             StringBuilder strB = new StringBuilder();
 
             for (int y = 0; y < Height; y++)
@@ -1186,6 +1190,7 @@ namespace FxMaths.Matrix
             }
 
             return strB.ToString();
+             */
         }
 
         #endregion
