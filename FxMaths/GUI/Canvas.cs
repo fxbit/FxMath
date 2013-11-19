@@ -289,13 +289,13 @@ namespace FxMaths.GUI
 
 
         #region Add/Remove Elements
-        public void AddElements( CanvasElements element ,Boolean Redraw=true)
+        public void AddElements(CanvasElements element, Boolean Redraw = true)
         {
             // set the parent of the new element
             element.Parent = this;
 
             // load the element before add
-            element.Load( RenderVariables );
+            element.Load(RenderVariables);
 
             // protect the element list
             lock (ElementsList)
@@ -303,17 +303,22 @@ namespace FxMaths.GUI
                 // add the element to the internal list
                 ElementsList.Add(element);
             }
-            
+
             // update element list in form
-            ComboBox_elements.Items.Clear();
-            ComboBox_elements.Items.AddRange(ElementsList.ToArray());
+            if (this.IsHandleCreated)
+                this.BeginInvoke((Action)(() =>
+                {
+                    ComboBox_elements.Items.Clear();
+                    ComboBox_elements.Items.AddRange(ElementsList.ToArray());
+                }));
+
 
             // refresh the image
-            if(Redraw)
+            if (Redraw)
                 ReDraw();
         }
 
-        public void RemoveElements( CanvasElements element, Boolean Redraw = true )
+        public void RemoveElements(CanvasElements element, Boolean Redraw = true)
         {
             // protect the element list
             lock (ElementsList)
@@ -323,11 +328,15 @@ namespace FxMaths.GUI
             }
 
             // update element list in form
-            ComboBox_elements.Items.Clear();
-            ComboBox_elements.Items.AddRange(ElementsList.ToArray());
+            if (this.IsHandleCreated)
+                this.BeginInvoke((Action)(() =>
+                {
+                    ComboBox_elements.Items.Clear();
+                    ComboBox_elements.Items.AddRange(ElementsList.ToArray());
+                }));
 
             // refresh the image
-            if ( Redraw )
+            if (Redraw)
                 ReDraw();
         }
         #endregion
@@ -717,11 +726,13 @@ namespace FxMaths.GUI
 
             // find the correct zoom factor
             var delta = max - min;
-            var z = this.Width / delta.x;
-            z = (z < this.Height / delta.y) ? this.Height / delta.y : z;
+            var z = RenderArea.Width / delta.x;
+            z = (z > RenderArea.Height / delta.y) ? RenderArea.Height / delta.y : z;
             this._Zoom.Width = z;
             this._Zoom.Height = z;
-        } 
+            this._ScreenOffset.X = 0;
+            this._ScreenOffset.Y = 0;
+        }
 
         #endregion
 
