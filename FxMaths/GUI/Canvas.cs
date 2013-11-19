@@ -160,6 +160,9 @@ namespace FxMaths.GUI
             RenderArea.MouseClick += new MouseEventHandler( RenderArea_MouseClick );
             RenderArea.MouseDoubleClick += new MouseEventHandler( RenderArea_MouseDoubleClick );
 
+
+            // link propertie grid
+            propertyGrid1.SelectedObject = this;
         }
 
 
@@ -312,6 +315,10 @@ namespace FxMaths.GUI
                 // add the element to the internal list
                 ElementsList.Add(element);
             }
+            
+            // update element list in form
+            ComboBox_elements.Items.Clear();
+            ComboBox_elements.Items.AddRange(ElementsList.ToArray());
 
             // refresh the image
             if(Redraw)
@@ -326,6 +333,10 @@ namespace FxMaths.GUI
                 // remove the element from the internal list
                 ElementsList.Remove(element);
             }
+
+            // update element list in form
+            ComboBox_elements.Items.Clear();
+            ComboBox_elements.Items.AddRange(ElementsList.ToArray());
 
             // refresh the image
             if ( Redraw )
@@ -347,11 +358,14 @@ namespace FxMaths.GUI
                 {
                     if (element.IsHit(point))
                     {
+                        ComboBox_elements.SelectedItem = element;
+                        propertyGrid1.SelectedObject = element;
                         return element;
                     }
                 }
             }
 
+            propertyGrid1.SelectedObject = this;
             // if we don't find it we return null
             return null;
         }
@@ -715,6 +729,25 @@ namespace FxMaths.GUI
             this._Zoom.Width = z;
             this._Zoom.Height = z;
         }
+
+
+
+
+
+        private void toolStripButton_propertieGrid_Click(object sender, EventArgs e)
+        {
+            if (toolStripButton_propertieGrid.Checked)
+            {
+                splitContainer1.Panel1Collapsed = true;
+                toolStripButton_propertieGrid.Checked = false;
+            }
+            else
+            {
+                splitContainer1.Panel1Collapsed = false;
+                toolStripButton_propertieGrid.Checked = true;
+            }
+        }
+
     }
 
 }
