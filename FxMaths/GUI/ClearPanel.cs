@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace FxMaths.GUI
 {
-    public class ClearPanel : Panel
+    class ClearPanel : Panel
     {
         public ClearPanel()
         {
