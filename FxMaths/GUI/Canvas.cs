@@ -14,6 +14,7 @@ using Ellipse = SharpDX.Direct2D1.Ellipse;
 using Color = SharpDX.Color;
 using RectangleF = SharpDX.RectangleF;
 using FxMaths.Vector;
+using System.Reflection;
 
 namespace FxMaths.GUI
 {
@@ -57,6 +58,8 @@ namespace FxMaths.GUI
         // list with all elements that the user have insert
         List<CanvasElements> ElementsList;
 
+
+
         #region Selected/Edit Border Brush/Color
 
         SolidColorBrush BrushSelectedBorder;
@@ -98,12 +101,21 @@ namespace FxMaths.GUI
         #endregion
 
 
+
+
+        #region Constructor
+
         public Canvas()
         {
             InitializeComponent();
 
             // start the factory
-            RenderVariables.factory = new Factory( FactoryType.MultiThreaded );
+            RenderVariables.factory = new Factory(FactoryType.MultiThreaded);
+
+
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.UserPaint |
+                          ControlStyles.OptimizedDoubleBuffer, true);
 
             // criate the properties of the controler
             HwndRenderTargetProperties windowProperties = new HwndRenderTargetProperties();
@@ -114,12 +126,12 @@ namespace FxMaths.GUI
             windowProperties.PresentOptions = PresentOptions.None;
 
             // create the render target 
-            RenderVariables.renderTarget = new WindowRenderTarget(RenderVariables.factory, 
-                new RenderTargetProperties(new PixelFormat( SharpDX.DXGI.Format.Unknown, AlphaMode.Premultiplied)),
+            RenderVariables.renderTarget = new WindowRenderTarget(RenderVariables.factory,
+                new RenderTargetProperties(new PixelFormat(SharpDX.DXGI.Format.Unknown, AlphaMode.Premultiplied)),
                 windowProperties);
 
             // create the write factory
-            RenderVariables.WriteFactory = new SharpDX.DirectWrite.Factory( SharpDX.DirectWrite.FactoryType.Shared );
+            RenderVariables.WriteFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
 
             // create write target
             // set the antialias mode
@@ -132,15 +144,15 @@ namespace FxMaths.GUI
             RenderVariables.renderTarget.Transform = Matrix3x2.Identity;
 
             // init the offset
-            _ScreenOffset = new Vector2(10,10);
+            _ScreenOffset = new Vector2(10, 10);
 
             // init zoom
-            _Zoom = new SizeF( 1, 1 );
+            _Zoom = new SizeF(1, 1);
 
             // set the origineBrush
             if (originBrush != null)
                 originBrush.Dispose();
-            originBrush = new SolidColorBrush( RenderVariables.renderTarget, new Color4( Color.Bisque.R, Color.Bisque.G, Color.Bisque.B , 1.0f) );
+            originBrush = new SolidColorBrush(RenderVariables.renderTarget, new Color4(Color.Bisque.R, Color.Bisque.G, Color.Bisque.B, 1.0f));
 
             // init elements list
             ElementsList = new List<CanvasElements>();
@@ -154,16 +166,19 @@ namespace FxMaths.GUI
             ReDraw();
 
             // get mouse events from RenderArea
-            RenderArea.MouseDown += new MouseEventHandler( RenderArea_MouseDown );
-            RenderArea.MouseMove += new MouseEventHandler( RenderArea_MouseMove );
-            RenderArea.MouseUp += new MouseEventHandler( RenderArea_MouseUp );
-            RenderArea.MouseClick += new MouseEventHandler( RenderArea_MouseClick );
-            RenderArea.MouseDoubleClick += new MouseEventHandler( RenderArea_MouseDoubleClick );
+            RenderArea.MouseDown += new MouseEventHandler(RenderArea_MouseDown);
+            RenderArea.MouseMove += new MouseEventHandler(RenderArea_MouseMove);
+            RenderArea.MouseUp += new MouseEventHandler(RenderArea_MouseUp);
+            RenderArea.MouseClick += new MouseEventHandler(RenderArea_MouseClick);
+            RenderArea.MouseDoubleClick += new MouseEventHandler(RenderArea_MouseDoubleClick);
 
 
             // link propertie grid
             propertyGrid1.SelectedObject = this;
         }
+        
+        #endregion
+
 
 
 
@@ -171,11 +186,14 @@ namespace FxMaths.GUI
 
         public void ReDraw()
         {
+            if (RenderVariables.renderTarget != null)
+            {
                 // set that the control must pe paint one time
                 isDirty = true;
 
                 // redraw
                 Render();
+            }
         }
 
 
@@ -244,36 +262,6 @@ namespace FxMaths.GUI
 
         #endregion
 
-
-
-        #region Form events
-
-        protected override void OnPaint( PaintEventArgs e )
-        {
-            Render();
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-
-            if (RenderVariables.renderTarget != null)
-            {
-                lock (RenderVariables.renderTarget)
-                {
-                    // resize  the buffers
-                    RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
-
-                    // set that the control must pe paint one time
-                    isDirty = true;
-
-                    // redraw
-                    Refresh();
-                }
-            }
-        }
-
-        #endregion
 
 
 
@@ -571,6 +559,7 @@ namespace FxMaths.GUI
 
 
 
+
         #region Name to String
 
         public override string ToString()
@@ -579,6 +568,7 @@ namespace FxMaths.GUI
         }
 
         #endregion
+
 
 
 
@@ -700,6 +690,9 @@ namespace FxMaths.GUI
 
 
 
+
+        #region Misc Utils
+
         /// <summary>
         /// Zoom out.
         /// </summary>
@@ -708,7 +701,7 @@ namespace FxMaths.GUI
             // find boundary of the internal elements.
             FxVector2f min = new FxVector2f(float.MaxValue);
             FxVector2f max = new FxVector2f(float.MinValue);
-            foreach(CanvasElements c in ElementsList)
+            foreach (CanvasElements c in ElementsList)
             {
                 if (c.Position.x < min.x)
                     min.x = c.Position.x;
@@ -728,12 +721,15 @@ namespace FxMaths.GUI
             z = (z < this.Height / delta.y) ? this.Height / delta.y : z;
             this._Zoom.Width = z;
             this._Zoom.Height = z;
-        }
+        } 
+
+        #endregion
 
 
 
 
 
+        #region Properties grid show/hide button
         private void toolStripButton_propertieGrid_Click(object sender, EventArgs e)
         {
             if (toolStripButton_propertieGrid.Checked)
@@ -746,7 +742,39 @@ namespace FxMaths.GUI
                 splitContainer1.Panel1Collapsed = false;
                 toolStripButton_propertieGrid.Checked = true;
             }
+        } 
+        #endregion
+
+
+
+
+
+        #region RenderArea events
+
+        private void RenderArea_Paint(object sender, PaintEventArgs e)
+        {
+            ReDraw();
         }
+
+        private void RenderArea_Resize(object sender, EventArgs e)
+        {
+            if (RenderVariables.renderTarget != null)
+            {
+                lock (RenderVariables.renderTarget)
+                {
+                    // resize  the buffers
+                    RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
+
+                    // set that the control must pe paint one time
+                    isDirty = true;
+
+                    // redraw
+                    Refresh();
+                }
+            }
+        } 
+
+        #endregion
 
     }
 

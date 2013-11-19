@@ -191,6 +191,9 @@
       <DependentUpon>Canvas.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\CanvasElements.cs" />
+    <Compile Include="GUI\ClearPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GUI\GMapPlotElement.cs" />
     <Compile Include="GUI\Struct.cs" />
     <Compile Include="GUI\TextElement.cs" />
@@ -218,6 +221,11 @@
     <Compile Include="MiscUtils.cs" />
     <Compile Include="Noise\INoise2D.cs" />
     <Compile Include="Noise\PerlinNoise.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TimeStatistics.cs" />
     <Compile Include="Utils\CsvFileWriter.cs" />
     <Compile Include="Vector\FxVectorI.cs" />
@@ -240,6 +248,10 @@
   <ItemGroup>
     <EmbeddedResource Include="GUI\Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
