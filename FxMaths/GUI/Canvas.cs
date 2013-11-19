@@ -707,6 +707,9 @@ namespace FxMaths.GUI
         /// </summary>
         public void FitView()
         {
+            if (ElementsList.Count == 0)
+                return;
+
             // find boundary of the internal elements.
             FxVector2f min = new FxVector2f(float.MaxValue);
             FxVector2f max = new FxVector2f(float.MinValue);
@@ -732,6 +735,13 @@ namespace FxMaths.GUI
             this._Zoom.Height = z;
             this._ScreenOffset.X = 0;
             this._ScreenOffset.Y = 0;
+        }
+
+
+        private void Button_ViewFit_Click(object sender, EventArgs e)
+        {
+            this.FitView();
+            this.ReDraw();
         }
 
         #endregion
@@ -786,6 +796,9 @@ namespace FxMaths.GUI
         } 
 
         #endregion
+
+
+
 
     }
 

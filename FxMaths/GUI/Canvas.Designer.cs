@@ -31,32 +31,22 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Canvas));
-            this.RenderArea = new FxMaths.GUI.ClearPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton_propertieGrid = new System.Windows.Forms.ToolStripButton();
-            this.ToolButton_GetPosition = new System.Windows.Forms.ToolStripButton();
-            this.ToolButtonSetPosition = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ComboBox_elements = new System.Windows.Forms.ToolStripComboBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.toolStripButton_propertieGrid = new System.Windows.Forms.ToolStripButton();
+            this.ToolButton_GetPosition = new System.Windows.Forms.ToolStripButton();
+            this.ToolButtonSetPosition = new System.Windows.Forms.ToolStripButton();
+            this.Button_ViewFit = new System.Windows.Forms.ToolStripButton();
+            this.RenderArea = new FxMaths.GUI.ClearPanel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // RenderArea
-            // 
-            this.RenderArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RenderArea.Location = new System.Drawing.Point(0, 33);
-            this.RenderArea.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.RenderArea.Name = "RenderArea";
-            this.RenderArea.Size = new System.Drawing.Size(1064, 555);
-            this.RenderArea.TabIndex = 0;
-            this.RenderArea.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderArea_Paint);
-            this.RenderArea.Resize += new System.EventHandler(this.RenderArea_Resize);
             // 
             // toolStrip1
             // 
@@ -66,7 +56,8 @@
             this.ToolButton_GetPosition,
             this.ToolButtonSetPosition,
             this.toolStripSeparator1,
-            this.ComboBox_elements});
+            this.ComboBox_elements,
+            this.Button_ViewFit});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -74,36 +65,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(1064, 33);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripButton_propertieGrid
-            // 
-            this.toolStripButton_propertieGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_propertieGrid.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_propertieGrid.Image")));
-            this.toolStripButton_propertieGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton_propertieGrid.Name = "toolStripButton_propertieGrid";
-            this.toolStripButton_propertieGrid.Size = new System.Drawing.Size(23, 30);
-            this.toolStripButton_propertieGrid.Text = "Show Properties";
-            this.toolStripButton_propertieGrid.Click += new System.EventHandler(this.toolStripButton_propertieGrid_Click);
-            // 
-            // ToolButton_GetPosition
-            // 
-            this.ToolButton_GetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToolButton_GetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButton_GetPosition.Image")));
-            this.ToolButton_GetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ToolButton_GetPosition.Name = "ToolButton_GetPosition";
-            this.ToolButton_GetPosition.Size = new System.Drawing.Size(23, 30);
-            this.ToolButton_GetPosition.Text = "GetThePosition";
-            this.ToolButton_GetPosition.Click += new System.EventHandler(this.ToolButton_GetPosition_Click);
-            // 
-            // ToolButtonSetPosition
-            // 
-            this.ToolButtonSetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToolButtonSetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButtonSetPosition.Image")));
-            this.ToolButtonSetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ToolButtonSetPosition.Name = "ToolButtonSetPosition";
-            this.ToolButtonSetPosition.Size = new System.Drawing.Size(23, 30);
-            this.ToolButtonSetPosition.Text = "SetPosition";
-            this.ToolButtonSetPosition.Click += new System.EventHandler(this.ToolButtonSetPosition_Click);
             // 
             // toolStripSeparator1
             // 
@@ -145,6 +106,57 @@
             this.propertyGrid1.Size = new System.Drawing.Size(236, 100);
             this.propertyGrid1.TabIndex = 0;
             // 
+            // toolStripButton_propertieGrid
+            // 
+            this.toolStripButton_propertieGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_propertieGrid.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_propertieGrid.Image")));
+            this.toolStripButton_propertieGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_propertieGrid.Name = "toolStripButton_propertieGrid";
+            this.toolStripButton_propertieGrid.Size = new System.Drawing.Size(23, 30);
+            this.toolStripButton_propertieGrid.Text = "Show Properties";
+            this.toolStripButton_propertieGrid.Click += new System.EventHandler(this.toolStripButton_propertieGrid_Click);
+            // 
+            // ToolButton_GetPosition
+            // 
+            this.ToolButton_GetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ToolButton_GetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButton_GetPosition.Image")));
+            this.ToolButton_GetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToolButton_GetPosition.Name = "ToolButton_GetPosition";
+            this.ToolButton_GetPosition.Size = new System.Drawing.Size(23, 30);
+            this.ToolButton_GetPosition.Text = "GetThePosition";
+            this.ToolButton_GetPosition.Click += new System.EventHandler(this.ToolButton_GetPosition_Click);
+            // 
+            // ToolButtonSetPosition
+            // 
+            this.ToolButtonSetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ToolButtonSetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButtonSetPosition.Image")));
+            this.ToolButtonSetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToolButtonSetPosition.Name = "ToolButtonSetPosition";
+            this.ToolButtonSetPosition.Size = new System.Drawing.Size(23, 30);
+            this.ToolButtonSetPosition.Text = "SetPosition";
+            this.ToolButtonSetPosition.Click += new System.EventHandler(this.ToolButtonSetPosition_Click);
+            // 
+            // Button_ViewFit
+            // 
+            this.Button_ViewFit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.Button_ViewFit.Image = global::FxMaths.Properties.Resources.view_fullscreen_6;
+            this.Button_ViewFit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Button_ViewFit.Name = "Button_ViewFit";
+            this.Button_ViewFit.Size = new System.Drawing.Size(23, 30);
+            this.Button_ViewFit.Text = "Fit";
+            this.Button_ViewFit.Click += new System.EventHandler(this.Button_ViewFit_Click);
+            // 
+            // RenderArea
+            // 
+            this.RenderArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RenderArea.Location = new System.Drawing.Point(0, 33);
+            this.RenderArea.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.RenderArea.Name = "RenderArea";
+            this.RenderArea.Size = new System.Drawing.Size(1064, 555);
+            this.RenderArea.TabIndex = 0;
+            this.RenderArea.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderArea_Paint);
+            this.RenderArea.Resize += new System.EventHandler(this.RenderArea_Resize);
+            // 
             // Canvas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -175,5 +187,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton_propertieGrid;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripComboBox ComboBox_elements;
+        private System.Windows.Forms.ToolStripButton Button_ViewFit;
     }
 }
