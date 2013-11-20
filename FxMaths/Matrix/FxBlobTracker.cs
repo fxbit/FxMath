@@ -67,11 +67,28 @@ namespace FxMaths.Matrix
 
         public void Process(FxMatrixF NextFrame)
         {
+#if false
             // create the boolean image 
             m = (1 - a) * m + a * NextFrame;
             var diff = NextFrame - m;
             s = (1 - a) * s + a * diff * diff;
             G = diff*diff > s;
+#else
+            int Width = NextFrame.Width;
+            int Height = NextFrame.Height;
+            Parallel.For(0, Height, (y) =>
+            {
+                var diff2 = 0f;
+                for (int x = 0; x < Width; x++)
+                {
+                    m[x, y] = (1 - a) * m[x, y] + a * NextFrame[x, y];
+                    diff2 = NextFrame[x, y] - m[x, y];
+                    diff2 *= diff2;
+                    s[x, y] = (1 - a) * s[x, y] + a * diff2;
+                    G[x, y] = diff2 > s[x, y];
+                }
+            });
+#endif
 
             // create a resize value
             G_small.SetValueFunc((x, y) =>
@@ -82,9 +99,11 @@ namespace FxMaths.Matrix
                     for (int iy = y * step_h; iy < y * step_h + step_h; iy++)
                     {
                         sum += G[ix, iy] ? 1 : 0;
+                        if (sum >= cG_thd)
+                            return true;
                     }
                 }
-                return sum >= cG_thd;
+                return false;
             });
 
             // filter out any small points 
