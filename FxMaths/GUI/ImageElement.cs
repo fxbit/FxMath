@@ -8,6 +8,7 @@ using SharpDX;
 using System.Drawing;
 using SharpDX.Direct2D1;
 using FxMaths.Images;
+using System.Threading.Tasks;
 
 namespace FxMaths.GUI
 {
@@ -196,6 +197,8 @@ namespace FxMaths.GUI
                         fixed(float *src = mat.Data) {
                             byte *pDst = dst;
                             float *pSrc = src;
+                            
+#if false
                             float *pSrcEnd = pSrc + mat.Size;
                             for(; pSrc < pSrcEnd; pSrc++) {
                                 byte value = (byte)(*(pSrc) * 255);
@@ -204,6 +207,23 @@ namespace FxMaths.GUI
                                 *(pDst++) = value;
                                 *(pDst++) = 255;
                             }
+#else
+                            int step = size / 8;
+                            Parallel.For(0, 8, (s) =>
+                            {
+                                int end = (s + 1) * step;
+                                for (int i = s * step; i < end; i++)
+                                {
+                                    byte value = (byte)(*(pSrc) * 255);
+                                    int i4 = i * 4;
+                                    *(pDst + i4) = value;
+                                    *(pDst + i4 + 1) = value;
+                                    *(pDst + i4 + 2) = value;
+                                    *(pDst + i4 + 3) = 255;
+
+                                }
+                            });
+#endif
                         }
                     }
 
@@ -243,20 +263,48 @@ namespace FxMaths.GUI
             unsafe {
                 try {
                     int size = Width * Height;
-                    fixed(byte* dst = internalImage) {
-                        fixed(float* src = mat.Data) {
+                    fixed (byte* dst = internalImage)
+                    {
+                        fixed (float* src = mat.Data)
+                        {
                             byte* pDst = dst;
                             float* pSrc = src;
-                            float* pSrcEnd = pSrc + mat.Size;
-                            if(useInvMap) {
-                                for(; pSrc < pSrcEnd; pSrc++) {
+
+                            if (useInvMap)
+                            {
+#if false
+                                float* pSrcEnd = pSrc + mat.Size;
+                                for (; pSrc < pSrcEnd; pSrc++)
+                                {
                                     byte id = (byte)(255 - *(pSrc) * 255);
                                     *(pDst++) = map[id, 2];
                                     *(pDst++) = map[id, 1];
                                     *(pDst++) = map[id, 0];
                                     *(pDst++) = 255;
                                 }
-                            } else {
+#else
+                                int step = size / 8;
+                                Parallel.For(0, 8, (s) =>
+                                {
+                                    int end = (s + 1) * step;
+                                    for (int i = s * step; i < end; i++)
+                                    {
+                                        byte id = (byte)(255 - *(pSrc + i) * 255);
+                                        int i4 = i * 4;
+                                        *(pDst + i4) = map[id, 2];
+                                        *(pDst + i4 + 1) = map[id, 1];
+                                        *(pDst + i4 + 2) = map[id, 0];
+                                        *(pDst + i4 + 3) = 255;
+
+                                    }
+                                });
+#endif
+                            }
+                            else
+                            {
+#if false
+                                
+                                float* pSrcEnd = pSrc + mat.Size;
                                 for(; pSrc < pSrcEnd; pSrc++) {
                                     byte id = (byte)(*(pSrc) * 255);
                                     *(pDst++) = map[id, 2];
@@ -264,7 +312,23 @@ namespace FxMaths.GUI
                                     *(pDst++) = map[id, 0];
                                     *(pDst++) = 255;
                                 }
+#else
+                                int step = size / 8;
+                                Parallel.For(0, 8, (s) =>
+                                {
+                                    int end = (s + 1) * step;
+                                    for (int i = s * step; i < end; i++)
+                                    {
+                                        byte id = (byte)(*(pSrc + i) * 255);
+                                        int i4 = i * 4;
+                                        *(pDst + i4) = map[id, 2];
+                                        *(pDst + i4 + 1) = map[id, 1];
+                                        *(pDst + i4 + 2) = map[id, 0];
+                                        *(pDst + i4 + 3) = 255;
 
+                                    }
+                                });
+#endif
                             }
                         }
                     }
@@ -309,4 +373,5 @@ namespace FxMaths.GUI
 
         #endregion
     }
+
 }
