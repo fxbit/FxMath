@@ -157,31 +157,31 @@ namespace FxMaths.Complex
             this.r += x.r;
         }
 
-        public FxComplexF Add(FxComplexF x1, FxComplexF x2)
+        public static FxComplexF Add(FxComplexF x1, FxComplexF x2)
         {
             return new FxComplexF(x1.r + x2.r, x1.i + x2.i);
         }
-        public FxComplexF Subtract(FxComplexF x1, FxComplexF x2)
+        public static FxComplexF Subtract(FxComplexF x1, FxComplexF x2)
         {
             return new FxComplexF(x1.r - x2.r, x1.i - x2.i);
         }
 
-        public FxComplexF Multiply(FxComplexF x1, FxComplexF x2)
+        public static FxComplexF Multiply(FxComplexF x1, FxComplexF x2)
         {
             return new FxComplexF(x1.r * x2.r - x1.i * x2.i, x1.i * x2.r + x1.r * x2.i);
         }
 
-        public FxComplexF Multiply(FxComplexF x1, float k)
+        public static FxComplexF Multiply(FxComplexF x1, float k)
         {
             return new FxComplexF(x1.r * k, x1.i * k);
         }
 
-        public FxComplexF Multiply(FxComplexF x1, double k)
+        public static FxComplexF Multiply(FxComplexF x1, double k)
         {
             return new FxComplexF((float)(x1.r * k), (float)(x1.i * k));
         }
 
-        public FxComplexF Multiply(FxComplexF x1, int k)
+        public static FxComplexF Multiply(FxComplexF x1, int k)
         {
             return new FxComplexF(x1.r * k, x1.i * k);
         } 
@@ -208,5 +208,53 @@ namespace FxMaths.Complex
         } 
         #endregion
 
+
+        #region Operators
+
+        public static FxComplexF operator +(FxComplexF x1, FxComplexF x2)
+        {
+            return FxComplexF.Add(x1, x2);
+        }
+
+        public static FxComplexF operator -(FxComplexF x1, FxComplexF x2)
+        {
+            return FxComplexF.Subtract(x1, x2);
+        }
+
+        public static FxComplexF operator *(FxComplexF x1, FxComplexF x2)
+        {
+            return FxComplexF.Multiply(x1, x2);
+        }
+
+        public static FxComplexF operator *(FxComplexF x1, float k)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+
+        public static FxComplexF operator *(FxComplexF x1, double k)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+
+        public static FxComplexF operator *(FxComplexF x1, int k)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+
+        public static FxComplexF operator *(float k, FxComplexF x1)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+
+        public static FxComplexF operator *(double k, FxComplexF x1)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+
+        public static FxComplexF operator *(int k, FxComplexF x1)
+        {
+            return FxComplexF.Multiply(x1, k);
+        }
+        #endregion
     }
 }

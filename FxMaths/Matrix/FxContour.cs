@@ -102,10 +102,15 @@ namespace FxMaths.Matrix
             int i = 0;
             foreach(FxContourChain chain in ChainList)
             {
+                chain.Equalization(20);
                 i++;
                 FxVector2f prevPoint = chain.StartPoint;
                 foreach (FxComplexF c in chain.ListComplex)
                 {
+                    if (prevPoint.x >= Width)
+                        prevPoint.x = Width-1;
+                    if (prevPoint.y >= Height)
+                        prevPoint.y = Height-1;
                     result[(int)prevPoint.x, (int)prevPoint.y] = i;
 
                     // calc the new prev point
@@ -154,7 +159,13 @@ namespace FxMaths.Matrix
         /// </summary>
         private FxVector2f prevPoint;
 
-        
+        public int Count { get { return ListComplex.Count; } }
+
+        public FxComplexF this[int i]
+        {
+            get { return ListComplex[i]; }
+            set { ListComplex[i] = value; }
+        }
 
         public FxContourChain(float x, float y)
         {
@@ -219,6 +230,56 @@ namespace FxMaths.Matrix
 
             // return the old prev point 
             return result;
+        }
+
+        public void Equalization(int newCount)
+        {
+            if(ListComplex.Count<newCount)
+            {
+                EqualizationUp(newCount);
+            }
+            else
+            {
+                EqualizationDown(newCount);
+            }
+        }
+
+        private void EqualizationUp(int newCount)
+        {
+            List<FxComplexF> newList = new List<FxComplexF>();
+
+            for (int i = 0; i < newCount; i++)
+            {
+                float index = 1f * i * Count / newCount;
+                int j = (int)index;
+                float k = index - j;
+                if (j == Count - 1)
+                    newList.Add(this[j]);
+                else
+                    newList.Add(this[j] * (1 - k) + this[j + 1] * k);
+            }
+
+            ListComplex.Clear();
+            ListComplex = newList;
+        }
+
+
+        private void EqualizationDown(int newCount)
+        {
+            FxComplexF[] newPoint = new FxComplexF[newCount];
+            
+            for (int i = 0; i < newCount; i++)
+            {
+                newPoint[newCount] = new FxComplexF(0,0);
+            }
+
+            for (int i = 0; i < Count; i++)
+            {
+                newPoint[i * newCount / Count] += this[i];
+            }
+
+            ListComplex.Clear();
+            ListComplex.AddRange(newPoint);
         }
     }
 }
