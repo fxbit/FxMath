@@ -381,6 +381,7 @@ namespace FxMaths.Matrix
         #endregion
 
 
+
         #region Labeling algorithm
 
         private void Labeling_addStack(Stack<Tuple<int, int>> stack, int x, int y)
@@ -451,5 +452,56 @@ namespace FxMaths.Matrix
 
             return bitmap;
         }
+
+
+
+        #region Misc Functions
+
+        /// <summary>
+        /// Count the non zero (true) elements in the mask.
+        /// </summary>
+        /// <returns></returns>
+        public int NumNZ()
+        {
+            int count = 0;
+            int end = Width * Height;
+            for (int i = 0; i < end; i++)
+            {
+                if (Data[i])
+                    count++;
+            }
+
+            return count;
+        }
+
+
+        /// <summary>
+        /// Count the non zero (true) elements in the mask.
+        /// </summary>
+        /// <param name="Start"></param>
+        /// <param name="Size"></param>
+        /// <returns></returns>
+        public int NumNZ(Vector.FxVector2f start, Vector.FxVector2f size)
+        {
+            if (start.x > Width || start.y > Height)
+                return 0;
+
+            int count = 0;
+            int startX = (int)((start.x < 0) ? 0 : start.x);
+            int startY = (int)((start.y < 0) ? 0 : start.y);
+            int endX = (int)((startX + size.x > Width) ? Width - startX : size.x);
+            int endY = (int)((startY + size.y > Height) ? Height - startY : size.y);
+            for (int y = startY; y < endY; y++)
+                for (int x = startX; x < endX; x++)
+                {
+                    if (this[x, y])
+                        count++;
+                }
+
+            return count;
+        } 
+
+
+        #endregion
     }
 }
