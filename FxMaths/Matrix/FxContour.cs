@@ -102,7 +102,7 @@ namespace FxMaths.Matrix
             int i = 0;
             foreach(FxContourChain chain in ChainList)
             {
-                chain.Equalization(20);
+                //chain.Equalization(20);
                 i++;
                 FxVector2f prevPoint = chain.StartPoint;
                 foreach (FxComplexF c in chain.ListComplex)
