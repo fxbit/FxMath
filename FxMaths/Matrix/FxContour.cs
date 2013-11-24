@@ -281,5 +281,87 @@ namespace FxMaths.Matrix
             ListComplex.Clear();
             ListComplex.AddRange(newPoint);
         }
+
+#if false
+        public float GetArea()
+        {
+            float area = 0;
+
+            // using image moments
+            for (int i = 0; i < Count; i++)
+            {
+                area += (ListComplex[i].r - ListComplex[i].i);
+            }
+
+            return area / 2.0f;
+        }
+#endif
+
+        public FxVector2f GetCentroid()
+        {
+            float m00 = 0;
+            float m10 = 0;
+            float m01 = 0;
+            FxVector2f tmpPoint = StartPoint;
+
+            // using image moments
+            for (int i = 0; i < Count; i++)
+            {
+                m10 += tmpPoint.x;
+                m01 += tmpPoint.y;
+                tmpPoint.x += ListComplex[i].r;
+                tmpPoint.y += ListComplex[i].i;
+            }
+            m00 = Count;
+            return new FxVector2f(m10/m00, m01/m00);
+        }
+
+
+
+        /// <summary>
+        /// Get the maximum distance from specific point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public float GetMaxDist(FxVector2f point)
+        {
+            float maxDist = 0;
+            FxVector2f tmpPoint = StartPoint;
+
+            for (int i = 0; i < Count; i++)
+            {
+                var dist = tmpPoint.Distance(point);
+                if (dist > maxDist)
+                    maxDist = dist;
+                tmpPoint.x += ListComplex[i].r;
+                tmpPoint.y += ListComplex[i].i;
+            }
+
+            return maxDist;
+        }
+
+
+
+        /// <summary>
+        /// Get the minimum distance from specific point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public float GetMinDist(FxVector2f point)
+        {
+            float minDist = float.MaxValue;
+            FxVector2f tmpPoint = StartPoint;
+
+            for (int i = 0; i < Count; i++)
+            {
+                var dist = tmpPoint.Distance(point);
+                if (dist < minDist)
+                    minDist = dist;
+                tmpPoint.x += ListComplex[i].r;
+                tmpPoint.y += ListComplex[i].i;
+            }
+
+            return minDist;
+        }
     }
 }
