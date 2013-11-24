@@ -318,6 +318,21 @@ namespace FxMaths.Vector
 
             return (float)Math.Sqrt((x * x) + (y * y));
         }
+
+        /// <summary>
+        ///  Calculates the distance between two vectors and one other.
+        /// </summary>
+        /// <param name="start">The first vector.</param>
+        /// <param name="endX">The x value of the second vector.</param>
+        /// <param name="endY">The y value of the second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public static float Distance(FxVector2f start, float endX, float endY)
+        {
+            float x = start.x - endX;
+            float y = start.y - endY;
+
+            return (float)Math.Sqrt((x * x) + (y * y));
+        }
         #endregion
 
         #region Local Func
@@ -330,6 +345,20 @@ namespace FxMaths.Vector
         {
             float x = this.X - end.X;
             float y = this.Y - end.Y;
+
+            return (float)Math.Sqrt((x * x) + (y * y));
+        }
+
+        /// <summary>
+        ///  Calculates the distance between this vector and one other.
+        /// </summary>
+        /// <param name="endX">The x value of the second vector.</param>
+        /// <param name="endY">The y value of the second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public float Distance(float endX, float endY)
+        {
+            float x = this.X - endX;
+            float y = this.Y - endY;
 
             return (float)Math.Sqrt((x * x) + (y * y));
         }
@@ -766,6 +795,7 @@ namespace FxMaths.Vector
                "Can not convert '" + (string)str +
                         "' to type FxVector2f");
         }
+
     }
 
     #region Converter
