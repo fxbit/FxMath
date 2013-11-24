@@ -499,9 +499,38 @@ namespace FxMaths.Matrix
                 }
 
             return count;
-        } 
+        }
 
+
+        /// <summary>
+        /// The number of points that included in specific circle.
+        /// </summary>
+        /// <param name="Center"></param>
+        /// <param name="Radius"></param>
+        /// <returns></returns>
+        public int NumNZ(Vector.FxVector2f center, float radius)
+        {
+            int count = 0;
+            if (center.x > Width || center.y > Height || center.x < 0 || center.y<0)
+                return 0;
+
+            int startX = (int)((center.x - radius < 0) ? 0 : center.x - radius);
+            int startY = (int)((center.y - radius < 0) ? 0 : center.y - radius);
+            int endX = (int)((center.x + radius > Width) ? Width - center.x - radius : center.x + radius);
+            int endY = (int)((center.y + radius > Height) ? Height - center.y - radius : center.y + radius);
+            for (int y = startY; y < endY; y++)
+                for (int x = startX; x < endX; x++)
+                {
+                    if (this[x, y] && center.Distance(x,y)<radius)
+                        count++;
+                }
+
+            return count;
+        }
 
         #endregion
+
+
+
     }
 }
