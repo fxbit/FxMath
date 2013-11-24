@@ -52,8 +52,8 @@ namespace FxMaths.Matrix
         /// <summary>
         /// Draw Rectangle.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="size"></param>
+        /// <param name="Start"></param>
+        /// <param name="Size"></param>
         public void DrawRect(FxVector2f start, FxVector2f size, float value)
         {
             DrawLine(start, new FxVector2f(start.x + size.x, start.y), value);
@@ -62,5 +62,26 @@ namespace FxMaths.Matrix
             DrawLine(new FxVector2f(start.x, start.y + size.y), start, value);
         }
 
+
+
+        /// <summary>
+        /// Draw Circle
+        /// </summary>
+        /// <param name="Center"></param>
+        /// <param name="Radius"></param>
+        /// <param name="Value"></param>
+        public void DrawCircle(Vector.FxVector2f center, float radius, float Value)
+        {
+            const float step = (float)Math.PI / 300.0f;
+
+            for (float rad = 0; rad < 2 * Math.PI; rad += step)
+            {
+                int x = (int)Math.Round(center.x + radius * Math.Cos(rad));
+                int y = (int)Math.Round(center.y + radius * Math.Sin(rad));
+                if (x >= 0 && x < Width && y >= 0 && y < Height)
+                    this[x, y] = Value;
+            }
+        }
     }
 }
+
