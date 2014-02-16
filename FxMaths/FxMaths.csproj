@@ -230,6 +230,8 @@
     </Compile>
     <Compile Include="TimeStatistics.cs" />
     <Compile Include="Utils\CsvFileWriter.cs" />
+    <Compile Include="Utils\FxKalman1D.cs" />
+    <Compile Include="Utils\FxKalman2D.cs" />
     <Compile Include="Vector\FxVectorI.cs" />
     <Compile Include="Vector\FxVector.cs" />
     <Compile Include="Vector234\FxVector2i.cs" />
