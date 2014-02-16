@@ -808,6 +808,11 @@ namespace FxMaths.Vector
             y = x * sn + y * cs;
             x = px;
         }
+
+        public Vector2 GetVector2()
+        {
+            return new Vector2(x, y);
+        }
     }
 
     #region Converter
