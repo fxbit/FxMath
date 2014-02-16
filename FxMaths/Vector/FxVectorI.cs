@@ -57,11 +57,22 @@ namespace FxMaths.Vector
             }
         }
 
+        protected override void DoAdd(double value)
+        {
+            int ivalue = (int)value;
+            // pass all the data and add the value
+            for (int i = 0; i < Size; i++)
+            {
+                Data[i] += ivalue;
+            }
+        }
+
         protected override void DoAdd( float value )
         {
+            int ivalue = (int)value;
             // pass all the data and add the value
             for ( int i=0; i < Size; i++ ) {
-                Data[i] += (int)value;
+                Data[i] += ivalue;
             }
         }
 

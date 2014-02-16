@@ -183,6 +183,20 @@ namespace FxMaths.Matrix
             } );
         }
 
+        protected override void DoAdd(double value)
+        {
+            float fvalue = (float)value;
+            // pass all the data and add the value
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    Data[x] += fvalue;
+                }
+            });
+        }
+
         protected override void DoAdd( float value )
         {
             // pass all the data and add the value
@@ -349,6 +363,20 @@ namespace FxMaths.Matrix
                     Data[x] -= other[x];
                 }
             } );
+        }
+
+        protected override void DoSubtract(double value)
+        {
+            float fvalue = (float)value;
+            // pass all the data and Subtract the value
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    Data[x] -= fvalue;
+                }
+            });
         }
 
         protected override void DoSubtract( float value )
@@ -524,6 +552,20 @@ namespace FxMaths.Matrix
 
         #region Multiply with scalar
 
+        protected override void DoMultiply(double value)
+        {
+            float fvalue = (float)value;
+            // pass all the data and Multiply the value
+            Parallel.For(0, Height, (y) =>
+            {
+                int end = (y + 1) * Width;
+                for (int x = y * Width; x < end; x++)
+                {
+                    Data[x] *= fvalue;
+                }
+            });
+        }
+
         protected override void DoMultiply(float value)
         {
             // pass all the data and Multiply the value
@@ -658,11 +700,25 @@ namespace FxMaths.Matrix
 
         #region With scalar
 
+        protected override void DoDivide(double value)
+        {
+#if true
+            DoMultiply(1.0f / value);
+#else
+            // pass all the data and Divide the value
+            Parallel.For( 0, Height, ( y ) => {
+                int offset = y * Width;
+                for ( int x = 0; x < Width; x++ ) {
+                    Data[offset + x] /= value;
+                }
+           } );
+#endif
+        }
+
         protected override void DoDivide( float value )
         {
 #if true
-            float ivalue = 1.0f / value;
-            DoMultiply(ivalue);
+            DoMultiply(1.0f / value);
 #else
             // pass all the data and Divide the value
             Parallel.For( 0, Height, ( y ) => {
@@ -677,8 +733,7 @@ namespace FxMaths.Matrix
         protected override void DoDivide(int value)
         {
 #if true
-            float ivalue = 1.0f / value;
-            DoMultiply(ivalue);
+            DoMultiply(1.0f / value);
 #else
             // pass all the data and Divide the value
             Parallel.For( 0, Height, ( y ) => {

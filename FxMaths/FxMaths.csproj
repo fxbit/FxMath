@@ -215,6 +215,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Matrix\FxBlobTracker.cs" />
     <Compile Include="Matrix\FxContour.cs" />
+    <Compile Include="Matrix\FxMatrixD.cs" />
     <Compile Include="Matrix\FxMatrixF.Draw.cs" />
     <Compile Include="Matrix\FxMatrixF.Loaders.cs" />
     <Compile Include="Matrix\FxMatrixF.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Utils\CsvFileWriter.cs" />
     <Compile Include="Utils\FxKalman1D.cs" />
     <Compile Include="Utils\FxKalman2D.cs" />
+    <Compile Include="Vector\FxVectorD.cs" />
     <Compile Include="Vector\FxVectorI.cs" />
     <Compile Include="Vector\FxVector.cs" />
     <Compile Include="Vector234\FxVector2i.cs" />

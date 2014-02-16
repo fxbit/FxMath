@@ -5,13 +5,16 @@ using System.Text;
 
 namespace FxMaths.Vector
 {
-    public class FxVectorF : FxVector<float>
+    // Declare a delegate type for processing a book:
+    public delegate float Fx1DGeneratorF( float x );
+
+    public class FxVectorD : FxVector<double>
     {
 
 
         #region Constructors
 
-        public FxVectorF( int Size )
+        public FxVectorD( int Size )
             : base( Size )
         {
             // init the datas
@@ -20,7 +23,7 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorF( int Size, float value )
+        public FxVectorD( int Size, double value )
             : base( Size )
         {
             // init the datas
@@ -29,7 +32,7 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorF( int Size, Fx1DGeneratorF Generator,float Step )
+        public FxVectorD( int Size, Fx1DGeneratorF Generator,float Step )
             : base( Size )
         {
             // init the datas
@@ -38,7 +41,7 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorF( byte[] data)
+        public FxVectorD( byte[] data)
             : base( data.Length/4 )
         {
             // init the datas
@@ -48,7 +51,7 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorF( float[] data)
+        public FxVectorD( float[] data)
             : base( data.Length )
         {
             // init the datas
@@ -57,7 +60,7 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorF( float[] data ,int size)
+        public FxVectorD( float[] data ,int size)
             : base( size )
         {
             // init the datas
@@ -66,9 +69,9 @@ namespace FxMaths.Vector
             }
         }
 
-        protected override FxVector<float> AllocateVector( int Size )
+        protected override FxVector<double> AllocateVector( int Size )
         {
-            return new FxVectorF( Size );
+            return new FxVectorD( Size );
         }
 
         #endregion
@@ -78,7 +81,7 @@ namespace FxMaths.Vector
 
         #region Add
 
-        protected override void DoAdd( FxVector<float> other, FxVector<float> result )
+        protected override void DoAdd( FxVector<double> other, FxVector<double> result )
         {
             // pass all the data and add the new data
             for ( int i=0; i < Size; i++ ) {
@@ -86,7 +89,7 @@ namespace FxMaths.Vector
             }
         }
 
-        protected override void DoAdd( FxVector<float> other )
+        protected override void DoAdd( FxVector<double> other )
         {
             // pass all the data and add the new data
             for ( int i=0; i < Size; i++ ) {
@@ -96,11 +99,10 @@ namespace FxMaths.Vector
 
         protected override void DoAdd(double value)
         {
-            float fvalue = (float)value;
             // pass all the data and add the value
             for (int i = 0; i < Size; i++)
             {
-                Data[i] += fvalue;
+                Data[i] += value;
             }
         }
 
@@ -124,7 +126,7 @@ namespace FxMaths.Vector
 
         #region Subtract
 
-        protected override void DoSubtract( FxVector<float> other, FxVector<float> result )
+        protected override void DoSubtract( FxVector<double> other, FxVector<double> result )
         {
             // pass all the data and Subtract the new data
             for ( int i=0; i < Size; i++ ) {
@@ -132,7 +134,7 @@ namespace FxMaths.Vector
             }
         }
 
-        protected override void DoSubtract( FxVector<float> other )
+        protected override void DoSubtract( FxVector<double> other )
         {
             // pass all the data and Subtract the new data
             for ( int i=0; i < Size; i++ ) {
@@ -163,7 +165,7 @@ namespace FxMaths.Vector
 
         #region Pointwise
 
-        public override void MultiplyPointwise( FxVector<float> other )
+        public override void MultiplyPointwise( FxVector<double> other )
         {
             // pass all the data and multiply the new data
             for ( int i = 0; i < Size; i++ ) {
@@ -210,7 +212,7 @@ namespace FxMaths.Vector
 
         #region Pointwise
 
-        public override void DividePointwise( FxVector<float> other )
+        public override void DividePointwise( FxVector<double> other )
         {
             // pass all the data and Divide the new data
             for ( int i = 0; i < Size; i++ ) {
@@ -273,9 +275,9 @@ namespace FxMaths.Vector
 
         #region Statistics
 
-        public override float Sum()
+        public override double Sum()
         {
-            float sum=0;
+            double sum = 0;
 
             // add all the elements
             for ( int i=0; i < Size; i++ ) {
@@ -325,9 +327,9 @@ namespace FxMaths.Vector
         /// Get the Max value of the Vector
         /// </summary>
         /// <returns></returns>
-        public override float Max()
+        public override double Max()
         {
-            float result = float.MinValue;
+            double result = double.MinValue;
 
             // comp all the elements
             for ( int i=0; i < Size; i++ ) {
@@ -341,9 +343,9 @@ namespace FxMaths.Vector
         /// Get the Min value of the Vector
         /// </summary>
         /// <returns></returns>
-        public override float Min()
+        public override double Min()
         {
-            float result = float.MaxValue;
+            double result = double.MaxValue;
 
             // comp all the elements
             for ( int i=0; i < Size; i++ ) {
@@ -437,7 +439,7 @@ namespace FxMaths.Vector
 
         #region Lenght/Distance
 
-        public override double Distance( FxVector<float> Other )
+        public override double Distance( FxVector<double> Other )
         {
             double result=0;
 
@@ -462,10 +464,10 @@ namespace FxMaths.Vector
         /// <param name="x1">Ending X</param>
         /// <param name="n">Steps</param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(float x0, float x1, int n)
+        public static FxVectorD LinSpace(double x0, double x1, int n)
         {
-            FxVectorF vec = new FxVectorF(n);
-            float step = (x1 - x0) / (n - 1.0f);
+            FxVectorD vec = new FxVectorD(n);
+            double step = (x1 - x0) / (n - 1.0f);
             for(int i=0; i < n; i++) {
                 vec[i] = x0 + i * step;
             }
@@ -478,7 +480,7 @@ namespace FxMaths.Vector
         /// <param name="x"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(FxVectorF x, int n)
+        public static FxVectorD LinSpace(FxVectorD x, int n)
         {
             return LinSpace(x.Data,n);
         }
@@ -489,9 +491,9 @@ namespace FxMaths.Vector
         /// <param name="x"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(float[] x, int n)
+        public static FxVectorD LinSpace(double[] x, int n)
         {
-            FxVectorF vec = new FxVectorF(n);
+            FxVectorD vec = new FxVectorD(n);
             int num_regions = x.Length - 1;
             int region_len = (int)Math.Ceiling((float)n / num_regions);
             for(int i=0; i < num_regions - 1; i++) {
@@ -508,9 +510,9 @@ namespace FxMaths.Vector
         /// <param name="x"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(float[] x, float[] range, int n)
+        public static FxVectorD LinSpace(double[] x, double[] range, int n)
         {
-            FxVectorF vec = new FxVectorF(n);
+            FxVectorD vec = new FxVectorD(n);
             int reg_len, offset=0;
             for(int i=0; i < x.Length - 1; i++) {
                 reg_len = (int)Math.Ceiling((range[i + 1] - range[i]) * n);
@@ -526,7 +528,7 @@ namespace FxMaths.Vector
         /// <param name="x"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static FxVectorF LinSpace(FxVectorF x, FxVectorF range, int n)
+        public static FxVectorD LinSpace(FxVectorD x, FxVectorD range, int n)
         {
             return LinSpace(x.Data, range.Data, n);
         }

@@ -193,7 +193,8 @@ namespace FxMaths.Vector
         /// Change this Vector.
         /// </summary>
         /// <param name="other">The Vector to add to this Vector.</param>
-        protected abstract void DoAdd( FxVector<T> other );
+        protected abstract void DoAdd(FxVector<T> other);
+        protected abstract void DoAdd(double value);
         protected abstract void DoAdd( float value );
         protected abstract void DoAdd( int result );
 

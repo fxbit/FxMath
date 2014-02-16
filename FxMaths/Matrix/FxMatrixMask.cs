@@ -237,6 +237,86 @@ namespace FxMaths.Matrix
         #region From Matrix calculations
 
 
+
+        #region Double
+        public static FxMatrixMask GreaderThan<T>(FxMatrixD mat1, T value) where T : struct, IComparable
+        {
+            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            double fValue = (dynamic)value;
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result.Data[x] = mat1.Data[x] > fValue;
+                }
+            });
+            return result;
+        }
+
+        public static FxMatrixMask LessThan<T>(FxMatrixD mat1, T value) where T : struct, IComparable
+        {
+            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            double fValue = (dynamic)value;
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result.Data[x] = mat1.Data[x] < fValue;
+                }
+            });
+            return result;
+        }
+
+
+        public static FxMatrixMask Equal<T>(FxMatrixD mat1, T value) where T : struct, IComparable
+        {
+            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            double fValue = (dynamic)value;
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result.Data[x] = mat1.Data[x] == fValue;
+                }
+            });
+            return result;
+        }
+
+        public static FxMatrixMask NotEqual<T>(FxMatrixD mat1, T value) where T : struct, IComparable
+        {
+            FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
+            int Height = mat1.Height;
+            int Width = mat1.Width;
+            double fValue = (dynamic)value;
+
+            Parallel.For(0, Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    result.Data[x] = mat1.Data[x] != fValue;
+                }
+            });
+            return result;
+        } 
+        #endregion
+
+
+
+
+        #region Float
         public static FxMatrixMask GreaderThan<T>(FxMatrixF mat1, T value) where T : struct, IComparable
         {
             FxMatrixMask result = new FxMatrixMask(mat1.Width, mat1.Height);
@@ -309,6 +389,11 @@ namespace FxMaths.Matrix
             });
             return result;
         }
+        
+        #endregion
+
+
+
 
         public static FxMatrixF operator *(FxMatrixMask mask, float f)
         {
@@ -323,6 +408,22 @@ namespace FxMaths.Matrix
             });
             return mat;
         }
+
+
+        public static FxMatrixD operator *(FxMatrixMask mask, double f)
+        {
+            FxMatrixD mat = new FxMatrixD(mask.Width, mask.Height);
+            Parallel.For(0, mask.Height, (y) =>
+            {
+                int offsetEnd = (y + 1) * mask.Width;
+                for (int x = y * mask.Width; x < offsetEnd; x++)
+                {
+                    mat.Data[x] = mask[x] ? f : 0;
+                }
+            });
+            return mat;
+        }
+
 
         #endregion
 
@@ -340,6 +441,21 @@ namespace FxMaths.Matrix
                 for (int x = y * Width; x < offsetEnd; x++)
                 {
                     newMat[x] = (this.Data[x]) ? 1f : 0;
+                }
+            }
+            return newMat;
+        }
+
+        public FxMatrixD ToFxMatrixD()
+        {
+            FxMatrixD newMat = new FxMatrixD(Width, Height);
+            // pass all the data and add the new data
+            for (int y = 0; y < Height; y++)
+            {
+                int offsetEnd = (y + 1) * Width;
+                for (int x = y * Width; x < offsetEnd; x++)
+                {
+                    newMat[x] = (this.Data[x]) ? 1 : 0;
                 }
             }
             return newMat;

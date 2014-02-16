@@ -598,7 +598,8 @@ namespace FxMaths.Matrix
         /// Change this Matrix.
         /// </summary>
         /// <param name="other">The matrix to add to this matrix.</param>
-        protected abstract void DoAdd( FxMatrix<T> other );
+        protected abstract void DoAdd(FxMatrix<T> other);
+        protected abstract void DoAdd( double value);
         protected abstract void DoAdd( float value );
         protected abstract void DoAdd( int result );
 
@@ -631,6 +632,16 @@ namespace FxMaths.Matrix
             #endregion
 
             DoAdd( other );
+        }
+
+
+        /// <summary>
+        /// Adds float value to this matrix.
+        /// </summary>
+        /// <param name="value">The float value to add to this matrix.</param>
+        public virtual void Add(double value)
+        {
+            DoAdd(value);
         }
 
         /// <summary>
@@ -692,6 +703,7 @@ namespace FxMaths.Matrix
         /// </summary>
         /// <param name="other">The matrix to Subtract to this matrix.</param>
         protected abstract void DoSubtract( FxMatrix<T> other );
+        protected abstract void DoSubtract( double value );
         protected abstract void DoSubtract( float value );
         protected abstract void DoSubtract( int result );
 
@@ -725,6 +737,16 @@ namespace FxMaths.Matrix
             #endregion
 
             DoSubtract( other );
+        }
+
+
+        /// <summary>
+        /// Subtracts double value to this matrix.
+        /// </summary>
+        /// <param name="value">The float value to Subtract to this matrix.</param>
+        public virtual void Subtract(double value)
+        {
+            DoSubtract(value);
         }
 
         /// <summary>
@@ -856,8 +878,18 @@ namespace FxMaths.Matrix
 
         #region Multiply with scalar
 
+        protected abstract void DoMultiply( double value );
         protected abstract void DoMultiply( float value );
         protected abstract void DoMultiply( int result );
+
+        /// <summary>
+        /// Multiplys double value to this matrix.
+        /// </summary>
+        /// <param name="value">The float value to Multiply to this matrix.</param>
+        public virtual void Multiply(double value)
+        {
+            DoMultiply(value);
+        }
 
         /// <summary>
         /// Multiplys float value to this matrix.
@@ -1005,8 +1037,18 @@ namespace FxMaths.Matrix
         
         #region With scalar
 
+        protected abstract void DoDivide(double value);
         protected abstract void DoDivide(float value);
         protected abstract void DoDivide(int result);
+
+        /// <summary>
+        /// Divides double value to this matrix.
+        /// </summary>
+        /// <param name="value">The float value to Divide to this matrix.</param>
+        public virtual void Divide(double value)
+        {
+            DoDivide(value);
+        }
 
         /// <summary>
         /// Divides float value to this matrix.
