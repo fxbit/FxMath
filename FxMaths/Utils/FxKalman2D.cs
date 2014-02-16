@@ -32,6 +32,7 @@ namespace FxMaths.Utils
         #endregion
 
 
+
         #region Constructors
         public FxKalman2D()
         {
@@ -51,6 +52,7 @@ namespace FxMaths.Utils
             this.Reset(qx, qv, r, pd, ix);
         } 
         #endregion
+
 
 
         #region Reset
@@ -79,6 +81,8 @@ namespace FxMaths.Utils
         #endregion
 
 
+
+
         #region Update
 
         /// <summary>
@@ -105,9 +109,7 @@ namespace FxMaths.Utils
 
             // X = F*X + H*U
             FxMatrixF f = new FxMatrixF(2, 2) { Data = new float[] { 1, dt, 0, 1 } };
-            FxMatrixF h = new FxMatrixF(2, 2) { Data = new float[] { 1, 0, 0, 1 } };
-            FxMatrixF ht = new FxMatrixF(2, 2) { Data = new float[] { 1, 0, 0, 1 } };
-
+            
             // U = {0,0};
             m_x = f.Multiply(m_x) as FxMatrixF;
 
@@ -119,18 +121,17 @@ namespace FxMaths.Utils
             FxMatrixF y = new FxMatrixF(1, 2) { Data = new float[] { mx - m_x[0], mv - m_x[1] } };
 
             // S = H*P*H^T + R 
-            FxMatrixF s = h.MultiplyABAT(m_p) as FxMatrixF;
+            FxMatrixF s = m_p.Copy();
             s[0] += m_r;
             s[3] += m_r * 0.1f;
 
             // K = P * H^T *S^-1 
-            FxMatrixF tmp = m_p.Multiply(ht) as FxMatrixF;
             FxMatrixF sinv = s.Inverse() as FxMatrixF;
             FxMatrixF k = new FxMatrixF(2, 2, 0f); // inited to zero.
 
             if (sinv as Object != null)
             {
-                k = tmp.Multiply(sinv) as FxMatrixF;
+                k = m_p.Multiply(sinv) as FxMatrixF;
             }
 
             // X = X + K*Y
@@ -138,10 +139,8 @@ namespace FxMaths.Utils
 
 
             // P = (I – K * H) * P
-            FxMatrixF kh = k.Multiply(h) as FxMatrixF;
             FxMatrixF id = new FxMatrixF(2, 2) { Data = new float[] { 1, 0, 0, 1 } };
-            kh.Multiply(-1);
-            id.Add(kh);
+            id.Subtract(k);
             id.Multiply(m_p);
             m_p = id;
 
