@@ -1034,6 +1034,77 @@ namespace FxMaths.Matrix
 
 
 
+        #region Determinal
+
+        public override float Determinal()
+        {
+            if (Width != Height)
+                return 0;
+
+            switch (Width)
+            {
+                case 0: return 0;
+                case 1: return Data[0];
+                case 2: return (Data[0] * Data[3] - Data[1] * Data[2]);
+                case 3: return
+                    (Data[0] * ((Data[8] * Data[4]) - (Data[7] * Data[5]))) -
+                    (Data[3] * ((Data[8] * Data[1]) - (Data[7] * Data[2]))) +
+                    (Data[6] * ((Data[5] * Data[1]) - (Data[4] * Data[2])));
+
+                // only supporting 1x1, 2x2 and 3x3
+                default: return 0;
+            }
+        } 
+
+        #endregion
+
+
+
+        #region Inverse
+
+        public override FxMatrix<float> Inverse()
+        {
+            // check if we can compute inverse
+            float det = this.Determinal();
+            if (det == 0) 
+                return null;
+
+            // create the result matrix
+            FxMatrix<float> result = this.AllocateMatrix(Width, Height);
+            det = 1 / det;
+            switch (Width)
+            {
+                case 1: 
+                    result[0] = 1 / Data[0]; 
+                    break;
+
+                case 2:
+                    result[0] = det * Data[3];
+                    result[3] = det * Data[0];
+                    result[1] = -det * Data[2];
+                    result[2] = -det * Data[1];
+                    break;
+
+                case 3:
+                    result[0] = det * (Data[8] * Data[4]) - (Data[7] * Data[5]);
+                    result[1] = -det * (Data[8] * Data[1]) - (Data[7] * Data[2]);
+                    result[2] = det * (Data[5] * Data[1]) - (Data[4] * Data[2]);
+
+                    result[3] = -det * (Data[8] * Data[3]) - (Data[6] * Data[5]);
+                    result[4] = det * (Data[8] * Data[0]) - (Data[6] * Data[2]);
+                    result[5] = -det * (Data[5] * Data[0]) - (Data[3] * Data[2]);
+
+                    result[6] = det * (Data[7] * Data[3]) - (Data[6] * Data[4]);
+                    result[7] = -det * (Data[7] * Data[0]) - (Data[6] * Data[2]);
+                    result[8] = det * (Data[4] * Data[0]) - (Data[3] * Data[1]);
+                    break;
+            }
+            return result;
+        }
+
+        #endregion
+
+
         #endregion
 
 

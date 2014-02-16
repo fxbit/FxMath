@@ -796,12 +796,13 @@ namespace FxMaths.Matrix
                 throw new ArgumentNullException( "other" );
             }
 
-            if ( other.Height != Width ) {
+            if (Width != other.Height)
+            {
                 throw new ArgumentOutOfRangeException( "Matrix Dimensions" );
             }
             #endregion
 
-            FxMatrix<T> result = AllocateMatrix(other.Width,Height);
+            FxMatrix<T> result = AllocateMatrix(other.Width, Height);
 
             DoMultiply( other , result );
 
@@ -821,12 +822,31 @@ namespace FxMaths.Matrix
                 throw new ArgumentNullException( "other" );
             }
 
-            if ( other.Width != Width || other.Height != Height ) {
+            if (Height != other.Width){
                 throw new ArgumentOutOfRangeException( "Matrix Dimensions" );
             }
             #endregion
 
             DoMultiply( other, result );
+        }
+
+
+        /// <summary>
+        /// Result = a*b*a^T.
+        /// </summary>
+        /// <param name="other">The matrix to Multiply to this matrix.</param>
+        /// <returns>The result of the multiplication</returns>
+        public virtual FxMatrix<T> MultiplyABAT(FxMatrix<T> other)
+        {
+            #region Exceptions
+            if (object.ReferenceEquals(null, other))
+            {
+                throw new ArgumentNullException("other");
+            }
+            #endregion
+
+            FxMatrix<T> result = this.Multiply(other);
+            return result.Multiply(this.TransposeCopy());
         }
 
         #endregion
@@ -1102,13 +1122,18 @@ namespace FxMaths.Matrix
         /// </summary>
         public virtual void Transpose()
         {
+            int x_height;
+
             // allocate a new array for the data's
             T []NewData= new T[Size];
 
             // copy the data in tranpose 
-            for ( int x=0; x < Width; x++ )
-                for ( int y=0; y < Height; y++ )
-                    NewData[x * Height + y] = Data[y * Width + x];
+            for (int x = 0; x < Width; x++)
+            {
+                x_height = x * Height;
+                for (int y = 0; y < Height; y++)
+                    NewData[x_height + y] = Data[y * Width + x];
+            }
 
             // swap the sizes
             int oldW = Width;
@@ -1118,6 +1143,27 @@ namespace FxMaths.Matrix
             // change the data
             Data = NewData;
         }
+
+
+        /// <summary>
+        /// Transpose the matrix
+        /// </summary>
+        public virtual FxMatrix<T> TransposeCopy()
+        {
+            int x_height;
+            FxMatrix<T> result = AllocateMatrix(Height, Width);
+
+            // copy the data in tranpose 
+            for (int x = 0; x < Width; x++)
+            {
+                x_height = x * Height;
+                for (int y = 0; y < Height; y++)
+                    result[x_height + y] = Data[y * Width + x];
+            }
+
+            return result;
+        }
+
 
         #endregion
 
@@ -1182,6 +1228,17 @@ namespace FxMaths.Matrix
         public abstract Vector.FxVectorI LU();
 
 
+        /// <summary>
+        /// Compute Inverse Matrix.
+        /// </summary>
+        /// <returns></returns>
+        public abstract FxMatrix<T> Inverse();
+
+        /// <summary>
+        /// Compute Determinal
+        /// </summary>
+        /// <returns></returns>
+        public abstract T Determinal();
         #endregion
 
 
