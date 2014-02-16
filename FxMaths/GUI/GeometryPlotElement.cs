@@ -98,6 +98,20 @@ namespace FxMaths.GUI
                 // redraw to see the result
                 Parent.ReDraw();
         }
+
+        /// <summary>
+        /// Force redraw
+        /// </summary>
+        public void ReDraw()
+        {
+            // set the the geometry is dirty
+            IsGeomrtryDirty = true;
+
+            // check if the load have be called before of add
+            if (Parent != null)
+                // redraw to see the result
+                Parent.ReDraw();
+        }
         #endregion
 
 
