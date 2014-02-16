@@ -85,7 +85,7 @@ namespace FxMaths.GUI
         /// <summary>
         /// Remove all the internal geometry
         /// </summary>
-        public void ClearGeometry()
+        public void ClearGeometry(Boolean Redraw = true)
         {
             // remove all the geometry from the list
             listGeometry.Clear();
@@ -94,7 +94,7 @@ namespace FxMaths.GUI
             IsGeomrtryDirty = true;
 
             // check if the load have be called before of add
-            if (Parent != null)
+            if (Parent != null && Redraw)
                 // redraw to see the result
                 Parent.ReDraw();
         }
