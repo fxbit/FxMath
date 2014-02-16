@@ -203,7 +203,7 @@ namespace FxMaths.Matrix
 
 
         /// <summary>
-        /// Set/Get internal values.
+        /// Get internal values.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -213,6 +213,34 @@ namespace FxMaths.Matrix
             get
             {
                 return this.Sample(x, y);
+            }
+        }
+
+        /// <summary>
+        /// Get internal values.
+        /// </summary>
+        /// <param name="point">Position of the value</param>
+        /// <returns></returns>
+        public T this[FxVector2f point]
+        {
+            get { return this.Sample(point.x, point.y); }
+        }
+
+        /// <summary>
+        /// Set/Get internal values.
+        /// </summary>
+        /// <param name="point">Position of the value.</param>
+        /// <returns></returns>
+        public T this[FxVector2i point]
+        {
+            get
+            {
+                return this.Data[point.y * Width + point.x];
+            }
+
+            set
+            {
+                this.Data[point.y * Width + point.x] = value;
             }
         }
 
