@@ -660,24 +660,34 @@ namespace FxMaths.Matrix
 
         protected override void DoDivide( float value )
         {
+#if true
+            float ivalue = 1.0f / value;
+            DoMultiply(ivalue);
+#else
             // pass all the data and Divide the value
             Parallel.For( 0, Height, ( y ) => {
                 int offset = y * Width;
                 for ( int x = 0; x < Width; x++ ) {
                     Data[offset + x] /= value;
                 }
-            } );
+           } );
+#endif
         }
 
-        protected override void DoDivide( int value )
+        protected override void DoDivide(int value)
         {
+#if true
+            float ivalue = 1.0f / value;
+            DoMultiply(ivalue);
+#else
             // pass all the data and Divide the value
             Parallel.For( 0, Height, ( y ) => {
                 int offset = y * Width;
                 for ( int x = 0; x < Width; x++ ) {
                     Data[offset + x] /= value;
                 }
-            } );
+           } );
+#endif
         }
 
 
