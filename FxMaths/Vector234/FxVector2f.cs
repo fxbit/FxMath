@@ -796,6 +796,18 @@ namespace FxMaths.Vector
                         "' to type FxVector2f");
         }
 
+        /// <summary>
+        /// Rotate the vector.
+        /// </summary>
+        /// <param name="directionAngleChange">Angle in radian.</param>
+        public void Rotation(float directionAngleChange)
+        {
+            float cs = (float)Math.Cos(directionAngleChange);
+            float sn = (float)Math.Sin(directionAngleChange);
+            float px = x * cs - y * sn;
+            y = x * sn + y * cs;
+            x = px;
+        }
     }
 
     #region Converter
