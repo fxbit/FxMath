@@ -109,8 +109,13 @@ namespace FxMaths.GUI
 
             // check if the load have be called before of add
             if (Parent != null)
+            {
                 // redraw to see the result
-                Parent.ReDraw();
+                Parent.BeginInvoke((Action)(() =>
+                {
+                    Parent.ReDraw();
+                }));
+            }
         }
         #endregion
 
