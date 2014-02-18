@@ -1,11 +1,13 @@
-﻿using System;
+﻿using FxMaths.GMaps;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace FxMaths.Vector
 {
-    public struct FxVector2b : IEquatable<FxVector2b>
+    public struct FxVector2b : IEquatable<FxVector2b>, IVertex<byte>
     {
         #region Public Variables
 
@@ -13,15 +15,16 @@ namespace FxMaths.Vector
         /// Gets or sets the X component of the vector.
         /// </summary>
         /// <value>The X component of the vector.</value>
-        public byte X;
+        public byte x;
 
         /// <summary>
         /// Gets or sets the Y component of the vector.
         /// </summary>
         /// <value>The Y component of the vector.</value>
-        public byte Y;
+        public byte y;
 
         #endregion
+
 
         #region Contractors
 
@@ -30,8 +33,8 @@ namespace FxMaths.Vector
         /// </summary>
         public FxVector2b( byte value )
         {
-            X = value;
-            Y = value;
+            this.x = value;
+            this.y = value;
         }
 
         /// <summary>
@@ -39,8 +42,8 @@ namespace FxMaths.Vector
         /// </summary>
         public FxVector2b( byte x, byte y)
         {
-            X = x;
-            Y = y;
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>
@@ -48,8 +51,8 @@ namespace FxMaths.Vector
         /// </summary>
         public FxVector2b( int x, int y )
         {
-            X = (byte)x;
-            Y = (byte)y;
+            this.x = (byte)x;
+            this.y = (byte)y;
         }
         #endregion
 
@@ -577,9 +580,10 @@ namespace FxMaths.Vector
 		/// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode();
+            return x.GetHashCode() + y.GetHashCode();
 
         }
+
         /// <summary>
         /// Returns a value that indicates whether the current instance is equal to a specified object. 
         /// </summary>
@@ -618,5 +622,140 @@ namespace FxMaths.Vector
             return ( value1.X == value2.X && value1.Y == value2.Y );
         }
         #endregion
+
+
+        #region IVertex Members 
+        
+        /// <summary>
+        /// Gets or sets the X component of the vector.
+        /// </summary>
+        /// <value>The X component of the vector.</value>
+        public byte X
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                x = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Y component of the vector.
+        /// </summary>
+        /// <value>The Y component of the vector.</value>
+        public byte Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+            }
+        }
+
+
+        [Browsable(false)]
+        public byte Z
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+            }
+        }
+
+        /// <summary>
+        /// Write the vertex to the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public void WriteToDataStream(SharpDX.DataStream dataStream)
+        {
+            // write the data to the stream
+            dataStream.Write<byte>(this.x);
+            dataStream.Write<byte>(this.y);
+        }
+
+
+        /// <summary>
+        /// Read the vertex from the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public void ReadFromDataStream(SharpDX.DataStream dataStream)
+        {
+            // read the data from the stream
+            x = dataStream.Read<byte>();
+            y = dataStream.Read<byte>();
+        }
+
+
+        /// <summary>
+        /// Read the vertex from the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public IVertex<byte> Copy()
+        {
+            return new FxVector2b(x, y);
+        }
+
+        public float Dot(IVertex<byte> vec)
+        {
+            return (x * vec.X + y * vec.Y);
+        }
+
+        public void Subtract(IVertex<byte> vec)
+        {
+            x -= vec.X;
+            y -= vec.Y;
+        }
+
+        public float Distance(IVertex<byte> end)
+        {
+            int x = this.X - end.X;
+            int y = this.Y - end.Y;
+
+            return (byte)Math.Sqrt((x * x) + (y * y));
+        }
+
+        public override string ToString()
+        {
+            return "(" + x.ToString() + "," + y.ToString() + ")";
+        }
+
+
+        public string ToString(string Format)
+        {
+            return "(" + x.ToString(Format) + "," + y.ToString(Format) + ")";
+        }
+
+        public bool Equals(IVertex<byte> other)
+        {
+            return other.X == x && other.Y == y;
+        }
+
+        public bool Equals(IVertex<byte> x, IVertex<byte> y)
+        {
+            return x.X == y.X && x.Y == y.Y;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public int GetHashCode(IVertex<byte> obj)
+        {
+            return obj.GetHashCode();
+        }
+
+        #endregion
+
+
     }
 }
+

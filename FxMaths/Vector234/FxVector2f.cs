@@ -695,6 +695,7 @@ namespace FxMaths.Vector
             }
         }
 
+        [Browsable(false)]
         public float Z
         {
             get

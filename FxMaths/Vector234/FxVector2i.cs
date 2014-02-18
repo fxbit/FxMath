@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SharpDX;
 using FxMaths.GMaps;
+using System.ComponentModel;
 
 namespace FxMaths.Vector
 {
@@ -656,6 +657,8 @@ namespace FxMaths.Vector
             }
         }
 
+
+        [Browsable(false)]
         public int Z
         {
             get
