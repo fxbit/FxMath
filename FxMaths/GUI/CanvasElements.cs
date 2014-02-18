@@ -13,18 +13,18 @@ namespace FxMaths.GUI
         /// <summary>
         /// The name of the Element.
         /// </summary>
-        public String Name;
+        public String Name { get; set; }
 
         /// <summary>
         /// The upper position of the element
         /// </summary>
-        public FxMaths.Vector.FxVector2f Position;
+        public FxMaths.Vector.FxVector2f Position { get; set; }
 
         /// <summary>
         /// The size of the element
         /// Width : x , Height y.
         /// </summary>
-        public FxMaths.Vector.FxVector2f Size;
+        public FxMaths.Vector.FxVector2f Size { get; set; }
 
         /// <summary>
         /// The element is selected by the user and have the focus.
@@ -35,6 +35,12 @@ namespace FxMaths.GUI
         /// The parent canvas of this element
         /// </summary>
         public Canvas Parent;
+
+        /// <summary>
+        /// Lock the moving of element from user.
+        /// This forbit the user to move the element with mouse.
+        /// </summary>
+        public Boolean lockMoving { get; set; }
 
         /// <summary>
         /// Render the element in the canva.

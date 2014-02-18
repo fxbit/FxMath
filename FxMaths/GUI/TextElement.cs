@@ -138,8 +138,8 @@ namespace FxMaths.GUI
 
             // get the size of the string
             SharpDX.DirectWrite.TextLayout textL= new SharpDX.DirectWrite.TextLayout( args.WriteFactory, Internal_String, DW_textFormat, 1500, 1500 );
-            Size.x = textL.GetFontSize( 0 ) * Internal_String.Length;
-            Size.y = textL.GetFontSize( 0 );
+            Size = new Vector.FxVector2f(textL.GetFontSize(0) * Internal_String.Length,
+                                         textL.GetFontSize(0));
             textL.Dispose();
 
             // init text rectangle

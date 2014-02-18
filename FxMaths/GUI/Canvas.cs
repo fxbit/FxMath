@@ -532,6 +532,10 @@ namespace FxMaths.GUI
                 // translate the location to the screen and the find the moving element
                 MovingElement = HitElement( TranslatePoint( e.Location ) );
 
+                // avoid move lock element
+                if (MovingElement != null && MovingElement.lockMoving == true)
+                    MovingElement = null;
+
                 // set the current position of the mouse to be able to find the delta
                 privMousePosition = new Vector2(e.Location.X, e.Location.Y);
 
