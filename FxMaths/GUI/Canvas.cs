@@ -176,7 +176,18 @@ namespace FxMaths.GUI
             // link propertie grid
             propertyGrid1.SelectedObject = this;
         }
-        
+
+
+        private void Canvas_Load(object sender, EventArgs e)
+        {
+            this.BeginInvoke((Action)(() =>
+            {
+                ComboBox_elements.Items.Clear();
+                ComboBox_elements.Items.AddRange(ElementsList.ToArray());
+            }));
+        }
+
+
         #endregion
 
 
@@ -763,7 +774,7 @@ namespace FxMaths.GUI
                 splitContainer1.Panel1Collapsed = false;
                 toolStripButton_propertieGrid.Checked = true;
             }
-        } 
+        }
         #endregion
 
 
@@ -796,6 +807,7 @@ namespace FxMaths.GUI
         } 
 
         #endregion
+
 
 
 

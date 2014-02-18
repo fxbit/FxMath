@@ -10,6 +10,10 @@ namespace FxMaths.GUI
 {
     public abstract class CanvasElements
     {
+        /// <summary>
+        /// The name of the Element.
+        /// </summary>
+        public String Name;
 
         /// <summary>
         /// The upper position of the element
@@ -103,6 +107,11 @@ namespace FxMaths.GUI
             if(handler != null) {
                 handler(m, location);
             }
+        }
+
+        public override string ToString()
+        {
+            return (Name!=null) ? Name : base.ToString();
         }
     }
 }
