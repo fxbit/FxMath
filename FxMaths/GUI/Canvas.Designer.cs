@@ -108,6 +108,7 @@
             this.ComboBox_elements.MaxDropDownItems = 12;
             this.ComboBox_elements.Name = "ComboBox_elements";
             this.ComboBox_elements.Size = new System.Drawing.Size(121, 25);
+            this.ComboBox_elements.SelectedIndexChanged += new System.EventHandler(this.ComboBox_elements_SelectedIndexChanged);
             // 
             // Button_ViewFit
             // 

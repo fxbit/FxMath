@@ -188,6 +188,15 @@ namespace FxMaths.GUI
         }
 
 
+
+        private void ComboBox_elements_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CanvasElements element = (CanvasElements)ComboBox_elements.SelectedItem;
+            ChangeSelectedElement(element);
+        }
+
+
+
         #endregion
 
 
@@ -356,6 +365,44 @@ namespace FxMaths.GUI
 
         #region Internal Handling
 
+        private void ChangeSelectedElement(CanvasElements element)
+        {
+#if true    
+            // clean the prev selection
+            if (SelectedElement != null)
+                SelectedElement.isSelected = false;
+
+#else
+            // protect the element list
+            lock (ElementsList)
+            {
+                // clean all the prev selection
+                foreach (CanvasElements element in ElementsList)
+                    element.isSelected = false;
+            }
+#endif
+
+            // update the selected element
+            SelectedElement = element;
+
+            if (element != null)
+            {
+                // set the flag of the seleceted element 
+                SelectedElement.isSelected = true;
+
+                // update the link to property grid
+                propertyGrid1.SelectedObject = element;
+            }
+            else
+            {
+                // update the link to property grid
+                propertyGrid1.SelectedObject = this;
+            }
+
+            // update the combobox 
+            ComboBox_elements.SelectedItem = element;
+        }
+
         private CanvasElements HitElement( Vector.FxVector2f point )
         {
             // protect the element list
@@ -365,15 +412,10 @@ namespace FxMaths.GUI
                 foreach (CanvasElements element in ElementsList)
                 {
                     if (element.IsHit(point))
-                    {
-                        ComboBox_elements.SelectedItem = element;
-                        propertyGrid1.SelectedObject = element;
                         return element;
-                    }
                 }
             }
 
-            propertyGrid1.SelectedObject = this;
             // if we don't find it we return null
             return null;
         }
@@ -395,35 +437,16 @@ namespace FxMaths.GUI
                 
                 // translate the location to the screen and then
                 // find if we have hit
-                SelectedElement = HitElement(TranslatePoint(e.Location));
+                CanvasElements hitElement = HitElement(TranslatePoint(e.Location));
+
+                // update the selected element
+                ChangeSelectedElement(hitElement);
 
                 if ( SelectedElement != null ) {
-
-                    // protect the element list
-                    lock (ElementsList)
-                    {
-                        // clean all the prev selection
-                        foreach (CanvasElements element in ElementsList)
-                            element.isSelected = false;
-                    }
-
-
-                    // set the flag of the seleceted element 
-                    SelectedElement.isSelected = true;
-
                     // because is double click then go to edit state
                     SelectedElementInEditMode = true;
 
                 } else {
-                    
-                    // protect the element list
-                    lock (ElementsList)
-                    {
-                        // clean all the prev selection
-                        foreach (CanvasElements element in ElementsList)
-                            element.isSelected = false;
-                    }
-
                     // because is no hit then leave to edit state
                     SelectedElementInEditMode = false;
                 }
@@ -444,41 +467,6 @@ namespace FxMaths.GUI
         {
             if(e.Button == System.Windows.Forms.MouseButtons.Left) {
                 this.Focus();
-
-
-#if false
-                // translate the location to the screen and then
-                // find if we have hit
-                SelectedElement = HitElement( TranslatePoint( e.Location ) );
-
-                if ( SelectedElement != null ) {
-
-                    // protect the element list
-                    lock (ElementsList)
-                    {
-                        // clean all the prev selection
-                        foreach (CanvasElements element in ElementsList)
-                            element.isSelected = false;
-                    }
-
-                    // set the flag of the seleceted element 
-                    SelectedElement.isSelected = true;
-
-                    // because is one click then leave to edit state
-                    //SelectedElementInEditMode = false;
-                } else {
-                    // protect the element list
-                    lock (ElementsList)
-                    {
-                        // clean all the prev selection
-                        foreach (CanvasElements element in ElementsList)
-                            element.isSelected = false;
-                    }
-
-                    // because is no hit then leave to edit state
-                    SelectedElementInEditMode = false;
-                }
-#endif
 
                 // get the translated points
                 Vector.FxVector2f pos = TranslatePoint(e.Location);
