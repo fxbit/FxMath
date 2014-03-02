@@ -85,41 +85,71 @@ namespace FxMaths.Vector
 
         #region Math calcuations
 
+
         #region Add
 
         #region Static Function
-        public static FxVector2i Add( FxVector2i left, FxVector2i right )
+        public static FxVector2i Add( ref FxVector2i left, ref FxVector2i right )
         {
-            return new FxVector2i( left.x + right.x, left.y + right.y);
+            FxVector2i r;
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
+            return r;
+        }
+        public static void Add(ref FxVector2i left, ref FxVector2i right, out FxVector2i r)
+        {
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
         }
         #endregion
 
         #region Local Function
-        public void Add( FxVector2i value )
+        public void Add(ref FxVector2i value )
         {
             x += value.x;
             y += value.y;
         }
+        public void Add(ref IVertex<int> value)
+        {
+            x += value.X;
+            y += value.Y;
+        }
         #endregion
 
         #endregion
+
 
         #region Subtract
         #region Static Function
-        public static FxVector2i Subtract( FxVector2i left, FxVector2i right )
+        public static FxVector2i Subtract( ref FxVector2i left, ref FxVector2i right )
         {
-            return new FxVector2i( left.x - right.x, left.y - right.y);
+            FxVector2i r;
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector2i left, ref FxVector2i right, out FxVector2i r)
+        {
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
         }
         #endregion
 
         #region Local Function
-        public void Subtract( IVertex<int> value )
+        public void Subtract(ref FxVector2i value)
+        {
+            x -= value.X;
+            y -= value.Y;
+        }
+        public void Subtract(ref IVertex<int> value )
         {
             x -= value.X;
             y -= value.Y;
         }
         #endregion
         #endregion
+
 
         #region Modulate
 
@@ -139,6 +169,7 @@ namespace FxMaths.Vector
         #endregion
 
         #endregion
+
 
         #region Multiply
 
@@ -181,6 +212,7 @@ namespace FxMaths.Vector
 
         #endregion
 
+
         #region Divide
 
         #region Static Functions
@@ -219,6 +251,7 @@ namespace FxMaths.Vector
 
         #endregion
 
+
         #region Nagate
 
         #region static Function
@@ -238,6 +271,7 @@ namespace FxMaths.Vector
         #endregion
 
         #endregion
+
 
         #region Special Functions
 
@@ -300,6 +334,8 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region vector functions
 
         #region Distance
@@ -311,7 +347,7 @@ namespace FxMaths.Vector
         /// <param name="start">The first vector.</param>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public static float Distance( FxVector2i start, FxVector2i end )
+        public static float Distance( ref FxVector2i start, ref FxVector2i end )
         {
             float x = start.x - end.x;
             float y = start.y - end.y;
@@ -326,7 +362,7 @@ namespace FxMaths.Vector
         /// </summary>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public float Distance(IVertex<int> end)
+        public float Distance(ref IVertex<int> end)
         {
             float x = this.X - end.X;
             float y = this.Y - end.Y;
@@ -336,6 +372,7 @@ namespace FxMaths.Vector
         #endregion
 
         #endregion
+
 
         #region DistanceSquared
 
@@ -376,23 +413,25 @@ namespace FxMaths.Vector
 
         #endregion
 
+
         #region Dot
 
         #region  Static Func
-        public static float Dot( FxVector2i left, FxVector2i right )
+        public static float Dot(ref FxVector2i left, ref FxVector2i right )
         {
             return ( left.x * right.x + left.y * right.y );
         }
         #endregion
 
         #region Local Func
-        public float Dot( FxMaths.GMaps.IVertex<int> vec )
+        public float Dot( ref IVertex<int> vec )
         {
             return ( x * vec.X + y * vec.Y);
         }
         #endregion
 
         #endregion
+
 
         #region Normalize
 
@@ -417,6 +456,7 @@ namespace FxMaths.Vector
 
         #endregion
 
+
         #region Length
 
         public float Length()
@@ -425,6 +465,7 @@ namespace FxMaths.Vector
         }
 
         #endregion
+
 
         #region LengthSquared
 
@@ -437,6 +478,8 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region Overite operations
         /// <summary>
         /// Adds two vectors.
@@ -446,7 +489,9 @@ namespace FxMaths.Vector
         /// <returns>The sum of the two vectors.</returns>
         public static FxVector2i operator +( FxVector2i left, FxVector2i right )
         {
-            return Add( left, right );
+            left.x += right.x;
+            left.y += right.y;
+            return left;
         }
 
         /// <summary>
@@ -457,7 +502,22 @@ namespace FxMaths.Vector
         /// <returns>The difference of the two vectors.</returns>
         public static FxVector2i operator -( FxVector2i left, FxVector2i right )
         {
-            return Subtract( left, right );
+            left.x -= right.x;
+            left.y -= right.y;
+            return left;
+        }
+
+
+        /// <summary>
+        /// Increase by one the 2 elements
+        /// </summary>
+        /// <param name="vec"></param>
+        /// <returns></returns>
+        public static FxVector2i operator ++(FxVector2i vec)
+        {
+            vec.x++;
+            vec.y++;
+            return vec;
         }
 
         /// <summary>
@@ -467,7 +527,9 @@ namespace FxMaths.Vector
         /// <returns>A vector facing in the opposite direction.</returns>
         public static FxVector2i operator -( FxVector2i value )
         {
-            return Negate( value );
+            value.x = -value.x;
+            value.y = -value.y;
+            return value;
         }
 
         /// <summary>
@@ -476,9 +538,11 @@ namespace FxMaths.Vector
         /// <param name="vector">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static FxVector2i operator *( FxVector2i vector, float scale )
+        public static FxVector2i operator *(FxVector2i vector, float scale)
         {
-            return Multiply( vector, scale );
+            vector.x = (int)(vector.x * scale);
+            vector.y = (int)(vector.y * scale);
+            return vector;
         }
 
         /// <summary>
@@ -489,7 +553,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2i operator *( FxVector2i vector, int scale )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -500,7 +566,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2i operator *( FxVector2i vector, byte scale )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -511,7 +579,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2i operator *( float scale, FxVector2i vector )
         {
-            return Multiply( vector, scale );
+            vector.x = (int)(vector.x * scale);
+            vector.y = (int)(vector.y * scale);
+            return vector;
         }
 
         /// <summary>
@@ -520,9 +590,11 @@ namespace FxMaths.Vector
         /// <param name="vector">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static FxVector2i operator /( FxVector2i vector, float scale )
+        public static FxVector2i operator /(FxVector2i vector, float scale)
         {
-            return Divide( vector, scale );
+            vector.x = (int)(vector.x / scale);
+            vector.y = (int)(vector.y / scale);
+            return vector;
         }
 
         /// <summary>
@@ -533,7 +605,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2i operator /( FxVector2i vector, int scale )
         {
-            return Divide( vector, scale );
+            vector.x /= scale;
+            vector.y /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -544,7 +618,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2i operator /( FxVector2i vector, byte scale )
         {
-            return Divide( vector, scale );
+            vector.x /= scale;
+            vector.y /= scale;
+            return vector;
         }
 
         /// <summary>

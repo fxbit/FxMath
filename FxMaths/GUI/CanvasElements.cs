@@ -15,10 +15,16 @@ namespace FxMaths.GUI
         /// </summary>
         public String Name { get; set; }
 
+
+        /// <summary>
+        /// The actual memory.
+        /// </summary>
+        public FxMaths.Vector.FxVector2f _Position;
+
         /// <summary>
         /// The upper position of the element
         /// </summary>
-        public FxMaths.Vector.FxVector2f Position { get; set; }
+        public FxMaths.Vector.FxVector2f Position { get { return _Position; } set { _Position = value; } }
 
         /// <summary>
         /// The size of the element

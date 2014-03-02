@@ -330,7 +330,7 @@ namespace FxMaths.Matrix
 
             for (int i = 0; i < Count; i++)
             {
-                var dist = tmpPoint.Distance(point);
+                var dist = tmpPoint.Distance(ref point);
                 if (dist > maxDist)
                     maxDist = dist;
                 tmpPoint.x += ListComplex[i].r;
@@ -354,7 +354,7 @@ namespace FxMaths.Matrix
 
             for (int i = 0; i < Count; i++)
             {
-                var dist = tmpPoint.Distance(point);
+                var dist = tmpPoint.Distance(ref point);
                 if (dist < minDist)
                     minDist = dist;
                 tmpPoint.x += ListComplex[i].r;

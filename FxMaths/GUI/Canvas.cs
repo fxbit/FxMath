@@ -475,7 +475,7 @@ namespace FxMaths.GUI
                 if(SelectedElement != null && SelectedElement.IsHit(pos)) {
 
                     // remove the position of the selected element
-                    pos.Subtract(SelectedElement.Position);
+                    pos.Subtract(ref SelectedElement._Position);
 
                     // send the event to selected element
                     SelectedElement.MouseClick(pos);

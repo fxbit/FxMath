@@ -151,7 +151,7 @@ namespace FxMaths.Matrix
                     var c_center = c.GetCentroid();
                     var c_radius = c.GetMaxDist(c_center);
 
-                    if (c_center.Distance(b.Center) < c_radius + b.Radius / 2)
+                    if (c_center.Distance(ref b.Center) < c_radius + b.Radius / 2)
                     {
                         chainStack.Push(c);
                         newCenter.x = (newCenter.x + c_center.x) / 2.0f;

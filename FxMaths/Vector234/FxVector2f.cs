@@ -29,6 +29,8 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region Contractors
 
         /// <summary>
@@ -51,6 +53,8 @@ namespace FxMaths.Vector
             this.y = y;
         }
         #endregion
+
+
 
         #region Get/Set Values
 
@@ -80,55 +84,227 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region Math calcuations
 
         #region Add
 
         #region Static Function
-        public static FxVector2f Add(FxVector2f left, FxVector2f right)
+        public static FxVector2f Add(ref FxVector2f left,ref FxVector2f right)
         {
-            return new FxVector2f(left.x + right.x, left.y + right.y);
+            FxVector2f r;
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
+            return r;
+        }
+
+        public static void Add(ref FxVector2f left, ref FxVector2f right, out FxVector2f r)
+        {
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
+        }
+
+        public static FxVector2f Add(ref FxVector2f vec, float value)
+        {
+            FxVector2f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector2f vec, float value, out FxVector2f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+        }
+
+
+        public static FxVector2f Add(ref FxVector2f vec, int value)
+        {
+            FxVector2f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector2f vec, int value, out FxVector2f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+        }
+
+        public static FxVector2f Add(ref FxVector2f vec, byte value)
+        {
+            FxVector2f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector2f vec, byte value, out FxVector2f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
         }
         #endregion
 
         #region Local Function
-        public void Add(FxVector2f value)
+        public void Add(ref FxVector2f value)
         {
             x += value.x;
             y += value.y;
         }
+
+        public void Add(ref IVertex<float> value)
+        {
+            x += value.X;
+            y += value.Y;
+        }
+
+
+        public void Add(float value)
+        {
+            x += value;
+            y += value;
+        }
+
+        public void Add(int value)
+        {
+            x += value;
+            y += value;
+        }
+
+        public void Add(byte value)
+        {
+            x += value;
+            y += value;
+        }
         #endregion
 
         #endregion
+
+
+
 
         #region Subtract
         #region Static Function
-        public static FxVector2f Subtract(FxVector2f left, FxVector2f right)
+        public static FxVector2f Subtract(ref FxVector2f left, ref FxVector2f right)
         {
-            return new FxVector2f(left.x - right.x, left.y - right.y);
+            FxVector2f r;
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector2f left, ref FxVector2f right, out FxVector2f r)
+        {
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
+        }
+
+
+        public static FxVector2f Subtract(ref FxVector2f vec, float value)
+        {
+            FxVector2f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector2f vec, float value, out FxVector2f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+        }
+
+
+        public static FxVector2f Subtract(ref FxVector2f vec, int value)
+        {
+            FxVector2f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector2f vec, int value, out FxVector2f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+        }
+
+
+        public static FxVector2f Subtract(ref FxVector2f vec, byte value)
+        {
+            FxVector2f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector2f vec, byte value, out FxVector2f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
         }
         #endregion
 
         #region Local Function
-        public void Subtract(IVertex<float> value)
+        public void Subtract(ref FxVector2f value)
         {
             x -= value.X;
             y -= value.Y;
         }
+        public void Subtract(ref IVertex<float> value)
+        {
+            x -= value.X;
+            y -= value.Y;
+        }
+
+        public void Subtract(float value)
+        {
+            x -= value;
+            y -= value;
+        }
+
+        public void Subtract(int value)
+        {
+            x -= value;
+            y -= value;
+        }
+
+        public void Subtract(byte value)
+        {
+            x -= value;
+            y -= value;
+        }
+
         #endregion
         #endregion
+
+
+
 
         #region Modulate
 
         #region static Functions
-        public static FxVector2f Modulate(FxVector2f left, FxVector2f right)
+        public static FxVector2f Modulate(ref FxVector2f left, ref FxVector2f right)
         {
-            return new FxVector2f(left.x * right.x, left.y * right.y);
+            FxVector2f r;
+            r.x = left.x * right.x;
+            r.y = left.y * right.y;
+            return r;
+        }
+
+        public static void Modulate(ref FxVector2f left, ref FxVector2f right, out FxVector2f r)
+        {
+            r.x = left.x * right.x;
+            r.y = left.y * right.y;
         }
         #endregion
 
         #region Local Functions
-        public void Modulate(FxVector2f value)
+        public void Modulate(ref FxVector2f value)
         {
             x *= value.x;
             y *= value.y;
@@ -137,22 +313,52 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
+
         #region Multiply
 
         #region static Functions
-        public static FxVector2f Multiply(FxVector2f left, float scale)
+        public static FxVector2f Multiply(ref FxVector2f left, float scale)
         {
-            return new FxVector2f(left.x * scale, left.y * scale);
+            FxVector2f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            return r;
         }
 
-        public static FxVector2f Multiply(FxVector2f left, int scale)
+        public static FxVector2f Multiply(ref FxVector2f left, int scale)
         {
-            return new FxVector2f(left.x * scale, left.y * scale);
+            FxVector2f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            return r;
         }
 
-        public static FxVector2f Multiply(FxVector2f left, byte scale)
+        public static FxVector2f Multiply(ref FxVector2f left, byte scale)
         {
-            return new FxVector2f(left.x * scale, left.y * scale);
+            FxVector2f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            return r;
+        }
+
+        public static void Multiply(ref FxVector2f left, float scale, out FxVector2f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+        }
+
+        public static void Multiply(ref FxVector2f left, int scale, out FxVector2f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+        }
+
+        public static void Multiply(ref FxVector2f left, byte scale, out FxVector2f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
         }
         #endregion
 
@@ -178,22 +384,52 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
+
         #region Divide
 
         #region Static Functions
-        public static FxVector2f Divide(FxVector2f left, float scale)
+        public static FxVector2f Divide(ref FxVector2f left, float scale)
         {
-            return new FxVector2f(left.x / scale, left.y / scale);
+            FxVector2f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            return r;
         }
 
         public static FxVector2f Divide(FxVector2f left, int scale)
         {
-            return new FxVector2f(left.x / scale, left.y / scale);
+            FxVector2f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            return r;
         }
 
         public static FxVector2f Divide(FxVector2f left, byte scale)
         {
-            return new FxVector2f(left.x / scale, left.y / scale);
+            FxVector2f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            return r;
+        }
+
+        public static void Divide(ref FxVector2f left, float scale, out FxVector2f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+        }
+
+        public static void Divide(ref FxVector2f left, int scale, out FxVector2f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+        }
+
+        public static void Divide(ref FxVector2f left, byte scale, out FxVector2f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
         }
         #endregion
 
@@ -219,12 +455,17 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
+
         #region Nagate
 
         #region static Function
         public static FxVector2f Negate(FxVector2f value)
         {
-            return new FxVector2f(-value.x, -value.y);
+            value.x = -value.x;
+            value.y = -value.y;
+            return value;
         }
         #endregion
 
@@ -239,6 +480,8 @@ namespace FxMaths.Vector
         #endregion
 
         #endregion
+
+
 
         #region Special Functions
 
@@ -300,7 +543,11 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region vector functions
+
+
 
         #region Distance
 
@@ -311,7 +558,7 @@ namespace FxMaths.Vector
         /// <param name="start">The first vector.</param>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public static float Distance(FxVector2f start, FxVector2f end)
+        public static float Distance(ref FxVector2f start, ref FxVector2f end)
         {
             float x = start.x - end.x;
             float y = start.y - end.y;
@@ -326,7 +573,7 @@ namespace FxMaths.Vector
         /// <param name="endX">The x value of the second vector.</param>
         /// <param name="endY">The y value of the second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public static float Distance(FxVector2f start, float endX, float endY)
+        public static float Distance(ref FxVector2f start, float endX, float endY)
         {
             float x = start.x - endX;
             float y = start.y - endY;
@@ -341,7 +588,20 @@ namespace FxMaths.Vector
         /// </summary>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public float Distance(IVertex<float> end)
+        public float Distance(ref IVertex<float> end)
+        {
+            float x = this.X - end.X;
+            float y = this.Y - end.Y;
+
+            return (float)Math.Sqrt((x * x) + (y * y));
+        }
+
+        /// <summary>
+        /// Calculates the distance between this vector and one other.
+        /// </summary>
+        /// <param name="end">The second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public float Distance(ref FxVector2f end)
         {
             float x = this.X - end.X;
             float y = this.Y - end.Y;
@@ -410,7 +670,7 @@ namespace FxMaths.Vector
         #region Dot
 
         #region  Static Func
-        public static float Dot(FxVector2f left, FxVector2f right)
+        public static float Dot(ref FxVector2f left,ref FxVector2f right)
         {
             return (left.x * right.x + left.y * right.y);
         }
@@ -418,7 +678,7 @@ namespace FxMaths.Vector
 
         #region Local Func
 
-        public float Dot(FxMaths.GMaps.IVertex<float> vec)
+        public float Dot(ref IVertex<float> vec)
         {
             return (x * vec.X + y * vec.Y);
         }
@@ -483,7 +743,21 @@ namespace FxMaths.Vector
         /// <returns>The sum of the two vectors.</returns>
         public static FxVector2f operator +(FxVector2f left, FxVector2f right)
         {
-            return Add(left, right);
+            left.x += right.x;
+            left.y += right.y;
+            return left;
+        }
+
+        /// <summary>
+        /// Increase by one the 2 elements
+        /// </summary>
+        /// <param name="vec"></param>
+        /// <returns></returns>
+        public static FxVector2f operator ++(FxVector2f vec)
+        {
+            vec.x++;
+            vec.y++;
+            return vec;
         }
 
         /// <summary>
@@ -494,7 +768,9 @@ namespace FxMaths.Vector
         /// <returns>The difference of the two vectors.</returns>
         public static FxVector2f operator -(FxVector2f left, FxVector2f right)
         {
-            return Subtract(left, right);
+            left.x -= right.x;
+            left.y -= right.y;
+            return left;
         }
 
         /// <summary>
@@ -504,7 +780,9 @@ namespace FxMaths.Vector
         /// <returns>A vector facing in the opposite direction.</returns>
         public static FxVector2f operator -(FxVector2f value)
         {
-            return Negate(value);
+            value.x = -value.x;
+            value.y = -value.y;
+            return value;
         }
 
         /// <summary>
@@ -515,7 +793,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator *(FxVector2f vector, float scale)
         {
-            return Multiply(vector, scale);
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -526,7 +806,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator *(FxVector2f vector, int scale)
         {
-            return Multiply(vector, scale);
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -537,7 +819,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator *(FxVector2f vector, byte scale)
         {
-            return Multiply(vector, scale);
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -548,7 +832,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator *(float scale, FxVector2f vector)
         {
-            return Multiply(vector, scale);
+            vector.x *= scale;
+            vector.y *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -559,7 +845,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator /(FxVector2f vector, float scale)
         {
-            return Divide(vector, scale);
+            vector.x /= scale;
+            vector.y /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -570,7 +858,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator /(FxVector2f vector, int scale)
         {
-            return Divide(vector, scale);
+            vector.x /= scale;
+            vector.y /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -581,7 +871,9 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector2f operator /(FxVector2f vector, byte scale)
         {
-            return Divide(vector, scale);
+            vector.x /= scale;
+            vector.y /= scale;
+            return vector;
         }
 
         /// <summary>

@@ -102,12 +102,13 @@ namespace FxMaths.GMaps
 
         #region Math functions
 
-        float Dot(IVertex<T> vec);
+        float Dot(ref IVertex<T> vec);
 
+        void Add(ref IVertex<T> vec);
 
-        void Subtract(IVertex<T> vec);
+        void Subtract(ref IVertex<T> vec);
 
-        float Distance(IVertex<T> vec);
+        float Distance(ref IVertex<T> vec);
 
         float Length();
 

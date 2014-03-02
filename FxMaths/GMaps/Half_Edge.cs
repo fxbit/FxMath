@@ -306,10 +306,10 @@ namespace FxMaths.GMaps
 
             //// check if the node acceptable
             IVertex<float> a = A.Copy();
-            a.Subtract(orig);
+            a.Subtract(ref orig);
 
             IVertex<float> b = B.Copy();
-            b.Subtract(orig);
+            b.Subtract(ref orig);
 
 #if true
             a.Normalize();
