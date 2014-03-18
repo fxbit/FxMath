@@ -286,9 +286,18 @@ namespace FxMaths.GUI
 
 
         #region point tranlsation in space
-        private Vector.FxVector2f TranslatePoint( PointF point )
+        private void TranslatePoint( PointF point , out FxVector2f tpoint)
         {
-            return new Vector.FxVector2f((point.X - _ScreenOffset.X) / _Zoom.Width, (point.Y - _ScreenOffset.Y) / _Zoom.Height);
+            tpoint.x = (point.X - _ScreenOffset.X) / _Zoom.Width;
+            tpoint.y = (point.Y - _ScreenOffset.Y) / _Zoom.Height;
+        }
+
+        private FxVector2f TranslatePoint(PointF point)
+        {
+            FxVector2f tpoint;
+            tpoint.x = (point.X - _ScreenOffset.X) / _Zoom.Width;
+            tpoint.y = (point.Y - _ScreenOffset.Y) / _Zoom.Height;
+            return tpoint;
         }
 
         private float TranslatePointX( float point )
@@ -455,7 +464,8 @@ namespace FxMaths.GUI
             ReDraw();
 
             // get the translated points
-            Vector.FxVector2f newLocation = TranslatePoint(e.Location);
+            Vector.FxVector2f newLocation;
+            TranslatePoint(e.Location, out newLocation);
 
             // send the event to the base
             base.OnMouseDoubleClick(new MouseEventArgs(e.Button, e.Clicks, (int)newLocation.X, (int)newLocation.Y, e.Delta));
@@ -469,7 +479,8 @@ namespace FxMaths.GUI
                 this.Focus();
 
                 // get the translated points
-                Vector.FxVector2f pos = TranslatePoint(e.Location);
+                Vector.FxVector2f pos;
+                TranslatePoint(e.Location, out pos);
 
                 // check that we have selected element and check that we are click inside it
                 if(SelectedElement != null && SelectedElement.IsHit(pos)) {

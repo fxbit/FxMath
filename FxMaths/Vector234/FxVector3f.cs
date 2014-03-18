@@ -1,39 +1,45 @@
-﻿using System;
+﻿using FxMaths.GMaps;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace FxMaths.Vector
 {
-    public struct FxVector3f : IEquatable<FxVector3f>
+    public struct FxVector3f : IEquatable<FxVector3f>, IVertex<float>
     {
+
         #region Public Variables
 
         /// <summary>
         /// Gets or sets the X component of the vector.
         /// </summary>
         /// <value>The X component of the vector.</value>
-        public float X;
+        public float x;
 
         /// <summary>
         /// Gets or sets the Y component of the vector.
         /// </summary>
         /// <value>The Y component of the vector.</value>
-        public float Y;
+        public float y;
 
         /// <summary>
         /// Gets or sets the Z component of the vector.
         /// </summary>
         /// <value>The Z component of the vector.</value>
-        public float Z;
+        public float z;
 
         #endregion
+
+
 
         #region Public Color Variables
-        public float R { get { return X; } set { X = value; } }
-        public float G { get { return Y; } set { Y = value; } }
-        public float B { get { return Z; } set { Z = value; } }
+        public float R { get { return x; } set { x = value; } }
+        public float G { get { return y; } set { y = value; } }
+        public float B { get { return z; } set { z = value; } }
         #endregion
+
+
 
         #region Contractors
 
@@ -43,9 +49,9 @@ namespace FxMaths.Vector
         /// <param name="value"></param>
         public FxVector3f( float value )
         {
-            X = value;
-            Y = value;
-            Z = value;
+            x = value;
+            y = value;
+            z = value;
         }
 
         /// <summary>
@@ -54,9 +60,9 @@ namespace FxMaths.Vector
         /// <param name="value"></param>
         public FxVector3f( float x, float y, float z )
         {
-            X = x;
-            Y = y;
-            Z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         /// <summary>
@@ -65,11 +71,13 @@ namespace FxMaths.Vector
         /// </summary>
         public FxVector3f( System.Drawing.Color color )
         {
-            X = color.R / 255.0f;
-            Y = color.G / 255.0f;
-            Z = color.B / 255.0f;
+            x = color.R / 255.0f;
+            y = color.G / 255.0f;
+            z = color.B / 255.0f;
         }
         #endregion
+
+
 
         #region Get/Set Values
 
@@ -78,9 +86,9 @@ namespace FxMaths.Vector
             get
             {
                 switch ( index ) {
-                    case 0: return X;
-                    case 1: return Y;
-                    case 2: return Z;
+                    case 0: return x;
+                    case 1: return y;
+                    case 2: return z;
                 }
 
                 return 0;
@@ -89,9 +97,9 @@ namespace FxMaths.Vector
             set
             {
                 switch ( index ) {
-                    case 0: X = value; break;
-                    case 1: Y = value; break;
-                    case 2: Z = value; break;
+                    case 0: x = value; break;
+                    case 1: y = value; break;
+                    case 2: z = value; break;
                 }
             }
 
@@ -99,170 +107,464 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region Math calcuations
+
+
 
         #region Add
 
         #region Static Function
-        public static FxVector3f Add( FxVector3f left, FxVector3f right )
+        public static FxVector3f Add(ref FxVector3f left, ref FxVector3f right)
         {
-            return new FxVector3f( left.X + right.X, left.Y + right.Y, left.Z + right.Z );
+            FxVector3f r;
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
+            r.z = left.z + right.z;
+            return r;
+        }
+
+        public static void Add(ref FxVector3f left, ref FxVector3f right, out FxVector3f r)
+        {
+            r.x = left.x + right.x;
+            r.y = left.y + right.y;
+            r.z = left.z + right.z;
+        }
+
+        public static FxVector3f Add(ref FxVector3f vec, float value)
+        {
+            FxVector3f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector3f vec, float value, out FxVector3f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
+        }
+
+
+        public static FxVector3f Add(ref FxVector3f vec, int value)
+        {
+            FxVector3f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector3f vec, int value, out FxVector3f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
+        }
+
+        public static FxVector3f Add(ref FxVector3f vec, byte value)
+        {
+            FxVector3f r;
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
+            return r;
+        }
+
+        public static void Add(ref FxVector3f vec, byte value, out FxVector3f r)
+        {
+            r.x = vec.x + value;
+            r.y = vec.y + value;
+            r.z = vec.z + value;
         }
         #endregion
 
         #region Local Function
-        public void Add( FxVector3f value )
+        public void Add(ref FxVector3f value)
         {
-            X += value.X;
-            Y += value.Y;
-            Z += value.Z;
+            x += value.x;
+            y += value.y;
+            z += value.z;
+        }
+
+        public void Add(ref IVertex<float> value)
+        {
+            x += value.X;
+            y += value.Y;
+            z += value.Z;
+        }
+
+
+        public void Add(float value)
+        {
+            x += value;
+            y += value;
+            z += value;
+        }
+
+        public void Add(int value)
+        {
+            x += value;
+            y += value;
+            z += value;
+        }
+
+        public void Add(byte value)
+        {
+            x += value;
+            y += value;
+            z += value;
         }
         #endregion
 
         #endregion
+
+
 
         #region Subtract
         #region Static Function
-        public static FxVector3f Subtract( FxVector3f left, FxVector3f right )
+        public static FxVector3f Subtract(ref FxVector3f left, ref FxVector3f right)
         {
-            return new FxVector3f( left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+            FxVector3f r;
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
+            r.z = left.z - right.z;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector3f left, ref FxVector3f right, out FxVector3f r)
+        {
+            r.x = left.x - right.x;
+            r.y = left.y - right.y;
+            r.z = left.z - right.z;
+        }
+
+
+        public static FxVector3f Subtract(ref FxVector3f vec, float value)
+        {
+            FxVector3f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector3f vec, float value, out FxVector3f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
+        }
+
+
+        public static FxVector3f Subtract(ref FxVector3f vec, int value)
+        {
+            FxVector3f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector3f vec, int value, out FxVector3f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
+        }
+
+
+        public static FxVector3f Subtract(ref FxVector3f vec, byte value)
+        {
+            FxVector3f r;
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
+            return r;
+        }
+
+        public static void Subtract(ref FxVector3f vec, byte value, out FxVector3f r)
+        {
+            r.x = vec.x - value;
+            r.y = vec.y - value;
+            r.z = vec.z - value;
         }
         #endregion
 
         #region Local Function
-        public void Subtract( FxVector3f value )
+        public void Subtract(ref FxVector3f value)
         {
-            X -= value.X;
-            Y -= value.Y;
-            Z -= value.Z;
+            x -= value.X;
+            y -= value.Y;
+            z -= value.Z;
         }
+        public void Subtract(ref IVertex<float> value)
+        {
+            x -= value.X;
+            y -= value.Y;
+            z -= value.Z;
+        }
+
+        public void Subtract(float value)
+        {
+            x -= value;
+            y -= value;
+            z -= value;
+        }
+
+        public void Subtract(int value)
+        {
+            x -= value;
+            y -= value;
+            z -= value;
+        }
+
+        public void Subtract(byte value)
+        {
+            x -= value;
+            y -= value;
+            z -= value;
+        }
+
         #endregion
         #endregion
+
+
 
         #region Modulate
 
         #region static Functions
-        public static FxVector3f Modulate( FxVector3f left, FxVector3f right )
+        public static FxVector3f Modulate(ref FxVector3f left,ref FxVector3f right )
         {
-            return new FxVector3f( left.X * right.X, left.Y * right.Y, left.Z * right.Z );
+            FxVector3f r;
+            r.x = left.x * right.x;
+            r.y = left.y * right.y;
+            r.z = left.z * right.z;
+            return r;
+        }
+
+
+        public static void Modulate(ref FxVector3f left, ref FxVector3f right, out FxVector3f r)
+        {
+            r.x = left.x * right.x;
+            r.y = left.y * right.y;
+            r.z = left.z * right.z;
         }
         #endregion
 
         #region Local Functions
-        public void Modulate( FxVector3f value )
+        public void Modulate(ref FxVector3f value )
         {
-            X *= value.X;
-            Y *= value.Y;
-            Z *= value.Z;
+            x *= value.x;
+            y *= value.y;
+            z *= value.z;
         }
         #endregion
 
         #endregion
+
+
 
         #region Multiply
 
         #region static Functions
-        public static FxVector3f Multiply( FxVector3f left, float scale )
+        public static FxVector3f Multiply(ref FxVector3f left, float scale )
         {
-            return new FxVector3f( left.X * scale, left.Y * scale, left.Z * scale);
+            FxVector3f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
+            return r;
         }
 
-        public static FxVector3f Multiply( FxVector3f left, int scale )
+        public static FxVector3f Multiply(ref FxVector3f left, int scale)
         {
-            return new FxVector3f( left.X * scale, left.Y * scale, left.Z * scale );
+            FxVector3f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
+            return r;
         }
 
-        public static FxVector3f Multiply( FxVector3f left, byte scale )
+        public static FxVector3f Multiply(ref FxVector3f left, byte scale)
         {
-            return new FxVector3f( left.X * scale, left.Y * scale, left.Z * scale);
+            FxVector3f r;
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
+            return r;
+        }
+        public static void Multiply(ref FxVector3f left, float scale, out FxVector3f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
+        }
+
+        public static void Multiply(ref FxVector3f left, int scale, out FxVector3f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
+        }
+
+        public static void Multiply(ref FxVector3f left, byte scale, out FxVector3f r)
+        {
+            r.x = left.x * scale;
+            r.y = left.y * scale;
+            r.z = left.z * scale;
         }
         #endregion
+
 
         #region Local Function
         public void Multiply( float scale )
         {
-            X *= scale;
-            Y *= scale;
-            Z *= scale;
+            x *= scale;
+            y *= scale;
+            z *= scale;
         }
 
         public void Multiply( int scale )
         {
-            X *= scale;
-            Y *= scale;
-            Z *= scale;
+            x *= scale;
+            y *= scale;
+            z *= scale;
         }
 
         public void Multiply( byte scale )
         {
-            X *= scale;
-            Y *= scale;
-            Z *= scale;
+            x *= scale;
+            y *= scale;
+            z *= scale;
         }
         #endregion
 
         #endregion
+
+
 
         #region Divide
 
         #region Static Functions
-        public static FxVector3f Divide( FxVector3f left, float scale )
+        public static FxVector3f Divide(ref FxVector3f left, float scale )
         {
-            return new FxVector3f( left.X / scale, left.Y / scale, left.Z / scale );
+            FxVector3f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
+            return r;
         }
 
-        public static FxVector3f Divide( FxVector3f left, int scale )
+        public static FxVector3f Divide(ref FxVector3f left, int scale)
         {
-            return new FxVector3f( left.X / scale, left.Y / scale, left.Z / scale );
+            FxVector3f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
+            return r;
         }
 
-        public static FxVector3f Divide( FxVector3f left, byte scale )
+        public static FxVector3f Divide(ref FxVector3f left, byte scale)
         {
-            return new FxVector3f( left.X / scale, left.Y / scale, left.Z / scale );
+            FxVector3f r;
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
+            return r;
+        }
+        public static void Divide(ref FxVector3f left, float scale, out FxVector3f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
+        }
+
+        public static void Divide(ref FxVector3f left, int scale, out FxVector3f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
+        }
+
+        public static void Divide(ref FxVector3f left, byte scale, out FxVector3f r)
+        {
+            r.x = left.x / scale;
+            r.y = left.y / scale;
+            r.z = left.z / scale;
         }
         #endregion
 
         #region Local Functions
         public void Divide( float scale )
         {
-            X /= scale; Y /= scale;
-            Z /= scale;
+            x /= scale; y /= scale;
+            z /= scale;
         }
 
         public void Divide( int scale )
         {
-            X /= scale;Y /= scale;
-            Z /= scale;
+            x /= scale;y /= scale;
+            z /= scale;
         }
 
         public void Divide( byte scale )
         {
-            X /= scale; Y /= scale;
-            Z /= scale;
+            x /= scale; y /= scale;
+            z /= scale;
         }
         #endregion
 
         #endregion
+
 
         #region Nagate
 
         #region static Function
         public static FxVector3f Negate( FxVector3f value )
         {
-            return new FxVector3f( -value.X, -value.Y, -value.Z);
+            return new FxVector3f( -value.x, -value.y, -value.z);
         }
         #endregion
 
         #region Local Function
         public void Negate()
         {
-            X = -X; Y = -Y; Z = -Z; 
+            x = -x; y = -y; z = -z; 
         }
         #endregion
 
         #endregion
 
+
+        #region Dot
+
+        #region  Static Func
+        public static float Dot(ref FxVector3f left, ref FxVector3f right)
+        {
+            return (left.x * right.x + left.y * right.y + left.z * right.z);
+        }
         #endregion
+
+        #region Local Func
+
+        public float Dot(ref IVertex<float> vec)
+        {
+            return (x * vec.X + y * vec.Y + z * vec.Z);
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #endregion
+
+
+
 
         #region Special Functions
 
@@ -276,17 +578,17 @@ namespace FxMaths.Vector
         /// <returns>The clamped value.</returns>
         public FxVector3f Clamp( FxVector3f value, FxVector3f min, FxVector3f max )
         {
-            float x = value.X;
-            x = ( x > max.X ) ? max.X : x;
-            x = ( x < min.X ) ? min.X : x;
+            float x = value.x;
+            x = ( x > max.x ) ? max.x : x;
+            x = ( x < min.x ) ? min.x : x;
 
-            float y = value.Y;
-            y = ( y > max.Y ) ? max.Y : y;
-            y = ( y < min.Y ) ? min.Y : y;
+            float y = value.y;
+            y = ( y > max.y ) ? max.y : y;
+            y = ( y < min.y ) ? min.y : y;
 
-            float z = value.Z;
-            z = ( z > max.Z ) ? max.Z : z;
-            z = ( z < min.Z ) ? min.Z : z;
+            float z = value.z;
+            z = ( z > max.z ) ? max.z : z;
+            z = ( z < min.z ) ? min.z : z;
 
             return new FxVector3f( x, y, z);
         }
@@ -299,14 +601,14 @@ namespace FxMaths.Vector
         /// <returns>The clamped value.</returns>
         public void Clamp( FxVector3f min, FxVector3f max )
         {
-            X = ( X > max.X ) ? max.X : X;
-            X = ( X < min.X ) ? min.X : X;
+            x = ( x > max.x ) ? max.x : x;
+            x = ( x < min.x ) ? min.x : x;
 
-            Y = ( Y > max.Y ) ? max.Y : Y;
-            Y = ( Y < min.Y ) ? min.Y : Y;
+            y = ( y > max.y ) ? max.y : y;
+            y = ( y < min.y ) ? min.y : y;
 
-            Z = ( Z > max.Z ) ? max.Z : Z;
-            Z = ( Z < min.Z ) ? min.Z : Z;
+            z = ( z > max.z ) ? max.z : z;
+            z = ( z < min.z ) ? min.z : z;
         }
         #endregion
 
@@ -325,13 +627,16 @@ namespace FxMaths.Vector
         /// </remarks>
         public static FxVector3f Lerp( FxVector3f start, FxVector3f end, float factor )
         {
-            return new FxVector3f( start.X + ( ( end.X - start.X ) * factor ), 
-                                   start.Y + ( ( end.Y - start.Y ) * factor ),
-                                   start.Z + ( ( end.Z - start.Z ) * factor ));
+            return new FxVector3f( start.x + ( ( end.x - start.x ) * factor ), 
+                                   start.y + ( ( end.y - start.y ) * factor ),
+                                   start.z + ( ( end.z - start.z ) * factor ));
         }
         #endregion
 
         #endregion
+
+
+
 
         #region vector functions
 
@@ -344,13 +649,30 @@ namespace FxMaths.Vector
         /// <param name="start">The first vector.</param>
         /// <param name="end">The second vector.</param>
         /// <returns>The distance between the two vectors.</returns>
-        public static float Distance( FxVector3f start, FxVector3f end )
+        public static float Distance(ref FxVector3f start, ref FxVector3f end )
         {
-            float x = start.X - end.X;
-            float y = start.Y - end.Y;
-            float z = start.Z - end.Z;
+            float x = start.x - end.x;
+            float y = start.y - end.y;
+            float z = start.z - end.z;
 
             return (float)Math.Sqrt( ( x * x ) + ( y * y ) + ( z * z ) );
+        }
+
+
+        /// <summary>
+        ///  Calculates the distance between two vectors and one other.
+        /// </summary>
+        /// <param name="start">The first vector.</param>
+        /// <param name="endX">The x value of the second vector.</param>
+        /// <param name="endY">The y value of the second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public static float Distance(ref FxVector2f start, float endX, float endY, float endZ)
+        {
+            float x = start.x - endX;
+            float y = start.y - endY;
+            float z = start.y - endZ;
+
+            return (float)Math.Sqrt((x * x) + (y * y) + (z * z));
         }
         #endregion
 
@@ -362,11 +684,41 @@ namespace FxMaths.Vector
         /// <returns>The distance between the two vectors.</returns>
         public float Distance( FxVector3f end )
         {
-            float x = X - end.X;
-            float y = Y - end.Y;
-            float z = Z - end.Z;
+            float x = this.x - end.x;
+            float y = this.y - end.y;
+            float z = this.z - end.z;
 
             return (float)Math.Sqrt( ( x * x ) + ( y * y ) + ( z * z ));
+        }
+
+        /// <summary>
+        /// Calculates the distance between this vector and one other.
+        /// </summary>
+        /// <param name="end">The second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public float Distance(ref IVertex<float> end)
+        {
+            float x = this.x - end.X;
+            float y = this.y - end.Y;
+            float z = this.z - end.Z;
+
+            return (float)Math.Sqrt((x * x) + (y * y) + (z * z));
+        }
+
+        /// <summary>
+        ///  Calculates the distance between this vector and one other.
+        /// </summary>
+        /// <param name="endX">The x value of the second vector.</param>
+        /// <param name="endY">The y value of the second vector.</param>
+        /// <param name="endZ">The z value of the second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        public float Distance(float endX, float endY, float endZ)
+        {
+            float x = this.x - endX;
+            float y = this.y - endY;
+            float z = this.z - endZ;
+
+            return (float)Math.Sqrt((x * x) + (y * y) + (z * z));
         }
         #endregion
 
@@ -383,11 +735,11 @@ namespace FxMaths.Vector
         /// <returns>The squared distance between the two vectors.</returns>
         /// <remarks>Distance squared is the value before taking the square root. 
         /// </remarks>
-        public static float DistanceSquared( FxVector3f start, FxVector3f end )
+        public static float DistanceSquared(ref FxVector3f start, ref FxVector3f end)
         {
-            float x = start.X - end.X;
-            float y = start.Y - end.Y;
-            float z = start.Z - end.Z;
+            float x = start.x - end.x;
+            float y = start.y - end.y;
+            float z = start.z - end.z;
 
             return ( x * x ) + ( y * y ) + ( z * z ) ;
         }
@@ -401,11 +753,11 @@ namespace FxMaths.Vector
         /// <returns>The squared distance between the two vectors.</returns>
         /// <remarks>Distance squared is the value before taking the square root. 
         /// </remarks>
-        public float DistanceSquared( FxVector3f end )
+        public float DistanceSquared(ref FxVector3f end )
         {
-            float x = X - end.X;
-            float y = Y - end.Y;
-            float z = Z - end.Z;
+            float x = this.x - end.x;
+            float y = this.y - end.y;
+            float z = this.z - end.z;
 
             return ( x * x ) + ( y * y ) + ( z * z );
         }
@@ -418,14 +770,14 @@ namespace FxMaths.Vector
         #region  Static Func
         public static float Dot( FxVector3f left, FxVector3f right )
         {
-            return ( left.X * right.X + left.Y * right.Y + left.Z * right.Z );
+            return ( left.x * right.x + left.y * right.y + left.z * right.z );
         }
         #endregion
 
         #region Local Func
         public float Dot( FxVector3f vec )
         {
-            return ( X * vec.X + Y * vec.Y + Z * vec.Z );
+            return ( x * vec.x + y * vec.y + z * vec.z );
         }
         #endregion
 
@@ -448,9 +800,9 @@ namespace FxMaths.Vector
             if ( length == 0 )
                 return;
             float num = 1 / length;
-            X *= num;
-            Y *= num;
-            Z *= num;
+            x *= num;
+            y *= num;
+            z *= num;
         }
         #endregion
 
@@ -460,7 +812,7 @@ namespace FxMaths.Vector
 
         public float Length()
         {
-            return (float)Math.Sqrt( X * X + Y * Y + Z * Z );
+            return (float)Math.Sqrt( x * x + y * y + z * z );
         }
 
         #endregion
@@ -469,12 +821,15 @@ namespace FxMaths.Vector
 
         public float LengthSquared()
         {
-            return X * X + Y * Y + Z * Z;
+            return x * x + y * y + z * z;
         }
 
         #endregion
 
         #endregion
+
+
+
 
         #region Overite operations
         /// <summary>
@@ -485,7 +840,24 @@ namespace FxMaths.Vector
         /// <returns>The sum of the two vectors.</returns>
         public static FxVector3f operator +( FxVector3f left, FxVector3f right )
         {
-            return Add( left, right );
+            left.x += right.x;
+            left.y += right.y;
+            left.z += right.z;
+            return left;
+        }
+
+
+        /// <summary>
+        /// Increase by one the 2 elements
+        /// </summary>
+        /// <param name="vec"></param>
+        /// <returns></returns>
+        public static FxVector3f operator ++(FxVector3f vec)
+        {
+            vec.x++;
+            vec.y++;
+            vec.z++;
+            return vec;
         }
 
         /// <summary>
@@ -496,7 +868,10 @@ namespace FxMaths.Vector
         /// <returns>The difference of the two vectors.</returns>
         public static FxVector3f operator -( FxVector3f left, FxVector3f right )
         {
-            return Subtract( left, right );
+            left.x -= right.x;
+            left.y -= right.y;
+            left.z -= right.z;
+            return left;
         }
 
         /// <summary>
@@ -506,7 +881,10 @@ namespace FxMaths.Vector
         /// <returns>A vector facing in the opposite direction.</returns>
         public static FxVector3f operator -( FxVector3f value )
         {
-            return Negate( value );
+            value.x = -value.x;
+            value.y = -value.y;
+            value.z = -value.z;
+            return value;
         }
 
         /// <summary>
@@ -517,7 +895,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator *( FxVector3f vector, float scale )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            vector.z *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -528,7 +909,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator *( FxVector3f vector, int scale )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            vector.z *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -539,7 +923,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator *( FxVector3f vector, byte scale )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            vector.z *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -550,7 +937,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator *( float scale, FxVector3f vector )
         {
-            return Multiply( vector, scale );
+            vector.x *= scale;
+            vector.y *= scale;
+            vector.z *= scale;
+            return vector;
         }
 
         /// <summary>
@@ -561,7 +951,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator /( FxVector3f vector, float scale )
         {
-            return Divide( vector, scale );
+            vector.x /= scale;
+            vector.y /= scale;
+            vector.z /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -572,7 +965,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator /( FxVector3f vector, int scale )
         {
-            return Divide( vector, scale );
+            vector.x /= scale;
+            vector.y /= scale;
+            vector.z /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -583,7 +979,10 @@ namespace FxMaths.Vector
         /// <returns>The scaled vector.</returns>
         public static FxVector3f operator /( FxVector3f vector, byte scale )
         {
-            return Divide( vector, scale );
+            vector.x /= scale;
+            vector.y /= scale;
+            vector.z /= scale;
+            return vector;
         }
 
         /// <summary>
@@ -609,6 +1008,9 @@ namespace FxMaths.Vector
         }
         #endregion
 
+
+
+
         #region Equals Functions
 
         /// <summary>
@@ -617,7 +1019,7 @@ namespace FxMaths.Vector
 		/// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+            return x.GetHashCode() + y.GetHashCode() + z.GetHashCode();
 
         }
         /// <summary>
@@ -643,7 +1045,7 @@ namespace FxMaths.Vector
         /// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals( FxVector3f value )
         {
-            return ( X == value.X && Y == value.Y && Z == value.Z );
+            return ( x == value.x && y == value.y && z == value.z );
         }
 
         /// <summary>
@@ -655,18 +1057,172 @@ namespace FxMaths.Vector
         /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
         public static bool Equals( FxVector3f value1, FxVector3f value2 )
         {
-            return ( value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z );
+            return ( value1.x == value2.x && value1.y == value2.y && value1.z == value2.z );
         }
         #endregion
+
+
+
 
         #region String Utils
 
         public override string ToString()
         {
-            return "(" + X.ToString().Replace(',', '.') + "," + Y.ToString().Replace(',', '.') + "," + Z.ToString().Replace(',', '.') + ")";
+            return "(" + x.ToString().Replace(',', '.') + "," + y.ToString().Replace(',', '.') + "," + z.ToString().Replace(',', '.') + ")";
+        }
+
+        public string ToString(String Format)
+        {
+            return "(" + x.ToString(Format).Replace(',', '.') + "," + y.ToString(Format).Replace(',', '.') + "," + z.ToString(Format).Replace(',', '.') + ")";
         }
 
 
+
+        #endregion
+
+
+
+
+        #region IVertex Members
+
+
+
+        #region Set/Get
+        public float X
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                this.x = value;
+            }
+        }
+
+        public float Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                this.y = value;
+            }
+        }
+
+        public float Z
+        {
+            get
+            {
+                return z;
+            }
+            set
+            {
+                this.z = value;
+            }
+        } 
+        #endregion
+
+
+
+
+
+        #region Data stream
+        /// <summary>
+        /// Write the vertex to the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public void WriteToDataStream(SharpDX.DataStream dataStream)
+        {
+            // write the data to the stream
+            dataStream.Write<float>(x);
+            dataStream.Write<float>(y);
+            dataStream.Write<float>(z);
+        }
+
+        /// <summary>
+        /// Read the vertex from the data stream
+        /// </summary>
+        /// <param name="dataStream"></param>
+        public void ReadFromDataStream(SharpDX.DataStream dataStream)
+        {
+            // read the data from the stream
+            x = dataStream.Read<float>();
+            y = dataStream.Read<float>();
+            z = dataStream.Read<float>();
+        } 
+        #endregion
+
+
+
+        public IVertex<float> Copy()
+        {
+            return new FxVector3f(x, y, z);
+        }
+
+
+
+        #region Equals Functions
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public int GetHashCode(IVertex<float> obj)
+        {
+            return obj.GetHashCode();
+        }
+
+
+        public bool Equals(IVertex<float> value)
+        {
+            return (Math.Abs(value.X - x) < 0.0001 && Math.Abs(y - value.Y) < 0.0001 && Math.Abs(z - value.Z) < 0.0001);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object instances are considered equal. 
+        /// </summary>
+        /// <param name="value1">The first value to compare.</param>
+        /// <param name="value2">The second value to compare.</param>
+        /// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
+        /// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
+        public bool Equals(IVertex<float> value1, IVertex<float> value2)
+        {
+            return (Math.Abs(value1.X - value2.X) < 0.0001 && Math.Abs(value1.Y - value2.Y) < 0.0001 && Math.Abs(value1.Z - value2.Z) < 0.0001);
+        }
+
+        #endregion
+
+
+
+
+        #endregion
+
+
+    }
+
+    public static class FxVector3fUtils
+    {
+        #region Random
+        public static FxVector3f NextFxVector3f(this Random random, FxVector3f min, FxVector3f max)
+        {
+            FxVector3f r;
+            r.x = (float)(random.NextDouble() * max.x + min.x);
+            r.y = (float)(random.NextDouble() * max.y + min.y);
+            r.z = (float)(random.NextDouble() * max.z + min.z);
+            return r;
+        }
+
+        public static FxVector3f NextFxVector3f(this Random random)
+        {
+            FxVector3f r;
+            r.x = (float)(random.NextDouble());
+            r.y = (float)(random.NextDouble());
+            r.z = (float)(random.NextDouble());
+            return r;
+        }
         #endregion
     }
 }

@@ -118,7 +118,7 @@ namespace FxMaths.Noise
         public float Noise(float x)
         {
             // use the tile 
-            x *= m_Tile.X;
+            x *= m_Tile.x;
 
             // Compute the cell coordinates
             int X = (int)Math.Floor(x) & 255;
@@ -140,8 +140,8 @@ namespace FxMaths.Noise
         public float Noise(float x, float y)
         {
             // use the tile 
-            x *= m_Tile.X;
-            y *= m_Tile.Y;
+            x *= m_Tile.x;
+            y *= m_Tile.y;
 
             // Compute the cell coordinates
             int X = (int)Math.Floor(x) & 255;
@@ -176,9 +176,9 @@ namespace FxMaths.Noise
         public float Noise(float x, float y, float z)
         {
             // use the tile 
-            x *= m_Tile.X;
-            y *= m_Tile.Y;
-            z *= m_Tile.Z;
+            x *= m_Tile.x;
+            y *= m_Tile.y;
+            z *= m_Tile.z;
 
             // Compute the cell coordinates
             int X = (int)Math.Floor(x) & 255;

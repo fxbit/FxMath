@@ -734,6 +734,8 @@ namespace FxMaths.Vector
 
         #endregion
 
+
+
         #region Overite operations
         /// <summary>
         /// Adds two vectors.
@@ -899,6 +901,8 @@ namespace FxMaths.Vector
         }
         #endregion
 
+
+
         #region Equals Functions
 
         /// <summary>
@@ -942,7 +946,7 @@ namespace FxMaths.Vector
         /// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
         public bool Equals(IVertex<float> value)
         {
-            return (Math.Abs(value.X - x) < 0.1 && Math.Abs(y - value.Y) < 0.1);
+            return (Math.Abs(value.X - x) < 0.0001 && Math.Abs(y - value.Y) < 0.0001);
             //return (x == value.X && y == value.Y);
         }
 
@@ -956,10 +960,11 @@ namespace FxMaths.Vector
         public bool Equals(IVertex<float> value1, IVertex<float> value2)
         {
             //return (value1.X == value2.X && value1.Y == value2.Y);
-
-            return (Math.Abs(value1.X - value2.X) < 0.1 && Math.Abs(value1.Y - value2.Y) < 0.1);
+            return (Math.Abs(value1.X - value2.X) < 0.0001 && Math.Abs(value1.Y - value2.Y) < 0.0001);
         }
         #endregion
+
+
 
         #region IVertex Members
 
@@ -1108,6 +1113,9 @@ namespace FxMaths.Vector
         }
     }
 
+
+
+
     #region Converter
 
     public class FxVector2fConverter : ExpandableObjectConverter
@@ -1183,5 +1191,28 @@ namespace FxMaths.Vector
     }
 
     #endregion
+
+
+
+    public static class FxVector2fUtils
+    {
+        #region Random
+        public static FxVector2f NextFxVector2f(this Random random, FxVector2f min, FxVector2f max)
+        {
+            FxVector2f r;
+            r.x = (float)(random.NextDouble() * max.x + min.x);
+            r.y = (float)(random.NextDouble() * max.y + min.y);
+            return r;
+        }
+
+        public static FxVector2f NextFxVector2f(this Random random)
+        {
+            FxVector2f r;
+            r.x = (float)(random.NextDouble());
+            r.y = (float)(random.NextDouble());
+            return r;
+        }
+        #endregion
+    }
 
 }
