@@ -1330,6 +1330,12 @@ namespace FxMaths.Matrix
             bitmap.Dispose();
         }
 
+
+        /// <summary>
+        /// Save the Matrix in CSV form.
+        /// This filetype can be load from matlab.
+        /// </summary>
+        /// <param name="fileName"></param>
         public void SaveCsv(string fileName)
         {
             CsvRow row = new CsvRow();
@@ -1342,6 +1348,60 @@ namespace FxMaths.Matrix
                     writer.WriteRow(row);
                 }
             }
+        }
+
+        /// <summary>
+        /// Load a Matrix from CSV form
+        /// This filetype can be saved from matlab
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        static public FxMatrixF LoadCsv(string fileName)
+        {
+            FxMatrixF mat = new FxMatrixF(10,10);
+            // Read sample data from CSV file
+            using (CsvFileReader reader = new CsvFileReader(fileName))
+            {
+                List<CsvRow> listRow = new List<CsvRow>();
+                CsvRow row = new CsvRow();
+                int width = 0;
+                int oldWidth = -1;
+                while (reader.ReadRow(row))
+                {
+                    // save the row for later
+                    listRow.Add(row);
+
+                    // the first time update the old width with the row count
+                    if (oldWidth == -1)
+                        oldWidth = row.Count;
+
+                    if (oldWidth != row.Count)
+                    {
+                        Console.WriteLine("The lines are not have the same lenght");
+                        return null;
+                    }
+
+                    oldWidth = row.Count;
+
+
+                    // create a new one that is going to be readed from file.
+                    row = new CsvRow();
+                }
+
+
+                // create the matrix
+                mat = new FxMatrixF(oldWidth, listRow.Count);
+                int i, j = 0;
+                foreach (CsvRow r in listRow)
+                {
+                    for (i = 0; i < oldWidth; i++)
+                    {
+                        mat[i, j] = float.Parse(r[i].Replace('.', ','));
+                    }
+                    j++;
+                }
+            }
+            return mat;
         }
 
         #endregion
