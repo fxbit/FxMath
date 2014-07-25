@@ -18,6 +18,27 @@ using System.Reflection;
 
 namespace FxMaths.GUI
 {
+
+    #region Event Arguments 
+
+    public class CanvasMouseClickEventArgs:EventArgs
+    {
+        public MouseEventArgs mouseClick;
+        public CanvasElements hitElement;
+        public FxVector2f hitPoint;
+        public FxVector2f insidePoint;
+
+        public CanvasMouseClickEventArgs( MouseEventArgs mouseClick, CanvasElements hitElement, FxVector2f hitPoint, FxVector2f insidePoint)
+        {
+            this.mouseClick = mouseClick;
+            this.hitElement = hitElement;
+            this.hitPoint = hitPoint;
+            this.insidePoint = insidePoint;
+        }
+    }
+
+    #endregion
+
     public partial class Canvas : UserControl, IDisposable
     {
 
@@ -58,6 +79,9 @@ namespace FxMaths.GUI
         // list with all elements that the user have insert
         List<CanvasElements> ElementsList;
 
+        // event from canvas when a user click in canvas
+        public delegate void CanvasMouseClickHandler(object sender, CanvasMouseClickEventArgs e);
+        public event CanvasMouseClickHandler OnCanvasMouseClick;
 
 
         #region Selected/Edit Border Brush/Color
@@ -490,6 +514,21 @@ namespace FxMaths.GUI
 
                     // send the event to selected element
                     SelectedElement.MouseClick(pos);
+                }
+
+                
+
+                if(this.OnCanvasMouseClick!= null)
+                {
+                    CanvasElements elem =  HitElement(pos);
+
+                    // find the internal hit point
+                    Vector.FxVector2f inpos = pos;
+                    if (elem!=null)
+                        inpos.Subtract(ref elem._Position);
+
+                    CanvasMouseClickEventArgs args = new CanvasMouseClickEventArgs(e, elem, pos, inpos);
+                    this.OnCanvasMouseClick(this, args);
                 }
             }
 
