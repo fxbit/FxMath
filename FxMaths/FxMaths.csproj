@@ -171,6 +171,7 @@
     <Compile Include="Geometry\IBaseGeometry.cs" />
     <Compile Include="Geometry\Line.cs" />
     <Compile Include="Geometry\Path.cs" />
+    <Compile Include="Geometry\Rectangle.cs" />
     <Compile Include="Geometry\Triangle.cs" />
     <Compile Include="GMaps\BoundaryNode.cs" />
     <Compile Include="GMaps\Boundary_Half_Edge.cs" />

@@ -68,7 +68,6 @@
             // toolStripButton_propertieGrid
             // 
             this.toolStripButton_propertieGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_propertieGrid.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_propertieGrid.Image")));
             this.toolStripButton_propertieGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_propertieGrid.Name = "toolStripButton_propertieGrid";
             this.toolStripButton_propertieGrid.Size = new System.Drawing.Size(23, 22);
@@ -78,7 +77,6 @@
             // ToolButton_GetPosition
             // 
             this.ToolButton_GetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToolButton_GetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButton_GetPosition.Image")));
             this.ToolButton_GetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolButton_GetPosition.Name = "ToolButton_GetPosition";
             this.ToolButton_GetPosition.Size = new System.Drawing.Size(23, 22);
@@ -88,7 +86,6 @@
             // ToolButtonSetPosition
             // 
             this.ToolButtonSetPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToolButtonSetPosition.Image = ((System.Drawing.Image)(resources.GetObject("ToolButtonSetPosition.Image")));
             this.ToolButtonSetPosition.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolButtonSetPosition.Name = "ToolButtonSetPosition";
             this.ToolButtonSetPosition.Size = new System.Drawing.Size(23, 22);

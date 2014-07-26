@@ -1364,7 +1364,6 @@ namespace FxMaths.Matrix
             {
                 List<CsvRow> listRow = new List<CsvRow>();
                 CsvRow row = new CsvRow();
-                int width = 0;
                 int oldWidth = -1;
                 while (reader.ReadRow(row))
                 {
