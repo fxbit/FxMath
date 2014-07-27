@@ -431,7 +431,7 @@ namespace FxMaths.Matrix
 
 
             // allocate the return matrix
-            FxMatrix<T> sub = AllocateMatrix( endX - startX + 1, endY - startY + 1 );
+            FxMatrix<T> sub = AllocateMatrix( endX - startX, endY - startY);
 
             // copy the submatrix
             for ( int x=startX; x < endX; x++ ) {
@@ -506,7 +506,7 @@ namespace FxMaths.Matrix
 
 
             // allocate the return matrix
-            FxMatrix<T> sub = AllocateMatrix(endX - startX + 1, endY - startY + 1);
+            FxMatrix<T> sub = AllocateMatrix(endX - startX, endY - startY);
 
             // copy the submatrix
             for (int x = startX; x < endX; x++)
