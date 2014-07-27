@@ -176,5 +176,15 @@ namespace FxMaths.GUI
         } 
 
         #endregion
+
+
+
+
+        #region ToolStrip
+        public override void FillToolStrip(System.Windows.Forms.ToolStrip toolStrip)
+        {
+            // Nothing for now
+        }
+        #endregion
     }
 }

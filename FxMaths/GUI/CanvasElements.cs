@@ -5,6 +5,7 @@ using System.Text;
 
 using SharpDX.Direct2D1;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace FxMaths.GUI
 {
@@ -60,6 +61,13 @@ namespace FxMaths.GUI
         /// </summary>
         /// <param name="renderTarget"></param>
         public abstract void Load( CanvasRenderArguments renderTarget );
+
+
+        /// <summary>
+        /// Fill any specific toolstrip that the selected element have.
+        /// </summary>
+        /// <param name="toolStrip"></param>
+        public abstract void FillToolStrip(ToolStrip toolStrip);
 
         /// <summary>
         /// Check if the specific points lie in the element

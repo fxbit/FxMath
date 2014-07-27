@@ -18,27 +18,6 @@ using System.Reflection;
 
 namespace FxMaths.GUI
 {
-
-    #region Event Arguments 
-
-    public class CanvasMouseClickEventArgs:EventArgs
-    {
-        public MouseEventArgs mouseClick;
-        public CanvasElements hitElement;
-        public FxVector2f hitPoint;
-        public FxVector2f insidePoint;
-
-        public CanvasMouseClickEventArgs( MouseEventArgs mouseClick, CanvasElements hitElement, FxVector2f hitPoint, FxVector2f insidePoint)
-        {
-            this.mouseClick = mouseClick;
-            this.hitElement = hitElement;
-            this.hitPoint = hitPoint;
-            this.insidePoint = insidePoint;
-        }
-    }
-
-    #endregion
-
     public partial class Canvas : UserControl, IDisposable
     {
 
@@ -425,11 +404,24 @@ namespace FxMaths.GUI
 
                 // update the link to property grid
                 propertyGrid1.SelectedObject = element;
+
+                // update the toolstrip
+                
+                // remove the old items
+                toolStrip_SelectedItem.Items.Clear();
+
+                // add the toolstrip items of the selectes object
+                SelectedElement.FillToolStrip(toolStrip_SelectedItem);
+                toolStrip_SelectedItem.Visible = true;
             }
             else
             {
                 // update the link to property grid
                 propertyGrid1.SelectedObject = this;
+
+                // remove the old items
+                toolStrip_SelectedItem.Visible = false;
+                toolStrip_SelectedItem.Items.Clear();
             }
 
             // update the combobox 
@@ -855,5 +847,26 @@ namespace FxMaths.GUI
 
 
     }
+
+
+    #region Event Arguments
+
+    public class CanvasMouseClickEventArgs : EventArgs
+    {
+        public MouseEventArgs mouseClick;
+        public CanvasElements hitElement;
+        public FxVector2f hitPoint;
+        public FxVector2f insidePoint;
+
+        public CanvasMouseClickEventArgs(MouseEventArgs mouseClick, CanvasElements hitElement, FxVector2f hitPoint, FxVector2f insidePoint)
+        {
+            this.mouseClick = mouseClick;
+            this.hitElement = hitElement;
+            this.hitPoint = hitPoint;
+            this.insidePoint = insidePoint;
+        }
+    }
+
+    #endregion
 
 }

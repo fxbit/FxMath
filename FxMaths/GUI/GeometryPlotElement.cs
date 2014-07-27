@@ -14,6 +14,9 @@ namespace FxMaths.GUI
 
     public class GeometryPlotElement : CanvasElements
     {
+
+
+        #region Variables
         /// <summary>
         /// Variable that show the list of the 
         /// </summary>
@@ -22,7 +25,7 @@ namespace FxMaths.GUI
         /// <summary>
         /// Flag for any change of the geometry
         /// </summary>
-        private Boolean IsGeomrtryDirty=true;
+        private Boolean IsGeomrtryDirty = true;
 
         /// <summary>
         /// set the brush style of lines
@@ -40,6 +43,9 @@ namespace FxMaths.GUI
             get { return OriginPosition; }
             set { OriginPosition = value; IsGeomrtryDirty = true; Parent.ReDraw(); }
         }
+        
+        #endregion
+
 
 
         #region Constructor
@@ -240,6 +246,15 @@ namespace FxMaths.GUI
             // void
         }
 
+        #endregion
+
+
+
+        #region ToolStrip
+        public override void FillToolStrip(System.Windows.Forms.ToolStrip toolStrip)
+        {
+            // Nothing for now
+        }
         #endregion
     }
 }
