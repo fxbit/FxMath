@@ -321,7 +321,7 @@ namespace FxMaths.GUI
 
 
         #region Add/Remove Elements
-        public void AddElements(CanvasElements element, Boolean Redraw = true)
+        public void AddElement(CanvasElements element, Boolean Redraw = true, Boolean addToFront = true)
         {
             // set the parent of the new element
             element.Parent = this;
@@ -333,7 +333,10 @@ namespace FxMaths.GUI
             lock (ElementsList)
             {
                 // add the element to the internal list
-                ElementsList.Add(element);
+                if (addToFront)
+                    ElementsList.Add(element);
+                else
+                    ElementsList.Insert(0, element);
             }
 
             // update element list in form
@@ -350,7 +353,7 @@ namespace FxMaths.GUI
                 ReDraw();
         }
 
-        public void RemoveElements(CanvasElements element, Boolean Redraw = true)
+        public void RemoveElement(CanvasElements element, Boolean Redraw = true)
         {
             // protect the element list
             lock (ElementsList)
