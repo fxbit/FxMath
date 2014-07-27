@@ -40,7 +40,7 @@ namespace FxMaths.Matrix
                      mask[x - 1, y + 1]);
         }
 
-        public FxContour(FxMatrixMask mask)
+        public FxContour(FxMatrixMask mask, int minPix = 0, int maxPix = int.MaxValue)
         {
             int maskSize = mask.Width * mask.Height;
             var stack = new Stack<Tuple<int, int>>(1000);
@@ -92,6 +92,19 @@ namespace FxMaths.Matrix
 
                     // add the new chain to the list 
                     ChainList.Add(newChain);
+                }
+            }
+
+
+            // filter the chain based on min/max size
+            if (minPix != 0 || maxPix != int.MaxValue)
+            {
+                List<FxContourChain> tmpChainList = ChainList;
+                ChainList = new List<FxContourChain>();
+                foreach(FxContourChain c in tmpChainList)
+                {
+                    if (c.Count > minPix && c.Count < maxPix)
+                        ChainList.Add(c);
                 }
             }
         }
