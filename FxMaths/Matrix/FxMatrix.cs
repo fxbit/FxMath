@@ -400,6 +400,7 @@ namespace FxMaths.Matrix
 
         #endregion 
 
+
         #region SubMatrix
 
         /// <summary>
@@ -412,13 +413,30 @@ namespace FxMaths.Matrix
         /// <returns></returns>
         public FxMatrix<T> GetSubMatrix( int startX, int startY, int endX, int endY )
         {
+            #region Exceptions
+
+            if (startX < 0 ||
+                startY < 0 ||
+                endX < 0 ||
+                endY < 0 ||
+                endX - startX < 0 ||
+                endY - startY < 0 ||
+                endX - startX > Width ||
+                endY - startY > Height)
+            {
+                throw new ArgumentOutOfRangeException("SubRegion Dimensions");
+            }
+
+            #endregion
+
+
             // allocate the return matrix
             FxMatrix<T> sub = AllocateMatrix( endX - startX + 1, endY - startY + 1 );
 
             // copy the submatrix
             for ( int x=startX; x < endX; x++ ) {
                 for ( int y=startY; y < endY; y++ ) {
-                    sub[x, y] = this[x, y];
+                    sub[x - startX, y - startY] = this[x, y];
                 }
             }
 
@@ -449,12 +467,61 @@ namespace FxMaths.Matrix
             // copy the submatrix
             for ( int x=startX; x < endX; x++ ) {
                 for ( int y=startY; y < endY; y++ ) {
-                    sub[x, y] = this[x, y];
+                    sub[x - startX, y - startY] = this[x, y];
                 }
             }
         }
 
+
+
+        /// <summary>
+        /// Return a subregion of the matrix.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public FxMatrix<T> GetSubMatrix(Vector.FxVector2f start, Vector.FxVector2f end)
+        {
+            int startX = (int)start.x;
+            int startY = (int)start.y;
+            int endX = (int)end.x;
+            int endY = (int)end.y;
+
+
+            #region Exceptions
+
+            if (startX < 0 ||
+                startY < 0 ||
+                endX < 0 ||
+                endY < 0 ||
+                endX - startX < 0 ||
+                endY - startY < 0 ||
+                endX - startX > Width ||
+                endY - startY > Height)
+            {
+                throw new ArgumentOutOfRangeException("SubRegion Dimensions");
+            }
+
+            #endregion
+
+
+            // allocate the return matrix
+            FxMatrix<T> sub = AllocateMatrix(endX - startX + 1, endY - startY + 1);
+
+            // copy the submatrix
+            for (int x = startX; x < endX; x++)
+            {
+                for (int y = startY; y < endY; y++)
+                {
+                    sub[x - startX, y - startY] = this[x, y];
+                }
+            }
+
+            return sub;
+        }
+
         #endregion
+
 
         #endregion
 
