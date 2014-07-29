@@ -5,6 +5,7 @@ using System.Text;
 
 namespace FxMaths.Vector
 {
+    [Serializable]
     public class FxVectorF : FxVector<float>
     {
 

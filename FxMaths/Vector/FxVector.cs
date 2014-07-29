@@ -5,6 +5,7 @@ using System.Text;
 
 namespace FxMaths.Vector
 {
+    [Serializable]
     public abstract class FxVector<T> where T : struct, IEquatable<T>
     {
 
