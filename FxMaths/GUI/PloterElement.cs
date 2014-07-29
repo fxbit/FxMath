@@ -188,7 +188,7 @@ namespace FxMaths.GUI
 
             // set the position and the size of the element
             this.Position = new Vector.FxVector2f(0);
-            this.Size = new Vector.FxVector2f(500, 250);
+            this.Size = new Vector.FxVector2f(750, 500);
 
             // add the vector to the list 
             PlotGeometry plot = new PlotGeometry();
@@ -200,8 +200,27 @@ namespace FxMaths.GUI
             // add the plot to the list
             listPlotsGeometry.Add(plot);
 
-            // set the origine position 
-            OriginPosition = new Vector.FxVector2f(10);
+            // set the origin position 
+            {
+                float max = vec.Max();
+                float min = vec.Min();
+                float orig_y = Size.Y / 2;
+                if(max >0 && min<0)
+                {
+                    orig_y = Size.Y * (min / (max - min));
+                }
+
+                if(max >0 && min >= 0)
+                {
+                    orig_y = -min;
+                }
+
+                if(max <=0 && min <0)
+                {
+                    orig_y = Size.Y + max;
+                }
+                OriginPosition = new Vector.FxVector2f(5, orig_y);
+            }
 
             // allocate scale
             _scale = new Vector.FxVector2f(1.0f);
@@ -230,7 +249,7 @@ namespace FxMaths.GUI
         {
             // set the scale
             float tmpScaleY=int.MaxValue;
-            _scale.y = 1;
+            _scale.y = int.MaxValue;
 
             // find the scale for this vector
             foreach ( PlotGeometry p in listPlotsGeometry ) {
@@ -243,8 +262,8 @@ namespace FxMaths.GUI
                     float upDist = Size.y - OriginPosition.y;
                     float downDist = OriginPosition.y;
 
-                    float upScale = (max == 0)? int.MaxValue : upDist / max;
-                    float downScale = (min == 0) ? int.MaxValue : downDist / min;
+                    float upScale = (max == 0)? int.MaxValue : upDist / (max*1.1f);
+                    float downScale = (min == 0) ? int.MaxValue : downDist / (min*1.1f);
 
                     if (Math.Abs(upScale) < Math.Abs(downScale))
                         tmpScaleY = Math.Abs(upScale);
@@ -270,6 +289,44 @@ namespace FxMaths.GUI
         }
 
 
+        public void CenterYOrigin()
+        {
+            float orig_y = Size.Y / 2;
+
+            float max = float.MinValue;
+            float min = float.MaxValue;
+
+            // find the scale for this vector
+            foreach (PlotGeometry p in listPlotsGeometry)
+            {
+                float maxP =  p.OrigVectorY.Max();
+                float minP =  p.OrigVectorY.Min();
+                if (maxP > max)
+                    max = maxP;
+                if (minP < min)
+                    min = minP;
+            }
+
+            if (max > 0 && min < 0)
+            {
+                orig_y = -Size.Y * (min / (max - min));
+            }
+
+            if (max > 0 && min >= 0)
+            {
+                orig_y = -min;
+            }
+
+            if (max <= 0 && min < 0)
+            {
+                orig_y = Size.Y + max;
+            }
+
+            OriginPosition.y = orig_y;
+
+            // set the geometry dirty
+            IsGeomrtryDirty = true;
+        }
 
 
         #region Add/Remove Plots
@@ -823,35 +880,52 @@ namespace FxMaths.GUI
 
 
         private System.Windows.Forms.ToolStripButton toolStrip_Fit;
+        private System.Windows.Forms.ToolStripButton toolStrip_CenterFit;
 
         private void InitToolStrips()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Canvas));
 
-            // 
-            // toolStripButton_propertieGrid
-            // 
             toolStrip_Fit = new System.Windows.Forms.ToolStripButton();
             toolStrip_Fit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             toolStrip_Fit.Image = ((System.Drawing.Image)(resources.GetObject("zoom-fit-best.Image")));
             toolStrip_Fit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            toolStrip_Fit.Name = "Show Color";
+            toolStrip_Fit.Name = "Fit the Plot";
             toolStrip_Fit.Size = new System.Drawing.Size(28, 28);
-            toolStrip_Fit.Text = "Show Color";
-            toolStrip_Fit.Click += toolStrip_ShowColor_Click;
+            toolStrip_Fit.Text = "Fit the Plot";
+            toolStrip_Fit.Click += toolStrip_Fit_Click;
+
+
+            toolStrip_CenterFit = new System.Windows.Forms.ToolStripButton();
+            toolStrip_CenterFit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            toolStrip_CenterFit.Image = ((System.Drawing.Image)(resources.GetObject("zoom-fit-height.Image")));
+            toolStrip_CenterFit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            toolStrip_CenterFit.Name = "Fit the Plot";
+            toolStrip_CenterFit.Size = new System.Drawing.Size(28, 28);
+            toolStrip_CenterFit.Text = "Fit the Plot";
+            toolStrip_CenterFit.Click += toolStrip_CenterFit_Click;
+            
 
         }
 
-        void toolStrip_ShowColor_Click(object sender, EventArgs e)
+        void toolStrip_Fit_Click(object sender, EventArgs e)
         {
             this.FitPlots();
             this.Parent.ReDraw();
         }
 
 
+        void toolStrip_CenterFit_Click(object sender, EventArgs e)
+        {
+            this.CenterYOrigin();
+            this.FitPlots();
+            this.Parent.ReDraw();
+        }
+
         public override void FillToolStrip(System.Windows.Forms.ToolStrip toolStrip)
         {
             toolStrip.Items.Add(toolStrip_Fit);
+            toolStrip.Items.Add(toolStrip_CenterFit);
         }
         #endregion
     }
