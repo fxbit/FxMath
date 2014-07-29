@@ -175,6 +175,12 @@ namespace FxMaths.GUI
             InitPlotter(vec, plotType, color);
         }
 
+
+        public PloterElement(Vector.FxVectorF vec, PlotType plotType, System.Drawing.Color color)
+        {
+            InitPlotter(vec, plotType, new Color(color.R, color.G, color.B, color.A));
+        }
+
         private void InitPlotter(Vector.FxVectorF vec, PlotType plotType, Color color)
         {
             // init the lists
@@ -215,13 +221,16 @@ namespace FxMaths.GUI
             _TextFormat.fontStretch = SharpDX.DirectWrite.FontStretch.Normal;
             _TextFormat.fontSize = 8.0f;
 
+
+            // init toolstrip
+            InitToolStrips();
         }
 
         public void FitPlots()
         {
             // set the scale
             float tmpScaleY=int.MaxValue;
-            _scale.y = int.MaxValue;
+            _scale.y = 1;
 
             // find the scale for this vector
             foreach ( PlotGeometry p in listPlotsGeometry ) {
@@ -234,13 +243,13 @@ namespace FxMaths.GUI
                     float upDist = Size.y - OriginPosition.y;
                     float downDist = OriginPosition.y;
 
-                    float upScale = upDist / max;
-                    float downScale = downDist / min;
+                    float upScale = (max == 0)? int.MaxValue : upDist / max;
+                    float downScale = (min == 0) ? int.MaxValue : downDist / min;
 
                     if (Math.Abs(upScale) < Math.Abs(downScale))
-                        tmpScaleY = upScale;
+                        tmpScaleY = Math.Abs(upScale);
                     else
-                        tmpScaleY = downScale;
+                        tmpScaleY = Math.Abs(downScale);
 
                 } else {
                     tmpScaleY = Size.y / p.OrigVectorY.Max();
@@ -300,6 +309,11 @@ namespace FxMaths.GUI
 
         public void AddPlot( Vector.FxVectorF vecY, PlotType type, System.Drawing.Color plotColor )
         {
+            AddPlot(vecY, type, new Color4(plotColor.R, plotColor.G, plotColor.B, plotColor.A));
+        }
+
+        public void AddPlot(Vector.FxVectorF vecY, PlotType type, Color4 plotColor)
+        {
             // add the vector to the list 
             PlotGeometry plot = new PlotGeometry();
 
@@ -307,7 +321,7 @@ namespace FxMaths.GUI
             plot.OrigVectorY = vecY;
 
             // set the color
-            plot.Color = new Color4(plotColor.R, plotColor.G, plotColor.B, plotColor.A);
+            plot.Color = plotColor;
 
             // set the plot type
             plot.Type = type;
@@ -316,7 +330,7 @@ namespace FxMaths.GUI
             plot.StepType = XStepType.ZeroToMax;
 
             // add the plot to the list
-            listPlotsGeometry.Add( plot );
+            listPlotsGeometry.Add(plot);
 
             // fit the plots to the view
             FitPlots();
@@ -325,7 +339,7 @@ namespace FxMaths.GUI
             IsGeomrtryDirty = true;
 
             // check if the load have be called before of add
-            if ( Parent != null )
+            if (Parent != null)
                 // redraw to see the result
                 Parent.ReDraw();
         }
@@ -371,41 +385,57 @@ namespace FxMaths.GUI
         public override void Render( CanvasRenderArguments args, System.Drawing.SizeF Zoom )
         {
             float maxValue = 0;
+            float minValue = 0;
             float maxOrigValue = 0;
 
             if ( IsGeomrtryDirty ) {
                 Load( args );
             }
 
+            float maxSize = (Size.y - OriginPosition.y > OriginPosition.y) ? Size.y - OriginPosition.y : OriginPosition.y;
+
+            int offset = (int)((Size.y) / 10.0);
+            float PositiveMaxValue = (Size.y - OriginPosition.y) / _scale.y;
+
             // plot the plots
             foreach (PlotGeometry geo in listPlotsGeometry)
             {
                 args.renderTarget.DrawGeometry(geo.Geometry, geo.Brush, 1);
-                float geoMaxValue = geo.ScaledVectorY.Max();
-                maxOrigValue = (geoMaxValue > maxValue) ? geo.OrigVectorY.Max() : maxOrigValue;
-                maxValue = (geoMaxValue > maxValue) ? geoMaxValue : maxValue;
             }
 
             // plot the axes
-            args.renderTarget.DrawGeometry( Geo_Axes, lineBrush, 1 );
+            args.renderTarget.DrawGeometry(Geo_Axes, lineBrush, 1);
 
-            maxValue = (int)Math.Ceiling(maxValue);
-            if (maxValue == 0)
-                maxValue = 1;
-
-            // add the dimension in the Axes
-            int offset = (int)(maxValue / 10.0);
-            if (offset == 0)
-                offset = (int)maxValue;
-
-            for (int i = 0; i <= maxValue; i += offset)
+            // draw possitive values
+            for(int i=0;i<Size.y - OriginPosition.y;i+=offset)
             {
-                textRectangle.X = OriginPosition.X;
-                textRectangle.Y = - i + Size.y - OriginPosition.Y - textRectangle.Height;
-                args.renderTarget.DrawText((maxOrigValue * (float)i/maxValue).ToString(), DW_textFormat, textRectangle, lineBrush);
+                textRectangle.X = OriginPosition.x;
+                textRectangle.Y = (Size.y - OriginPosition.y) - i  - textRectangle.Height;
+
+                if (textRectangle.X < 0 ||
+                    textRectangle.Y < 0 ||
+                    textRectangle.X > Size.x ||
+                    textRectangle.Y > Size.y)
+                    continue;
+
+                args.renderTarget.DrawText(((float)i / _scale.y).ToString(), DW_textFormat, textRectangle, lineBrush);
             }
 
-            //this.FitPlots();
+
+            // draw Negative values
+            for (int i = offset; i < OriginPosition.y; i += offset)
+            {
+                textRectangle.X = OriginPosition.x;
+                textRectangle.Y = (Size.y - OriginPosition.y) + i - textRectangle.Height;
+
+                if (textRectangle.X < 0 ||
+                    textRectangle.Y < 0 ||
+                    textRectangle.X > Size.x ||
+                    textRectangle.Y > Size.y)
+                    continue;
+
+                args.renderTarget.DrawText(((float)-i / _scale.y).ToString(), DW_textFormat, textRectangle, lineBrush);
+            }
         }
 
         public override void Load( CanvasRenderArguments args )
@@ -790,9 +820,38 @@ namespace FxMaths.GUI
 
 
         #region ToolStrip
+
+
+        private System.Windows.Forms.ToolStripButton toolStrip_Fit;
+
+        private void InitToolStrips()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Canvas));
+
+            // 
+            // toolStripButton_propertieGrid
+            // 
+            toolStrip_Fit = new System.Windows.Forms.ToolStripButton();
+            toolStrip_Fit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            toolStrip_Fit.Image = ((System.Drawing.Image)(resources.GetObject("zoom-fit-best.Image")));
+            toolStrip_Fit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            toolStrip_Fit.Name = "Show Color";
+            toolStrip_Fit.Size = new System.Drawing.Size(28, 28);
+            toolStrip_Fit.Text = "Show Color";
+            toolStrip_Fit.Click += toolStrip_ShowColor_Click;
+
+        }
+
+        void toolStrip_ShowColor_Click(object sender, EventArgs e)
+        {
+            this.FitPlots();
+            this.Parent.ReDraw();
+        }
+
+
         public override void FillToolStrip(System.Windows.Forms.ToolStrip toolStrip)
         {
-            // Nothing for now
+            toolStrip.Items.Add(toolStrip_Fit);
         }
         #endregion
     }
