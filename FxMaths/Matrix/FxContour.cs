@@ -16,16 +16,35 @@ namespace FxMaths.Matrix
 
         private void Labeling_addStack(Stack<Tuple<int, int>> stack, int x, int y)
         {
-            stack.Push(Tuple.Create(x, y - 1));
-            stack.Push(Tuple.Create(x, y + 1));
-
+#if false
             stack.Push(Tuple.Create(x + 1, y - 1));
             stack.Push(Tuple.Create(x + 1, y));
             stack.Push(Tuple.Create(x + 1, y + 1));
 
+            stack.Push(Tuple.Create(x, y - 1));
+            stack.Push(Tuple.Create(x, y + 1));
+
             stack.Push(Tuple.Create(x - 1, y - 1));
             stack.Push(Tuple.Create(x - 1, y));
             stack.Push(Tuple.Create(x - 1, y + 1));
+#else
+
+
+
+            stack.Push(Tuple.Create(x - 1, y + 1));
+            stack.Push(Tuple.Create(x - 1, y - 1));
+            stack.Push(Tuple.Create(x, y - 1));
+            stack.Push(Tuple.Create(x + 1, y - 1));
+
+
+            stack.Push(Tuple.Create(x + 1, y + 1));
+
+
+            stack.Push(Tuple.Create(x, y + 1));
+            stack.Push(Tuple.Create(x + 1, y));
+            stack.Push(Tuple.Create(x - 1, y));
+
+#endif
         }
 
         private bool check(FxMatrixMask mask, int x, int y)
