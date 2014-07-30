@@ -129,9 +129,12 @@ namespace FxMaths.GUI
             windowProperties.PresentOptions = PresentOptions.None;
 
             // create the render target 
-            RenderVariables.renderTarget = new WindowRenderTarget(RenderVariables.factory,
+            RenderVariables.windowsTarget = new WindowRenderTarget(RenderVariables.factory,
                 new RenderTargetProperties(new PixelFormat(SharpDX.DXGI.Format.Unknown, AlphaMode.Premultiplied)),
                 windowProperties);
+
+            // link the render target to the windows target
+            RenderVariables.renderTarget = RenderVariables.windowsTarget;
 
             // create the write factory
             RenderVariables.WriteFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
@@ -827,12 +830,12 @@ namespace FxMaths.GUI
 
         private void RenderArea_Resize(object sender, EventArgs e)
         {
-            if (RenderVariables.renderTarget != null)
+            if (RenderVariables.windowsTarget != null)
             {
-                lock (RenderVariables.renderTarget)
+                lock (RenderVariables.windowsTarget)
                 {
                     // resize  the buffers
-                    RenderVariables.renderTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
+                    RenderVariables.windowsTarget.Resize(new Size2(RenderArea.Size.Width, RenderArea.Size.Height));
 
                     // set that the control must pe paint one time
                     isDirty = true;

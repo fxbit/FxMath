@@ -17,7 +17,9 @@ namespace FxMaths.GUI
     {
         public Factory factory;
         public SharpDX.DirectWrite.Factory WriteFactory;
-        public WindowRenderTarget renderTarget;
+        public RenderTarget renderTarget;
+        public WindowRenderTarget windowsTarget;
+        public BitmapRenderTarget bitmapTarget;
     }
 
     /// <summary>
