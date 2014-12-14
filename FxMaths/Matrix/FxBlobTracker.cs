@@ -80,57 +80,10 @@ namespace FxMaths.Matrix
             numProcessingFrames = 0;
         }
 
-
-        public void Process(FxMatrixF NextFrame)
+        public void Process(FxMatrixMask mask)
         {
-            // evrey 100 frames reset the s;
-            if (numProcessingFrames % 100 ==0)
-            {
-                s = new FxMatrixF(NextFrame.Width, NextFrame.Height, 0.05f);
-            }
-
-
-#if false
-            // create the boolean image 
-            m = (1 - a) * m + a * NextFrame;
-            var diff = NextFrame - m;
-            s = (1 - a) * s + a * diff * diff;
-            G = diff*diff > s;
-#else
-            int Width = NextFrame.Width;
-            int Height = NextFrame.Height;
-            Parallel.For(0, Height, (y) =>
-            {
-                var diff2 = 0f;
-                for (int x = 0; x < Width; x++)
-                {
-                    m[x, y] = (1 - a) * m[x, y] + a * NextFrame[x, y];
-                    diff2 = NextFrame[x, y] - m[x, y];
-                    diff2 *= diff2;
-                    s[x, y] = (1 - a) * s[x, y] + a * diff2;
-                    G[x, y] = diff2 > s[x, y];
-                }
-            });
-#endif
-
-            // create a resize value
-            G_small.SetValueFunc((x, y) =>
-            {
-                int sum = 0;
-                for (int ix = x * step_w; ix < x * step_w + step_w; ix++)
-                {
-                    for (int iy = y * step_h; iy < y * step_h + step_h; iy++)
-                    {
-                        sum += G[ix, iy] ? 1 : 0;
-                        if (sum >= cG_thd)
-                            return true;
-                    }
-                }
-                return false;
-            });
-
             // filter out any small points 
-            G_small = G_small.MedianFilt();
+            G_small = mask.MedianFilt();
 
             // create the contours of the current frame
             var contours = new FxContour(G_small);
@@ -232,10 +185,55 @@ namespace FxMaths.Matrix
 
             // increase the counter
             numProcessingFrames++;
+
+
         }
 
 
 
+        public void Process(FxMatrixF NextFrame)
+        {
+            // evrey 100 frames reset the s;
+            if (numProcessingFrames % 100 == 0)
+            {
+                s = new FxMatrixF(NextFrame.Width, NextFrame.Height, 0.05f);
+            }
+
+
+            int Width = NextFrame.Width;
+            int Height = NextFrame.Height;
+            Parallel.For(0, Height, (y) =>
+            {
+                var diff2 = 0f;
+                for (int x = 0; x < Width; x++)
+                {
+                    m[x, y] = (1 - a) * m[x, y] + a * NextFrame[x, y];
+                    diff2 = NextFrame[x, y] - m[x, y];
+                    diff2 *= diff2;
+                    s[x, y] = (1 - a) * s[x, y] + a * diff2;
+                    G[x, y] = diff2 > s[x, y];
+                }
+            });
+
+            // create a resize value
+            G_small.SetValueFunc((x, y) =>
+            {
+                int sum = 0;
+                for (int ix = x * step_w; ix < x * step_w + step_w; ix++)
+                {
+                    for (int iy = y * step_h; iy < y * step_h + step_h; iy++)
+                    {
+                        sum += G[ix, iy] ? 1 : 0;
+                        if (sum >= cG_thd)
+                            return true;
+                    }
+                }
+                return false;
+            });
+
+
+            Process(G_small);
+        }
     }
 
     public class FxBlob
