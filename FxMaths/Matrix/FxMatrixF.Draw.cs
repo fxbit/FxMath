@@ -82,6 +82,85 @@ namespace FxMaths.Matrix
                     this[x, y] = Value;
             }
         }
+
+        /// <summary>
+        /// The method that we are going to 
+        /// use for the interpolation.
+        /// </summary>
+        public enum DrawInterpolationMethod
+        {
+            NearestNeighbor,
+            Linear,
+            Cubic
+        }
+
+        /// <summary>
+        /// Draw external matrix to this matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix that store the copied image</param>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        public void DrawMatrix(FxMatrixF matrix, FxVector2f start, FxVector2f size, DrawInterpolationMethod method)
+        {
+            int h = matrix.Height;
+            int w = matrix.Width;
+
+            float stepW = (float)w/ size.x;
+            float stepH = (float)h/size.y;
+
+            FxVector2f end = start + size;
+            if (end.x > Width)
+                end.x = Width - 1;
+            if (end.y > Height)
+                end.y = Height - 1;
+
+            switch (method)
+            {
+                case DrawInterpolationMethod.NearestNeighbor:
+
+                    Parallel.For((int)start.x, (int)end.x, (i) =>
+                    {
+                        int xp = (int)Math.Floor((i - start.x) * stepW);
+                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        {
+                            int yp = (int)Math.Floor(jy * stepH);
+                            this[i, j] = matrix[xp, yp];
+                        }
+                    });
+
+                    break;
+
+                case DrawInterpolationMethod.Linear:
+
+                    Parallel.For((int)start.x, (int)end.x, (i) =>
+                    {
+                        float xp = (i - start.x) * stepW;
+                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        {
+                            float yp = jy * stepH;
+                            this[i, j] = matrix.Sample(xp, yp);
+                        }
+                    });
+
+                    break;
+
+
+                case DrawInterpolationMethod.Cubic:
+
+                    Parallel.For((int)start.x, (int)end.x, (i) =>
+                    {
+                        float xp = (i - start.x) * stepW;
+                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        {
+                            float yp = jy * stepH;
+                            this[i, j] = matrix.SampleCubic(xp, yp);
+                        }
+                    });
+
+                    break;
+            }
+        }
     }
 }
+
 

@@ -1167,7 +1167,7 @@ namespace FxMaths.Matrix
         #region Sample Functions
 
         /// <summary>
-        /// Return interpolated value.
+        /// Return Bilinear interpolated value.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -1185,6 +1185,58 @@ namespace FxMaths.Matrix
             y=y-lowY;
             //return lowlow + (hilow - lowlow) * x + (lowhi - lowlow) * y + (lowlow - hilow - lowhi + hihi) * x * y;
             return lowlow * (1 - x) * (1 - y) + hilow * x * (1 - y) + lowhi * (1 - x) * y + hihi * x * y;
+        }
+
+
+
+        /// <summary>
+        /// Return the Bicubic interpolated value
+        /// </summary>
+        /// <param name="xp"></param>
+        /// <param name="yp"></param>
+        /// <returns></returns>
+        private float SampleCubic(float xp, float yp)
+        {
+            int x = (int)Math.Floor(xp);
+            int y = (int)Math.Floor(yp);
+
+            if (x < 3 || y < 3 || x - 3 > Width || y - 3 > Height)
+            {
+                return Sample(xp, yp);
+            }
+
+            float dx = xp - x, dx2 = dx * dx, dx3 = dx2 * dx;
+            float dy = yp - y, dy2 = dy * dy, dy3 = dy2 * dy;
+            float[] C = new float[4];
+
+            for (int jj = 0; jj < 4; ++jj)
+            {
+                int idx = y - 1 + jj;
+                float a0 = this[x, idx];
+                float d0 = this[x - 1, idx] - a0;
+                float d2 = this[x + 1, idx] - a0;
+                float d3 = this[x + 2, idx] - a0;
+                float a1 = -(1.0f / 3.0f) * d0 + d2 - (1.0f / 6.0f) * d3;
+                float a2 = 0.5f * d0 + 0.5f * d2;
+                float a3 = -(1.0f / 6.0f) * d0 - 0.5f * d2 + (1.0f / 6.0f) * d3;
+                C[jj] = a0 + a1 * dx + a2 * dx2 + a3 * dx3;
+            }
+
+            {
+                float d0 = C[0] - C[1];
+                float d2 = C[2] - C[1];
+                float d3 = C[3] - C[1];
+                float a0 = C[1];
+                float a1 = -(1.0f / 3.0f) * d0 + d2 - (1.0f / 6.0f) * d3;
+                float a2 = 0.5f * d0 + 0.5f * d2;
+                float a3 = -(1.0f / 6.0f) * d0 - 0.5f * d2 + (1.0f / 6.0f) * d3;
+                float r = a0 + a1 * dy + a2 * dy2 + a3 * dy3;
+                if (r > 1)
+                    r = 1;
+                if (r < 0)
+                    r = 0;
+                return r;
+            }
         }
 
         #endregion
