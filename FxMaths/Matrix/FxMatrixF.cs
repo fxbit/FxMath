@@ -1177,13 +1177,17 @@ namespace FxMaths.Matrix
             // for now we are support only Bilinear sampling
             int lowX = (int)Math.Floor(x);
             int lowY = (int)Math.Floor(y);
+
+            if (lowX == Width - 1 || lowY == Height - 1)
+                return this[lowX, lowY];
+
             float lowlow = this[lowX, lowY];
-            float lowhi = this[lowX, lowY+1];
-            float hilow = this[lowX+1, lowY];
-            float hihi = this[lowX+1, lowY+1];
-            x=x-lowX;
-            y=y-lowY;
-            //return lowlow + (hilow - lowlow) * x + (lowhi - lowlow) * y + (lowlow - hilow - lowhi + hihi) * x * y;
+            float lowhi = this[lowX, lowY + 1];
+            float hilow = this[lowX + 1, lowY];
+            float hihi = this[lowX + 1, lowY + 1];
+            x = x - lowX;
+            y = y - lowY;
+
             return lowlow * (1 - x) * (1 - y) + hilow * x * (1 - y) + lowhi * (1 - x) * y + hihi * x * y;
         }
 
@@ -1200,7 +1204,11 @@ namespace FxMaths.Matrix
             int x = (int)Math.Floor(xp);
             int y = (int)Math.Floor(yp);
 
-            if (x < 3 || y < 3 || x - 3 > Width || y - 3 > Height)
+            if(x == Width - 1 || y== Height-1)
+            {
+                return this[x, y];
+            }
+            else if (x < 3 || y < 3 || x > Width - 3 || y > Height - 3)
             {
                 return Sample(xp, yp);
             }

@@ -62,7 +62,7 @@ namespace FxMaths.GUI
             internalImage = new byte[mat.Width * mat.Height * 4];
             Pitch = mat.Width * 4;
 
-            UpdateInternalImage(mat);
+            UpdateInternalImage(mat, new ColorMap(ColorMapDefaults.Gray));
         }
 
         public ImageElement(Matrix.FxMatrixF mat, ColorMap map)

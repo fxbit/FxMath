@@ -262,6 +262,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\view-fullscreen-4.png" />
   </ItemGroup>
   <ItemGroup>

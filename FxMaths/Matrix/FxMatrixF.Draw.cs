@@ -105,8 +105,8 @@ namespace FxMaths.Matrix
             int h = matrix.Height;
             int w = matrix.Width;
 
-            float stepW = (float)w/ size.x;
-            float stepH = (float)h/size.y;
+            float stepW = (float)w / size.x;
+            float stepH = (float)h / size.y;
 
             FxVector2f end = start + size;
             if (end.x > Width)
@@ -121,7 +121,7 @@ namespace FxMaths.Matrix
                     Parallel.For((int)start.x, (int)end.x, (i) =>
                     {
                         int xp = (int)Math.Floor((i - start.x) * stepW);
-                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        for (int j = (int)start.y, jy = 0; j < end.y ; j++, jy++)
                         {
                             int yp = (int)Math.Floor(jy * stepH);
                             this[i, j] = matrix[xp, yp];
@@ -135,10 +135,11 @@ namespace FxMaths.Matrix
                     Parallel.For((int)start.x, (int)end.x, (i) =>
                     {
                         float xp = (i - start.x) * stepW;
-                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        for (int j = (int)start.y, jy = 0; j < end.y; j++, jy++)
                         {
                             float yp = jy * stepH;
-                            this[i, j] = matrix.Sample(xp, yp);
+                            if (yp < matrix.Height - 1)
+                                this[i, j] = matrix.Sample(xp, yp);
                         }
                     });
 
@@ -150,10 +151,11 @@ namespace FxMaths.Matrix
                     Parallel.For((int)start.x, (int)end.x, (i) =>
                     {
                         float xp = (i - start.x) * stepW;
-                        for (int j = (int)start.y, jy = 0; j < end.y && jy < h; j++, jy++)
+                        for (int j = (int)start.y, jy = 0; j < end.y; j++, jy++)
                         {
                             float yp = jy * stepH;
-                            this[i, j] = matrix.SampleCubic(xp, yp);
+                            if (yp < matrix.Height - 1)
+                                this[i, j] = matrix.SampleCubic(xp, yp);
                         }
                     });
 
