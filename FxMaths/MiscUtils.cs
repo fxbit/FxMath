@@ -152,6 +152,65 @@ namespace FxMaths
             }
         } 
         #endregion
+
+
+
+
+        #region Random selection of element 
+
+        
+        public static T RandomSelect<T>(this List<T> list) where T: class
+        {
+            if (list.Count == 0)
+                return null;
+            Random rand = new Random();
+            int index = rand.Next(list.Count);
+            return list[index];
+        }
+
+        public static T RandomSelect<T>(this List<T> list, Random rand) where T : class
+        {
+            if (list.Count == 0)
+                return null;
+            int index = rand.Next(list.Count);
+            return list[index];
+        }
+
+        public static T RandomSelectStruct<T>(this List<T> list) where T : struct
+        {
+            if (list.Count == 0)
+                return new T();
+            Random rand = new Random();
+            int index = rand.Next(list.Count);
+            return list[index];
+        }
+
+        public static T RandomSelectStruct<T>(this List<T> list, Random rand) where T : struct
+        {
+            if (list.Count == 0)
+                return new T();
+            int index = rand.Next(list.Count);
+            return list[index];
+        }
+
+        public static T RandomSelect<T>(this T[] list) where T : class
+        {
+            if (list.Length == 0)
+                return null;
+            Random rand = new Random();
+            int index = rand.Next(list.Length);
+            return list[index];
+        }
+
+        public static T RandomSelect<T>(this T[] list, Random rand) where T : class
+        {
+            if (list.Length == 0)
+                return null;
+            int index = rand.Next(list.Length);
+            return list[index];
+        }
+
+        #endregion
     }
 
 }
