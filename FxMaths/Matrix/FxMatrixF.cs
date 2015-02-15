@@ -1667,5 +1667,36 @@ namespace FxMaths.Matrix
 
         #endregion
 
+
+
+
+        #region Per Cell execution
+
+
+        public void Exec(Func<float, float> func)
+        {
+            Parallel.For(0, Height, (y) =>
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    this[x, y] = func(this[x, y]);
+                }
+            });
+        }
+
+
+        public void Exec(Action<float> func)
+        {
+            Parallel.For(0, Height, (y) =>
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    func(this[x, y]);
+                }
+            });
+        }
+
+
+        #endregion
     }
 }
