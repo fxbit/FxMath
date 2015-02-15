@@ -340,7 +340,7 @@ namespace FxMaths.GUI
                                     int end = (s + 1) * step;
                                     for (int i = s * step; i < end; i++)
                                     {
-                                        byte id = (byte)(*(pSrc + i) * 255);
+                                        int id = (int)(*(pSrc + i) * 255);
                                         int i4 = i * 4;
                                         *(pDst + i4) = map[id, 2];
                                         *(pDst + i4 + 1) = map[id, 1];

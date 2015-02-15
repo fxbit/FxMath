@@ -683,6 +683,12 @@ namespace FxMaths.Vector
             return (x * vec.X + y * vec.Y);
         }
 
+
+        public float Dot(ref FxVector2f vec)
+        {
+            return (x * vec.X + y * vec.Y);
+        }
+
         #endregion
 
         #endregion
@@ -1100,6 +1106,9 @@ namespace FxMaths.Vector
         /// <param name="directionAngleChange">Angle in radian.</param>
         public void Rotation(float directionAngleChange)
         {
+            if (float.IsNaN(directionAngleChange))
+                throw new ArithmeticException();
+
             float cs = (float)Math.Cos(directionAngleChange);
             float sn = (float)Math.Sin(directionAngleChange);
             float px = x * cs - y * sn;
@@ -1110,6 +1119,15 @@ namespace FxMaths.Vector
         public Vector2 GetVector2()
         {
             return new Vector2(x, y);
+        }
+
+
+
+
+        public double Angle(ref FxVector2f vec)
+        {
+            double val =  Math.Acos(this.Dot(ref vec) / (vec.Length() * this.Length()));
+            return val;
         }
     }
 

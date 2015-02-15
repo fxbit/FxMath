@@ -105,8 +105,11 @@ namespace FxMaths.Matrix
             int h = matrix.Height;
             int w = matrix.Width;
 
-            float stepW = (float)w / size.x;
-            float stepH = (float)h / size.y;
+            float stepW = (float)(w-1) / size.x;
+            float stepH = (float)(h-1) / size.y;
+
+            start.x = (float)Math.Floor(start.x);
+            start.y = (float)Math.Floor(start.y);
 
             FxVector2f end = start + size;
             if (end.x > Width)
@@ -118,12 +121,12 @@ namespace FxMaths.Matrix
             {
                 case DrawInterpolationMethod.NearestNeighbor:
 
-                    Parallel.For((int)start.x, (int)end.x, (i) =>
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
                     {
-                        int xp = (int)Math.Floor((i - start.x) * stepW);
-                        for (int j = (int)start.y, jy = 0; j < end.y ; j++, jy++)
+                        int yp = (int)Math.Floor((j - start.y) * stepH);
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
                         {
-                            int yp = (int)Math.Floor(jy * stepH);
+                            int xp = (int)Math.Floor(ix * stepW);
                             this[i, j] = matrix[xp, yp];
                         }
                     });
@@ -132,13 +135,14 @@ namespace FxMaths.Matrix
 
                 case DrawInterpolationMethod.Linear:
 
-                    Parallel.For((int)start.x, (int)end.x, (i) =>
+
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
                     {
-                        float xp = (i - start.x) * stepW;
-                        for (int j = (int)start.y, jy = 0; j < end.y; j++, jy++)
+                        float yp = (j - start.y) * stepH;
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
                         {
-                            float yp = jy * stepH;
-                            if (yp < matrix.Height - 1)
+                            float xp = ix * stepW;
+                            if (xp < matrix.Width - 1)
                                 this[i, j] = matrix.Sample(xp, yp);
                         }
                     });
@@ -148,13 +152,95 @@ namespace FxMaths.Matrix
 
                 case DrawInterpolationMethod.Cubic:
 
-                    Parallel.For((int)start.x, (int)end.x, (i) =>
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
                     {
-                        float xp = (i - start.x) * stepW;
-                        for (int j = (int)start.y, jy = 0; j < end.y; j++, jy++)
+                        float yp = (j - start.y) * stepH;
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
                         {
-                            float yp = jy * stepH;
-                            if (yp < matrix.Height - 1)
+                            float xp = ix * stepW;
+                            if (xp < matrix.Width - 1)
+                                this[i, j] = matrix.SampleCubic(xp, yp);
+                        }
+                    });
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Draw external matrix to this matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix that store the copied image</param>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        public void DrawMatrix(FxMatrixF matrix, 
+            FxMatrixMask mask,
+            FxVector2f start, 
+            FxVector2f size, 
+            DrawInterpolationMethod method)
+        {
+            int h = matrix.Height;
+            int w = matrix.Width;
+
+            float stepW = (float)(w - 1) / size.x;
+            float stepH = (float)(h - 1) / size.y;
+
+            start.x = (float)Math.Floor(start.x);
+            start.y = (float)Math.Floor(start.y);
+
+            FxVector2f end = start + size;
+            if (end.x > Width)
+                end.x = Width - 1;
+            if (end.y > Height)
+                end.y = Height - 1;
+
+            switch (method)
+            {
+                case DrawInterpolationMethod.NearestNeighbor:
+
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
+                    {
+                        int yp = (int)Math.Floor((j - start.y) * stepH);
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
+                        {
+                            int xp = (int)Math.Floor(ix * stepW);
+                            if (mask[xp,yp])
+                                this[i, j] = matrix[xp, yp];
+                        }
+                    });
+
+                    break;
+
+                case DrawInterpolationMethod.Linear:
+
+
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
+                    {
+                        float yp = (j - start.y) * stepH;
+                        int yp_n = (int)Math.Floor((j - start.y) * stepH);
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
+                        {
+                            float xp = ix * stepW;
+                            int xp_n = (int)Math.Floor(ix * stepW);
+                            if ((xp < matrix.Width - 1) && (mask[xp_n, yp_n]))
+                                this[i, j] = matrix.Sample(xp, yp);
+                        }
+                    });
+
+                    break;
+
+
+                case DrawInterpolationMethod.Cubic:
+
+                    Parallel.For((int)start.y, (int)end.y, (j) =>
+                    {
+                        float yp = (j - start.y) * stepH;
+                        int yp_n = (int)Math.Floor((j - start.y) * stepH);
+                        for (int i = (int)start.x, ix = 0; i < end.x; i++, ix++)
+                        {
+                            float xp = ix * stepW;
+                            int xp_n = (int)Math.Floor(ix * stepW);
+                            if ((xp < matrix.Width - 1) && (mask[xp_n, yp_n]))
                                 this[i, j] = matrix.SampleCubic(xp, yp);
                         }
                     });
