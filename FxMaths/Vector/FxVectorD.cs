@@ -355,6 +355,52 @@ namespace FxMaths.Vector
             return result;
         }
 
+
+        /// <summary>
+        /// Get the Max value of the Vector
+        /// </summary>
+        /// <param name="maxIndex"></param>
+        /// <returns></returns>
+        public override double Max(out int maxIndex)
+        {
+            double result = double.MinValue;
+            maxIndex = -1;
+
+            // comp all the elements
+            for (int i = 0; i < Size; i++)
+            {
+                if (Data[i] > result)
+                {
+                    result = Data[i];
+                    maxIndex = i;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the Min value of the Vector
+        /// </summary>
+        /// <param name="minIndex"></param>
+        /// <returns></returns>
+        public override double Min(out int minIndex)
+        {
+            double result = double.MaxValue;
+            minIndex = -1;
+
+            // comp all the elements
+            for (int i = 0; i < Size; i++)
+            {
+                if (Data[i] < result)
+                {
+                    result = Data[i];
+                    minIndex = i;
+                }
+            }
+
+            return result;
+        }
         #endregion
 
 

@@ -31,7 +31,7 @@ namespace TestMaths
                 ImageElement imE = new ImageElement(im);
 
                 // add the element on canva
-                canvas1.AddElements(imE);
+                canvas1.AddElement(imE);
             }
         }
     }

@@ -67,6 +67,17 @@ namespace FxMaths.Vector
             }
         }
 
+
+        public FxVectorF(FxVectorI fxVectorI)
+            : base(fxVectorI.Size)
+        {
+            // init the datas
+            for (int i = 0; i < fxVectorI.Size; i++)
+            {
+                this.Data[i] = (float)fxVectorI.Data[i];
+            }
+        }
+
         protected override FxVector<float> AllocateVector( int Size )
         {
             return new FxVectorF( Size );
@@ -272,6 +283,7 @@ namespace FxMaths.Vector
         #endregion
 
 
+
         #region Statistics
 
         public override float Sum()
@@ -354,6 +366,94 @@ namespace FxMaths.Vector
             return result;
         }
 
+        /// <summary>
+        /// Get the Max value of the Vector
+        /// </summary>
+        /// <param name="maxIndex"></param>
+        /// <returns></returns>
+        public override float Max(out int maxIndex)
+        {
+            float result = float.MinValue;
+            maxIndex = -1;
+
+            // comp all the elements
+            for (int i = 0; i < Size; i++)
+            {
+                if (Data[i] > result)
+                {
+                    result = Data[i];
+                    maxIndex = i;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the Min value of the Vector
+        /// </summary>
+        /// <param name="minIndex"></param>
+        /// <returns></returns>
+        public override float Min(out int minIndex)
+        {
+            float result = float.MaxValue;
+            minIndex = -1;
+
+            // comp all the elements
+            for (int i = 0; i < Size; i++)
+            {
+                if (Data[i] < result)
+                {
+                    result = Data[i];
+                    minIndex = i;
+                }
+            }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Get a histogram of the given Vector
+        /// </summary>
+        /// <param name="numBin">The number of bins</param>
+        /// <param name="range">A vector with the range of each bin</param>
+        /// <returns>The frequency of each bin</returns>
+        public FxVectorI GetHistogram(int numBin, out FxVector2f[] range)
+        {
+            FxVectorI freq = new FxVectorI(numBin, 0);
+            range = new FxVector2f[numBin];
+
+            // Find the ranges
+            float min = this.Min();
+            float max = this.Max();
+            float step = (max - min) / numBin;
+
+            range[0].x = min;
+            range[numBin - 1].y = max;
+            for (int i = 0; i < numBin - 1; i++)
+            {
+                range[i].y = range[i].x + step;
+                range[i + 1].x = range[i].y;
+            }
+
+            // Find the frequences
+            foreach (var f in Data)
+            {
+                // find the range that is usable
+                for (int i = 0; i < numBin; i++)
+                {
+                    if (f < range[i].y)
+                    {
+                        freq[i]++;
+                        break;
+                    }
+                }
+                // TODO: make binary search
+            }
+
+            return freq;
+        }
         #endregion
 
 
@@ -549,5 +649,7 @@ namespace FxMaths.Vector
             }
         } 
         #endregion
+
+
     }
 }

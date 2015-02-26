@@ -419,6 +419,20 @@ namespace FxMaths.Vector
         /// <returns></returns>
         public abstract T Min();
 
+        /// <summary>
+        /// Get the Max value of the Vector
+        /// </summary>
+        /// /// <param name="MaxIndex"></param>
+        /// <returns></returns>
+        public abstract T Max(out int MaxIndex);
+
+        /// <summary>
+        /// Get the Min value of the Vector
+        /// </summary>
+        /// <param name="MinIndex"></param>
+        /// <returns></returns>
+        public abstract T Min(out int MinIndex);
+
         #endregion
 
 
