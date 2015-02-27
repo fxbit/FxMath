@@ -149,6 +149,39 @@ namespace FxMaths.Vector
             Array.Copy(this.Data, data, copySize);
         }
 
+
+        /// <summary>
+        /// Fill the data from external list.
+        /// </summary>
+        /// <typeparam name="K">The type of given list</typeparam>
+        /// <param name="list"></param>
+        /// <param name="func">A function that transform the list object to T</param>
+        public void Fill<K>(List<K> list, Func<K, T> func)
+        {
+            int count = (list.Count < Data.Length) ? list.Count : Data.Length;
+            for (int i = 0; i < count; i++)
+            {
+                this.Data[i] = func(list[i]);
+            }
+        }
+
+
+        /// <summary>
+        /// Fill the data from external list.
+        /// </summary>
+        /// <typeparam name="K">The type of given list</typeparam>
+        /// <param name="list"></param>
+        /// <param name="func">A function that transform the list object to T</param>
+        /// <param name="offset">Offset to the data index of vector</param>
+        public void Fill<K>(List<K> list, Func<K, T> func, int offset)
+        {
+            int count = (list.Count + offset < Data.Length) ? list.Count : Data.Length - offset;
+            for (int i = offset; i < count; i++)
+            {
+                this.Data[i] = func(list[i]);
+            }
+        }
+
         /// <summary>
         /// Set/Get internal values.
         /// </summary>
