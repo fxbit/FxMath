@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FxMaths.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -448,6 +449,155 @@ namespace FxMaths.Vector
 
             return Math.Sqrt( result );
         }
+
+        #endregion
+
+
+        #region Saves
+
+
+        /// <summary>
+        /// Save to CSV (Excel) format the Vector.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void SaveCsv(string fileName)
+        {
+            CsvRow row = new CsvRow();
+            using (CsvFileWriter writer = new CsvFileWriter(fileName))
+            {
+                for (int j = 0; j < Data.Length; j++)
+                {
+                    row.Clear();
+                    row.Add(Data[j].ToString().Replace(',', '.'));
+                    writer.WriteRow(row);
+                }
+            }
+        }
+
+        #endregion
+
+
+
+
+        #region Operators
+
+
+        #region Subtract
+        public static FxVectorI operator -(FxVectorI vec, int value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+
+        public static FxVectorI operator -(FxVectorI vec, float value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+
+        public static FxVectorI operator -(FxVectorI vec, FxVectorI value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+
+        #region Add
+
+        public static FxVectorI operator +(FxVectorI vec, int value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator +(FxVectorI vec, float value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator +(FxVectorI vec, double value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+
+        public static FxVectorI operator +(FxVectorI vec, FxVectorI value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+
+
+        #region Multi
+
+        public static FxVectorI operator *(FxVectorI vec, int value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.Multiply(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator *(FxVectorI vec, float value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.Multiply(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator *(FxVectorI vec, FxVectorI value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.MultiplyPointwise(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+
+        #region Divide
+
+        public static FxVectorI operator /(FxVectorI vec, int value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.Divide(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator /(FxVectorI vec, float value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.Divide(value);
+            return newVec;
+        }
+
+        public static FxVectorI operator /(FxVectorI vec, FxVectorI value)
+        {
+            var newVec = vec.GetCopy() as FxVectorI;
+            newVec.DividePointwise(value);
+            return newVec;
+        }
+
+        #endregion
+
 
         #endregion
 

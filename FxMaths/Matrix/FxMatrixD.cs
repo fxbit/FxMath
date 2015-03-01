@@ -1414,6 +1414,10 @@ namespace FxMaths.Matrix
         }
 #endif
 
+        /// <summary>
+        /// Save to CSV (Excel) format the Matrix.
+        /// </summary>
+        /// <param name="fileName"></param>
         public void SaveCsv(string fileName)
         {
             CsvRow row = new CsvRow();

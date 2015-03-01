@@ -581,5 +581,129 @@ namespace FxMaths.Vector
         #endregion
 
 
+
+
+        #region Operators
+
+
+        #region Subtract
+        public static FxVector<T> operator -(FxVector<T> vec, int value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+
+        public static FxVector<T> operator -(FxVector<T> vec, float value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+
+        public static FxVector<T> operator -(FxVector<T> vec, FxVector<T> value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoSubtract(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+
+        #region Add
+
+        public static FxVector<T> operator +(FxVector<T> vec, int value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator +(FxVector<T> vec, float value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator +(FxVector<T> vec, double value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoAdd(value);
+            return newVec;
+        }
+
+
+        public static FxVector<T> operator +(FxVector<T> vec, FxVector<T> value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DoAdd(value);
+            return newVec;
+        } 
+
+        #endregion
+
+
+
+
+        #region Multi
+
+        public static FxVector<T> operator *(FxVector<T> vec, int value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.Multiply(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator *(FxVector<T> vec, float value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.Multiply(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator *(FxVector<T> vec, FxVector<T> value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.MultiplyPointwise(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+
+        #region Divide
+
+        public static FxVector<T> operator /(FxVector<T> vec, int value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.Divide(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator /(FxVector<T> vec, float value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.Divide(value);
+            return newVec;
+        }
+
+        public static FxVector<T> operator /(FxVector<T> vec, FxVector<T> value)
+        {
+            var newVec = vec.GetCopy();
+            newVec.DividePointwise(value);
+            return newVec;
+        }
+
+        #endregion
+
+
+        #endregion
+
     }
 }
