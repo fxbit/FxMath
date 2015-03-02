@@ -884,6 +884,35 @@ namespace FxMaths.Vector
             return vector;
         }
 
+
+        /// <summary>
+        /// Scales a vector by the given vector.
+        /// </summary>
+        /// <param name="left">The vector to scale.</param>
+        /// <param name="right">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static FxVector2f operator *(FxVector2f left, FxVector2f right)
+        {
+            left.x *= right.x;
+            left.y *= right.y;
+            return left;
+        }
+
+
+        /// <summary>
+        /// Scales a vector by the given vector.
+        /// </summary>
+        /// <param name="left">The vector to scale.</param>
+        /// <param name="right">The amount by which to scale the vector.</param>
+        /// <returns>The scaled vector.</returns>
+        public static FxVector2f operator /(FxVector2f left, FxVector2f right)
+        {
+            left.x /= right.x;
+            left.y /= right.y;
+            return left;
+        }
+
+
         /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
