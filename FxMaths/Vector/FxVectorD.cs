@@ -51,12 +51,20 @@ namespace FxMaths.Vector
             }
         }
 
-        public FxVectorD( float[] data)
+        public FxVectorD(double[] data)
+            : base(data.Length)
+        {
+            // init the datas
+            for (int i = 0; i < Size; i++)
+                this.Data[i] = data[i];
+        }
+
+        public FxVectorD(float[] data)
             : base( data.Length )
         {
             // init the datas
             for ( int i=0; i < Size; i++ ) {
-                this.Data[i] = data[i];
+                this.Data[i] = (double)data[i];
             }
         }
 

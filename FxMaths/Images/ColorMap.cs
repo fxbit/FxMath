@@ -15,7 +15,8 @@ namespace FxMaths.Images
         Sepia,
         Copper,
         HSV,
-        DeepBlue
+        DeepBlue,
+        RGB332
     }
 
     public class ColorMap
@@ -229,6 +230,20 @@ namespace FxMaths.Images
                             colorMap[i][0] = (byte)(r[i] * 255);
                             colorMap[i][1] = (byte)(g[i] * 255);
                             colorMap[i][2] = (byte)(b[i] * 255);
+                        }
+                        #endregion
+                    }
+                    break;
+
+                case ColorMapDefaults.RGB332:
+                    {
+                        #region RGB332
+                        for (int i = 0; i < 256; i++)
+                        {
+                            colorMap[i] = new byte[3];
+                            colorMap[i][0] = (byte)(i & 0xE0);
+                            colorMap[i][1] = (byte)((i & 0x1C) << 3);
+                            colorMap[i][2] = (byte)((i & 0x03) << 6);
                         }
                         #endregion
                     }

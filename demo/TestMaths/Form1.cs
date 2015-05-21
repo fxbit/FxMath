@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using FxMaths.Images;
+using FxMaths.Vector;
 using FxMaths.GUI;
 
 namespace TestMaths
@@ -18,6 +19,15 @@ namespace TestMaths
         public Form1()
         {
             InitializeComponent();
+
+            FxVectorF vec1 = new FxVectorF(10, 6f);
+            FxVectorF vec2 = new FxVectorF(10, 4f);
+
+            vec1 /= vec2;
+            var c = vec1/vec2;
+            
+            Console.WriteLine(c.Size);
+            Console.WriteLine(c[0]);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,6 +42,10 @@ namespace TestMaths
 
                 // add the element on canva
                 canvas1.AddElement(imE);
+
+
+                
+
             }
         }
     }

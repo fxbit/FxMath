@@ -57,7 +57,7 @@ namespace FxMaths.Matrix
         private const int G_small_width = 64;
         private const int G_small_height = 48;
         
-        private const int smallerRadius = 8;
+        private const int smallerRadius = 12;//8;
 
         public FxMatrixMask G_small;
 
@@ -83,7 +83,7 @@ namespace FxMaths.Matrix
         public void Process(FxMatrixMask mask)
         {
             // filter out any small points 
-            G_small = mask.MedianFilt();
+            G_small = mask.MedianFilt(6,6);
 
             // create the contours of the current frame
             var contours = new FxContour(G_small);
@@ -104,7 +104,7 @@ namespace FxMaths.Matrix
                     var c_center = c.GetCentroid();
                     var c_radius = c.GetMaxDist(c_center);
 
-                    if (c_center.Distance(ref b.Center) < c_radius + b.Radius / 2)
+                    if (c_center.Distance(ref b.Center) < c_radius + b.Radius)
                     {
                         chainStack.Push(c);
                         newCenter.x = (newCenter.x + c_center.x) / 2.0f;
@@ -215,6 +215,7 @@ namespace FxMaths.Matrix
                 }
             });
 
+#if false
             // create a resize value
             G_small.SetValueFunc((x, y) =>
             {
@@ -233,6 +234,10 @@ namespace FxMaths.Matrix
 
 
             Process(G_small);
+#else
+
+            Process(G);
+#endif
         }
     }
 

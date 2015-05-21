@@ -165,6 +165,21 @@ namespace FxMaths.Vector
             }
         }
 
+        /// <summary>
+        /// Fill the data from external list.
+        /// </summary>
+        /// <typeparam name="K">The type of given list</typeparam>
+        /// <param name="array"></param>
+        /// <param name="func">A function that transform the list object to T</param>
+        public void Fill(double[] array, Func<double, T> func)
+        {
+            int count = (array.Length < Data.Length) ? array.Length : Data.Length;
+            for (int i = 0; i < count; i++)
+            {
+                this.Data[i] = func(array[i]);
+            }
+        }
+
 
         /// <summary>
         /// Fill the data from external list.
