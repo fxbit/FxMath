@@ -83,6 +83,36 @@ namespace FxMaths.Matrix
             }
         }
 
+
+
+        /// <summary>
+        /// Fill Circle
+        /// </summary>
+        /// <param name="Center"></param>
+        /// <param name="Radius"></param>
+        /// <param name="Value"></param>
+        public void FillCircle(Vector.FxVector2f center, float radius, float Value)
+        {
+            // Create a rectangle that we are going to fill
+            FxVector2i StartVect = new FxVector2i(center.x - radius, center.y - radius);
+            FxVector2i EndVect = new FxVector2i(center.x + radius, center.y + radius);
+            for (int x = StartVect.x; x < EndVect.x; x++)
+                for (int y = StartVect.y; y < EndVect.y; y++)
+                {
+                    if (x >= 0 && x < Width && y >= 0 && y < Height)
+                    {
+                        float dist = center.Distance(x, y);
+                        if (dist < radius)
+                        {
+                            float a = (radius - dist) / radius;
+                            this[x, y] = a * Value;
+                        }
+                    }
+                }
+        }
+
+
+
         /// <summary>
         /// The method that we are going to 
         /// use for the interpolation.

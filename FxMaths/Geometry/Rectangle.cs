@@ -193,7 +193,11 @@ namespace FxMaths.Geometry
 
         public void Dispose()
         {
-
+            // clean memory
+            if (m_lineColorBrush != null)
+                m_lineColorBrush.Dispose();
+            if (m_sharpGeometry != null)
+                m_sharpGeometry.Dispose();
         }
 
         #endregion

@@ -76,8 +76,12 @@ namespace FxMaths.GUI
         /// <param name="Redraw">Set if we want to redraw all elements</param>
         public void AddGeometry(IBaseGeometry geo, Boolean Redraw = true)
         {
-            // add the plot to the list
-            listGeometry.Add(geo);
+
+            lock (listGeometry)
+            {
+                // add the plot to the list
+                listGeometry.Add(geo);
+            }
 
             // set the the geometry is dirty
             IsGeomrtryDirty = true;
@@ -93,8 +97,14 @@ namespace FxMaths.GUI
         /// </summary>
         public void ClearGeometry(Boolean Redraw = true)
         {
-            // remove all the geometry from the list
-            listGeometry.Clear();
+            lock(listGeometry)
+            {
+                // clean the memory that is using
+                listGeometry.ForEach(x => x.Dispose());
+
+                // remove all the geometry from the list
+                listGeometry.Clear();
+            }
 
             // set the the geometry is dirty
             IsGeomrtryDirty = true;
@@ -137,20 +147,23 @@ namespace FxMaths.GUI
                 Load( args );
             }
 
-            // plot the plots
-            foreach (IBaseGeometry geo in listGeometry)
+            lock(listGeometry)
             {
-                newMAtrix = args.renderTarget.Transform;
-                newMAtrix.M31 += OriginPosition.x * Zoom.Width;
-                newMAtrix.M32 -= OriginPosition.y * Zoom.Height;
-                args.renderTarget.Transform = newMAtrix;
+                // plot the plots
+                foreach (IBaseGeometry geo in listGeometry)
+                {
+                    newMAtrix = args.renderTarget.Transform;
+                    newMAtrix.M31 += OriginPosition.x * Zoom.Width;
+                    newMAtrix.M32 -= OriginPosition.y * Zoom.Height;
+                    args.renderTarget.Transform = newMAtrix;
 
-                geo.Render2D( args.renderTarget, lineBrush );
+                    geo.Render2D(args.renderTarget, lineBrush);
 
-                newMAtrix.M31 -= OriginPosition.x * Zoom.Width;
-                newMAtrix.M32 += OriginPosition.y * Zoom.Height;
-                args.renderTarget.Transform = newMAtrix;
+                    newMAtrix.M31 -= OriginPosition.x * Zoom.Width;
+                    newMAtrix.M32 += OriginPosition.y * Zoom.Height;
+                    args.renderTarget.Transform = newMAtrix;
 
+                }
             }
 
             // plot the axes
@@ -170,9 +183,14 @@ namespace FxMaths.GUI
 
         public override void Dispose()
         {
-            // clean all the subgeometry
-            foreach (IBaseGeometry bg in listGeometry)
-                bg.Dispose();
+            lock(listGeometry)
+            {
+                // clean all the subgeometry
+                foreach (IBaseGeometry bg in listGeometry)
+                    bg.Dispose();
+
+                listGeometry.Clear();
+            }
 
             // clean the memory 
             lineBrush.Dispose();

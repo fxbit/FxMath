@@ -267,7 +267,7 @@ namespace FxMaths.GUI
                     Width = mat.Width;
                     Height = mat.Height;
 
-                    if (mImageBitmap == null)
+                    if (mImageBitmap != null)
                     {
                         mImageBitmap.Dispose();
                     }
